@@ -1,0 +1,21 @@
+# Paquete `{poblador}`
+
+Datos de población para Chile y utilidades relacionadas
+
+Este paquete ofrece tablas de datos de población oficiales de Chile, así
+como funciones para simplificar el uso de estos datos como complemento a
+otros conjuntos de datos, por ejemplo, para agregar población oficial a
+otras fuentes, calcular tasas de población, entre otros.
+
+# Package index
+
+## All functions
+
+- [`censo_poblacion_2017`](https://bastianolea.github.io/poblador/reference/censo_poblacion_2017.md)
+  : Población a nivel comunal de Chile (2017)
+- [`censo_poblacion_2024`](https://bastianolea.github.io/poblador/reference/censo_poblacion_2024.md)
+  : Población a nivel comunal de Chile (2024)
+- [`censo_poblacion_proyeccion`](https://bastianolea.github.io/poblador/reference/censo_poblacion_proyeccion.md)
+  : Proyecciones de población a nivel comunal de Chile (2002-2035), base
+  Censo 2017
+
