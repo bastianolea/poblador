@@ -10,7 +10,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 8.0.0
 Imports: 
     dplyr,
-    territorial
 Suggests: 
     arrow,
     janitor,
@@ -18,7 +17,8 @@ Suggests:
     readxl,
     stringr,
     testthat (>= 3.0.0),
-    tidyr
+    tidyr,
+    territorial
 Remotes:
     bastianolea/territorial
 Depends: 
