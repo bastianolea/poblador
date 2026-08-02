@@ -1,0 +1,28 @@
+Package: poblador
+Title: Datos de población para Chile y utilidades relacionadas
+Version: 0.0.0.9000
+Authors@R: 
+    person("Bastián", "Olea", , "bastianolea@gmail.com", role = c("aut", "cre"))
+Description: Este paquete ofrece tablas de datos de población oficiales de Chile, así como funciones para simplificar el uso de estos datos como complemento a otros conjuntos de datos, por ejemplo, para agregar población oficial a otras fuentes, calcular tasas de población, entre otros.
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 8.0.0
+Imports: 
+    dplyr,
+    territorial
+Suggests: 
+    arrow,
+    janitor,
+    pointblank,
+    readxl,
+    stringr,
+    testthat (>= 3.0.0),
+    tidyr
+Remotes:
+    bastianolea/territorial
+Depends: 
+    R (>= 3.5)
+LazyData: true
+Config/Needs/website: quarto, rmarkdown
+Config/testthat/edition: 3
