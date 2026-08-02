@@ -24,7 +24,7 @@ poblacion_2 <- poblacion_1 |>
   mutate(año = 2024, .before = poblacion)
 
 # agregar variables territoriales
-poblacion_2024 <- poblacion_2 |>
+censo_poblacion_2024 <- poblacion_2 |>
   territorial::contextualizar(codigo_comuna) |>
   arrange(codigo_region, nombre_region)
 
@@ -32,12 +32,12 @@ poblacion_2024 <- poblacion_2 |>
 library(pointblank)
 
 # revisar que no hay NA
-poblacion_2024 |>
+censo_poblacion_2024 |>
   expect_col_vals_not_null(everything())
 
 # revisar dimensiones
-poblacion_2024 |>
+censo_poblacion_2024 |>
   expect_col_count_match(8) |>
   expect_row_count_match(346)
 
-usethis::use_data(poblacion_2024, overwrite = TRUE)
+usethis::use_data(censo_poblacion_2024, overwrite = TRUE)

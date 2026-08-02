@@ -40,19 +40,19 @@ poblacion_4 <- poblacion_3 |>
   mutate(año = 2017, .before = poblacion)
 
 # agregar variables territoriales
-poblacion_2017 <- poblacion_4 |>
+censo_poblacion_2017 <- poblacion_4 |>
   territorial::contextualizar(codigo_comuna)
 
 # validar datos
 library(pointblank)
 
 # revisar que no hay NA
-poblacion_2017 |>
+censo_poblacion_2017 |>
   expect_col_vals_not_null(everything())
 
 # revisar dimensiones
-poblacion_2017 |>
+censo_poblacion_2017 |>
   expect_col_count_match(8) |>
   expect_row_count_match(346)
 
-usethis::use_data(poblacion_2017, overwrite = TRUE)
+usethis::use_data(censo_poblacion_2017, overwrite = TRUE)

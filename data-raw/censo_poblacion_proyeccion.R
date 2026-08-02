@@ -38,7 +38,7 @@ proyecciones_año <- proyecciones_long |>
 #   filter(is_codigo_comuna(codigo_comuna))
 
 # agregar columnas territoriales
-poblacion_proyeccion <- proyecciones_año |>
+censo_poblacion_proyeccion <- proyecciones_año |>
   territorial::contextualizar(codigo_comuna)
 
-usethis::use_data(poblacion_proyeccion, overwrite = TRUE)
+usethis::use_data(censo_poblacion_proyeccion, overwrite = TRUE)
