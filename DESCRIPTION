@@ -26,5 +26,5 @@ Depends:
 LazyData: true
 Config/Needs/website: quarto, rmarkdown
 Config/testthat/edition: 3
-URL: https://github.com/bastianolea/poblador
+URL: https://bastianolea.github.io/poblador/, https://github.com/bastianolea/poblador
 BugReports: https://github.com/bastianolea/poblador/issues

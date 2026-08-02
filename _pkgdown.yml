@@ -1,0 +1,17 @@
+url: https://bastianolea.github.io/poblador/
+lang: es
+template:
+  bootstrap: 5
+project:
+  render: ['*.qmd']
+
+authors:
+  "Bastián Olea Herrera":
+    href: "https://bastianolea.rbind.io"
+
+home:
+  links:
+  - text: Blog sobre análisis de datos con R
+    href: https://bastianolea.rbind.io/blog
+  - text: Aprende a programar en R
+    href: https://bastianolea.github.io/aprende_r/
