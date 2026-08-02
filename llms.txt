@@ -25,3 +25,11 @@ otras fuentes, calcular tasas de población, entre otros.
   : Población en situación de pobreza multidimensional a nivel comunal
   (2024)
 
+# Articles
+
+### All vignettes
+
+- [Introducción al
+  paquete](https://bastianolea.github.io/poblador/articles/poblador.md):
+
+  Instalación y primeros pasos con el paquete {poblador}.
