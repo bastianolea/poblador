@@ -7,3 +7,5 @@
 ^pkgdown$
 ^\.github$
 _pendientes.md
+^vignettes/\.quarto$
+^vignettes/*_files$

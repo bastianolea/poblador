@@ -18,7 +18,11 @@ Suggests:
     stringr,
     testthat (>= 3.0.0),
     tidyr,
-    territorial
+    territorial,
+    knitr,
+    quarto,
+    ggplot2,
+    scales
 Remotes:
     bastianolea/territorial
 Depends: 
@@ -28,3 +32,4 @@ Config/Needs/website: quarto, rmarkdown
 Config/testthat/edition: 3
 URL: https://bastianolea.github.io/poblador/, https://github.com/bastianolea/poblador
 BugReports: https://github.com/bastianolea/poblador/issues
+VignetteBuilder: quarto
