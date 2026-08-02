@@ -17,4 +17,4 @@
 #'   \item{poblacion}{Cantidad de habitantes para la comuna y el año correspondientes}
 #' }
 #' @source <https://www.ine.gob.cl/estadisticas-por-tema/demografia-y-poblacion/censo-de-poblacion-y-vivienda>
-"poblacion_2024"
+"censo_poblacion_2024"

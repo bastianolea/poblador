@@ -18,4 +18,4 @@
 #'   \item{poblacion}{Cantidad de habitantes proyectados para la comuna y el año correspondientes}
 #' }
 #' @source <https://www.ine.gob.cl/estadisticas-por-tema/demografia-y-poblacion/estimaciones-y-proyecciones-de-poblacion>
-"poblacion_proyeccion"
+"censo_poblacion_proyeccion"
