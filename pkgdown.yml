@@ -3,7 +3,7 @@ pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   poblador: poblador.html
-last_built: 2026-08-13T00:49Z
+last_built: 2026-08-13T02:38Z
 urls:
   reference: https://bastianolea.github.io/poblador/reference
   article: https://bastianolea.github.io/poblador/articles
