@@ -7,6 +7,8 @@ format:
 
 # Paquete `{poblador}`
 
-Datos de población para Chile y utilidades relacionadas
+Datos de población para Chile y utilidades relacionadas.
 
-Este paquete ofrece tablas de datos de población oficiales de Chile, así como funciones para simplificar el uso de estos datos como complemento a otros conjuntos de datos, por ejemplo, para agregar población oficial a otras fuentes, calcular tasas de población, entre otros.
+Este paquete ofrece tablas de datos de población desde fuentes oficiales de Chile, así como funciones para simplificar el uso de estos datos como complemento a otros conjuntos de datos, por ejemplo, para agregar población oficial a otras fuentes de datos, calcular tasas de población, entre otros.
+
+Visita [la página de documentación del paquete para más información.](https://bastianolea.github.io/poblador/)
