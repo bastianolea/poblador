@@ -1,4 +1,4 @@
-#' Lista de fuentes de datos disponibles en {poblador}
+#' Lista de fuentes de datos disponibles
 #'
 #' Imprime en la consola una lista de todas las fuentes de datos incluídas en el paquete.
 #'
