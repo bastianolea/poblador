@@ -2,6 +2,11 @@ url: https://bastianolea.github.io/poblador/
 lang: es
 template:
   bootstrap: 5
+  theme: atom-one-light
+  bslib:
+    fg: "#51685F"
+    bg: "#EFF8E4"
+    primary: "#83B397"
 project:
   render: ['*.qmd']
 
@@ -15,7 +20,6 @@ home:
     href: https://bastianolea.rbind.io/blog
   - text: Aprende a programar en R
     href: https://bastianolea.github.io/aprende_r/
-
 
 reference:
 - title: Catálogo de datos
