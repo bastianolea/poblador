@@ -6,7 +6,7 @@
 \usage{
 agregar_poblacion(
   datos,
-  nivel,
+  nivel = NULL,
   codigo = NULL,
   años = NULL,
   base = "censo_poblacion_proyeccion"
@@ -24,20 +24,43 @@ agregar_poblacion(
 \item{base}{Base de datos de población a utilizar. Por defecto es \link{censo_poblacion_proyeccion}.}
 }
 \value{
-Vector con cifras de población para la/s comuna/s consultadas.
+Dataframe con la columna \code{poblacion}, o vector de las cifras de población correspondientes.
 }
 \description{
-Agrega cifras de población oficiales a datos territoriales de Chile. Esta función opera tanto sobre tablas de datos (\emph{dataframes}) o vectores de datos. En ambos casos, se esperan Códigos Únicos Territoriales válidos, como los que aparecen en \link[territorial:territorios]{territorial::territorios}. Para conocer más sobre estos códigos, revisa la \href{https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html}{viñeta sobre códigos únicos territoriales}. Se debe especificar la base de datos de población a utilizar entre varias: Proyecciones del Censo (base 2017), Censo 2024 (población censada). Se puede consultar la población para más de una comuna a la vez, para un mismo o distintos años.
+Agrega cifras de población oficiales a datos territoriales de Chile. Esta función opera tanto sobre tablas de datos (\emph{dataframes}) o vectores de datos. En ambos casos, se esperan Códigos Únicos Territoriales válidos, como los que aparecen en \link[territorial:territorios]{territorial::territorios}. Para conocer más sobre estos códigos, revisa la \href{https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html}{viñeta sobre códigos únicos territoriales}.
+}
+\details{
+Para agregar población, se debe especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con \code{\link[=datos]{datos()}}.
 }
 \examples{
-# varios años para una comuna
-agregar_poblacion(codigo_comuna = 1101, año = 2020:2026)
+# tabla de datos con un par de comunas: el nivel comunal se detecta
+# desde la columna `codigo_comuna`
+comunas <- territorial::territorios |>
+  dplyr::filter(codigo_comuna \%in\% c(1101, 2102)) |>
+  dplyr::select(nombre_comuna, codigo_comuna)
 
-# varias comunas para un año
-agregar_poblacion(codigo_comuna = c(1101, 1107, 1401, 1402, 1403), año = 2026)
+comunas |>
+  agregar_poblacion(años = 2023)
 
-# crear variable población para una tabla de datos
-territorial::territorios |>
-  dplyr::mutate(poblacion = agregar_poblacion(codigo_comuna, 2026))
+# especificar el nivel y usar otra base de datos
+comunas |>
+  agregar_poblacion(nivel = "comunal", base = censo_poblacion_2017)
+
+# tabla de datos con un par de regiones: el nivel regional se detecta
+# desde la columna `codigo_region`
+regiones <- territorial::territorios |>
+  dplyr::filter(codigo_region \%in\% c(1, 2)) |>
+  dplyr::distinct(nombre_region, codigo_region)
+
+regiones |>
+  agregar_poblacion(años = 2023)
+
+# vector de códigos: devuelve un vector con las cifras de población
+c(1101, 2102) |>
+  agregar_poblacion(nivel = "comunal", años = 2023)
+
+# crear una variable de población dentro de una tabla
+comunas |>
+  dplyr::mutate(poblacion = agregar_poblacion(codigo_comuna, años = 2023))
 
 }

@@ -12,3 +12,97 @@ Datos de población para Chile y utilidades relacionadas.
 Este paquete ofrece tablas de datos de población desde fuentes oficiales de Chile, así como funciones para simplificar el uso de estos datos como complemento a otros conjuntos de datos, por ejemplo, para agregar población oficial a otras fuentes de datos, calcular tasas de población, entre otros.
 
 Visita [la página de documentación del paquete para más información.](https://bastianolea.github.io/poblador/)
+
+## Instalación
+
+Instala el paquete a R desde [R-Universe](https://bastianolea.r-universe.dev/poblador) así:
+
+```r
+install.packages('poblador', 
+repos = c('https://bastianolea.r-universe.dev', 
+'https://cloud.r-project.org')
+)
+```
+
+También puedes instalar desde GitHub así:
+
+```r
+# install.packages("pak")
+pak::pak("bastianolea/poblador")
+```
+
+## Datos de población
+
+La función `datos()` entrega una lista con todas las fuentes de datos disponibles en el paquete:
+
+```r
+library(poblador)
+
+datos()
+```
+
+Puedes usar estas fuentes de datos para consutlarlas, cruzarlas con otras tablas, o su uso principal, que es usarlas para alimentar a la función `agregar_poblacion()`, como veremos a continuación.
+
+## Agregar población a tus datos
+
+La función `agregar_poblacion()` recibe una tabla de datos o _dataframe_ y le agrega una columna `poblacion` con los datos oficiales de población.
+
+Primero creemos una tabla de datos de ejemplo:
+
+```{r}
+#| warning: false
+library(dplyr)
+
+datos <- tibble::tribble(
+  ~nombre_comuna, ~codigo_comuna,
+  "Iquique",       1101,
+  "Mejillones",    2102
+)
+
+datos
+```
+
+Ahora agreguémosle la población:
+
+```{r}
+library(poblador)
+
+datos |> 
+  agregar_poblacion()
+```
+
+Así de simple! La tabla recibe una columna de población.
+
+El nivel territorial puede ser detectado automáticamente desde la tabla de datos, o puede ser especificado manualmente.`poblacion`
+
+
+```{r}
+# tabla de datos con un par de comunas: el nivel comunal se detecta
+# desde la columna `codigo_comuna`
+
+
+comunas |>
+  agregar_poblacion(años = 2023)
+
+# especificar el nivel y usar otra base de datos
+comunas |>
+  agregar_poblacion(nivel = "comunal", base = censo_poblacion_2017)
+
+# tabla de datos con un par de regiones: el nivel regional se detecta
+# desde la columna `codigo_region`
+regiones <- territorial::territorios |>
+  dplyr::filter(codigo_region %in% c(1, 2)) |>
+  dplyr::distinct(nombre_region, codigo_region)
+
+regiones |>
+  agregar_poblacion(años = 2023)
+
+# vector de códigos: devuelve un vector con las cifras de población
+c(1101, 2102) |>
+  agregar_poblacion(nivel = "comunal", años = 2023)
+
+# crear una variable de población dentro de una tabla
+comunas |>
+  dplyr::mutate(poblacion = agregar_poblacion(codigo_comuna, años = 2023))
+```
+
