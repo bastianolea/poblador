@@ -15,3 +15,26 @@ home:
     href: https://bastianolea.rbind.io/blog
   - text: Aprende a programar en R
     href: https://bastianolea.github.io/aprende_r/
+
+
+reference:
+- title: Catálogo de datos
+  contents:
+  - datos
+- title: Tablas de datos de población de Chile
+  desc: Datos oficiales de población a nivel de comuna, obtenidos desde el INE
+  contents:
+  - starts_with("censo")
+  - starts_with("mideso")
+- title: Agregar población a datos
+  desc: Funciones para agregar columnas con población o cifras de población
+  contents:
+  - starts_with("agregar")
+  - starts_with("obtener")
+
+articles:
+- title: Viñetas
+  navbar: ~
+  desc: Información general sobre el paquete
+  contents:
+  - poblador

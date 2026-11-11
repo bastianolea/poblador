@@ -7,28 +7,31 @@ format:
 
 # Paquete `{poblador}`
 
-Datos de población para Chile y utilidades relacionadas.
+Datos de población para Chile y funciones para agregar datos poblacionales fácilmente.
 
-Este paquete ofrece tablas de datos de población desde fuentes oficiales de Chile, así como funciones para simplificar el uso de estos datos como complemento a otros conjuntos de datos, por ejemplo, para agregar población oficial a otras fuentes de datos, calcular tasas de población, entre otros.
+Este paquete ofrece tablas de datos de población desde fuentes oficiales de Chile, así como funciones para simplificar el uso de estos datos como complemento a otros conjuntos de datos, por ejemplo, para agregar población oficial a una tabla de comunas o regiones, entre otros.
 
-Visita [la página de documentación del paquete para más información.](https://bastianolea.github.io/poblador/)
+El funcionamiento interno de este paquete depende bastante de [mi paquete `territorial`](https://bastianolea.github.io/territorial/), que entrega herramientas para trabajar con datos qeu representan comunas y regiones de Chile.
 
 ## Instalación
 
-Instala el paquete a R desde [R-Universe](https://bastianolea.r-universe.dev/poblador) así:
+Instala el paquete a R desde [R-Universe](https://bastianolea.r-universe.dev/poblador):
 
 ```r
-install.packages('poblador', 
-repos = c('https://bastianolea.r-universe.dev', 
-'https://cloud.r-project.org')
-)
+install.packages('poblador', repos = c('https://bastianolea.r-universe.dev'))
 ```
 
-También puedes instalar desde GitHub así:
+También puedes instalar desde GitHub:
 
 ```r
 # install.packages("pak")
 pak::pak("bastianolea/poblador")
+```
+
+Para que `{poblador}` funcione, necesitas tener instalado `{territorial}`. Si no lo tienes, instálalo con:
+
+```r
+install.packages("territorial", repos = "https://bastianolea.r-universe.dev")
 ```
 
 ## Datos de población
@@ -41,7 +44,7 @@ library(poblador)
 datos()
 ```
 
-Puedes usar estas fuentes de datos para consutlarlas, cruzarlas con otras tablas, o su uso principal, que es usarlas para alimentar a la función `agregar_poblacion()`, como veremos a continuación.
+Puedes usar estas fuentes de datos para consularlas, cruzarlas con otras tablas, o su uso principal, que es usarlas para alimentar a la función `agregar_poblacion()`, como veremos a continuación.
 
 ## Agregar población a tus datos
 
@@ -73,7 +76,7 @@ comunas |>
 
 Así de simple! La tabla recibe una columna de población. 
 
-Por defecto, la población se obtiene de las [proyecciones oficiales del INE](https://www.ine.gob.cl/estadisticas-por-tema/demografia-y-poblacion/estimaciones-y-proyecciones-de-poblacion) (ver [poblador::censo_poblacion_proyeccion]).
+Por defecto, la población se obtiene de las [proyecciones oficiales del INE](https://www.ine.gob.cl/estadisticas-por-tema/demografia-y-poblacion/estimaciones-y-proyecciones-de-poblacion) (ver `poblador::censo_poblacion_proyeccion`).
 
 La función detectó automáticamente que se trataba de datos comunales, y puso el año actual por defecto.
 
@@ -131,25 +134,36 @@ dplyr::tibble(país = "Chile") |>
 ```
 
 
-## Obtener población de vectores
+## Obtener población de territorios
 
-También se puede obtener la población 
+También se puede obtener la población de territorios específicos con `obtener_poblacion()`. Funciona casi idéntico a `agregar_poblacion()`, sólo qeu sobre vectores de datos como nombres o códigos territoriales.
+
+De esta manera podemos obtener fácilmente la población de una comuna, notando que la función infiere que se trata de una comuna:
 
 ```{r}
 obtener_poblacion("La Florida")
 ```
 
+También podemos entregar algunos [códigos únicos territoriales](https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html):
+
 ```{r}
-obtener_poblacion(13102) # Cerrillos
+obtener_poblacion(c(13102, 13201))
 ```
+
+Solicitar la proyección de población de un año específico: 
 
 ```{r}
 obtener_poblacion("La Florida", años = 2002)
 ```
 
+Obtener la población de una comuna en el Censo 2017 y en el Censo 2024
 ```{r}
 obtener_poblacion(
   "La Florida", 
   base = censo_poblacion_2017)
+
+obtener_poblacion(
+  "La Florida", 
+  base = censo_poblacion_2024)
 ```
 

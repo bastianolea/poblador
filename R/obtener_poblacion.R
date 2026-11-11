@@ -1,8 +1,13 @@
 #' Obtener la población una unidad territorial
 #'
-#' A partir del código único territorial (ver [viñeta sobre códigos únicos territoriales](https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html)) de una unidad territorial (comuna, región o país) de Chile, obtiene la población correspondiente en un año específico. Esta función opera sobre vectores, retornando un vector con las cifras de población correspondientes en el mismo orden que fueron entregadas.
+#' A partir del código único territorial de una unidad territorial (comuna, región o país) de Chile (ver [viñeta sobre códigos únicos territoriales](https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html)), esta función obtiene la población correspondiente en un año específico. Esta función opera sobre vectores, retornando un vector con las cifras de población correspondientes en el mismo orden que fueron entregadas. Para _dataframes_, usar [agregar_poblacion()].
 #'
 #' Se puede especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con [poblador::datos()]), o una distinta que siga las mismas convenciones.
+#'
+#'@param datos Vector de datos para obtener su población
+#' @param nivel Nivel del dato a obtener. Puede ser "regional", "comunal" o "nacional", pero si no se indica, se infiere a partir de los datos.
+#' @param años Año de la población, para las bases de población que cubren múltiples años.
+#' @param base Base de datos de población a utilizar. Por defecto es [poblador::censo_poblacion_proyeccion].
 #'
 #' @seealso [agregar_poblacion()] para agregar una columna de población sobre dataframes.
 #' @returns Vector de las cifras de población correspondientes.

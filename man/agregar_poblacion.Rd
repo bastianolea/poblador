@@ -12,21 +12,19 @@ agregar_poblacion(
 )
 }
 \arguments{
-\item{datos}{Dataframe o vector al que deseas agregar población}
+\item{datos}{Dataframe al que deseas agregar población}
 
-\item{nivel}{Nivel del dato a agregar. Puede ser "regional", "comunal" o "nacional".}
+\item{nivel}{Nivel del dato a agregar. Puede ser "regional", "comunal" o "nacional", pero si no se indica, se infiere a partir de los datos.}
 
-\item{años}{Opcional: si se va a elegir proyecciones de población, año de la estimación.}
+\item{años}{Año de la población, para las bases de población que cubren múltiples años.}
 
 \item{base}{Base de datos de población a utilizar. Por defecto es \link{censo_poblacion_proyeccion}.}
-
-\item{codigo}{Códigos de las comunas o regiones para entregar su población. Ver \link[territorial:territorios]{territorial::territorios}. Si es país, se omite.}
 }
 \value{
 Dataframe con la columna \code{poblacion}.
 }
 \description{
-Agrega cifras de población oficiales a datos territoriales de Chile. Esta función opera sobre tablas de datos (\emph{dataframes}) agregando una nueva columna llamada \code{poblacion}. En ambos casos, se esperan Códigos Únicos Territoriales válidos, como los que aparecen en \link[territorial:territorios]{territorial::territorios}. Para conocer más sobre estos códigos, revisa la \href{https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html}{viñeta sobre códigos únicos territoriales}.
+Agrega cifras de población oficiales a datos territoriales de Chile. Esta función opera sobre tablas de datos (\emph{dataframes}) agregando una nueva columna llamada \code{poblacion}, y se espeta que estos datos tengan columnas \code{nombre_comuna}, \code{codigo_comuna}, \code{nombre_region} o \code{codigo_region}, como en la tabla \link[territorial:territorios]{territorial::territorios} del \href{https://bastianolea.github.io/territorial}{paquete de R {territorial}}. Para obtener la población de vectores, usar \code{\link[=obtener_poblacion]{obtener_poblacion()}}.
 }
 \details{
 Se puede especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con \code{\link[=datos]{datos()}}), o una distinta que siga las mismas convenciones.

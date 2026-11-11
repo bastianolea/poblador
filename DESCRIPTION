@@ -1,6 +1,6 @@
 Package: poblador
 Title: Datos de población para Chile y utilidades relacionadas
-Version: 0.1.1
+Version: 0.2.0
 Authors@R: 
     person("Bastián", "Olea Herrera", , "bastianolea@gmail.com", role = c("aut", "cre"),
              comment = c(url = "https://bastianolea.rbind.io",

@@ -11,11 +11,20 @@ obtener_poblacion(
   base = "censo_poblacion_proyeccion"
 )
 }
+\arguments{
+\item{datos}{Vector de datos para obtener su población}
+
+\item{nivel}{Nivel del dato a obtener. Puede ser "regional", "comunal" o "nacional", pero si no se indica, se infiere a partir de los datos.}
+
+\item{años}{Año de la población, para las bases de población que cubren múltiples años.}
+
+\item{base}{Base de datos de población a utilizar. Por defecto es \link{censo_poblacion_proyeccion}.}
+}
 \value{
 Vector de las cifras de población correspondientes.
 }
 \description{
-A partir del código único territorial (ver \href{https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html}{viñeta sobre códigos únicos territoriales}) de una unidad territorial (comuna, región o país) de Chile, obtiene la población correspondiente en un año específico. Esta función opera sobre vectores, retornando un vector con las cifras de población correspondientes en el mismo orden que fueron entregadas.
+A partir del código único territorial de una unidad territorial (comuna, región o país) de Chile (ver \href{https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html}{viñeta sobre códigos únicos territoriales}), esta función obtiene la población correspondiente en un año específico. Esta función opera sobre vectores, retornando un vector con las cifras de población correspondientes en el mismo orden que fueron entregadas. Para \emph{dataframes}, usar \code{\link[=agregar_poblacion]{agregar_poblacion()}}.
 }
 \details{
 Se puede especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con \code{\link[=datos]{datos()}}), o una distinta que siga las mismas convenciones.

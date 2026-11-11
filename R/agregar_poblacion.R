@@ -1,13 +1,12 @@
 #' Agregar población de Chile a datos existentes
 #'
-#' Agrega cifras de población oficiales a datos territoriales de Chile. Esta función opera sobre tablas de datos (_dataframes_) agregando una nueva columna llamada `poblacion`. En ambos casos, se esperan Códigos Únicos Territoriales válidos, como los que aparecen en [territorial::territorios]. Para conocer más sobre estos códigos, revisa la [viñeta sobre códigos únicos territoriales](https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html).
+#' Agrega cifras de población oficiales a datos territoriales de Chile. Esta función opera sobre tablas de datos (_dataframes_) agregando una nueva columna llamada `poblacion`, y se espeta que estos datos tengan columnas `nombre_comuna`, `codigo_comuna`, `nombre_region` o `codigo_region`, como en la tabla [territorial::territorios] del [paquete de R {territorial}](https://bastianolea.github.io/territorial). Para obtener la población de vectores, usar [obtener_poblacion()].
 #'
 #' Se puede especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con [poblador::datos()]), o una distinta que siga las mismas convenciones.
 #'
-#' @param datos Dataframe o vector al que deseas agregar población
-#' @param nivel Nivel del dato a agregar. Puede ser "regional", "comunal" o "nacional".
-#' @param codigo Códigos de las comunas o regiones para entregar su población. Ver [territorial::territorios]. Si es país, se omite.
-#' @param años Opcional: si se va a elegir proyecciones de población, año de la estimación.
+#' @param datos Dataframe al que deseas agregar población
+#' @param nivel Nivel del dato a agregar. Puede ser "regional", "comunal" o "nacional", pero si no se indica, se infiere a partir de los datos.
+#' @param años Año de la población, para las bases de población que cubren múltiples años.
 #' @param base Base de datos de población a utilizar. Por defecto es [poblador::censo_poblacion_proyeccion].
 #'
 #' @seealso [poblador::obtener_poblacion()] para obtener poblaciones de vectores con códigos o nombres de unidades territoriales.

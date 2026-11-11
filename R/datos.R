@@ -1,4 +1,4 @@
-#' Lista de fuentes de datos disponibles
+#' Lista de fuentes de datos disponibles en {poblador}
 datos <- function() {
   # # no funciona esta mierda
   #

@@ -2,10 +2,10 @@
 % Please edit documentation in R/datos.R
 \name{datos}
 \alias{datos}
-\title{Lista de fuentes de datos disponibles}
+\title{Lista de fuentes de datos disponibles en {poblador}}
 \usage{
 datos()
 }
 \description{
-Lista de fuentes de datos disponibles
+Lista de fuentes de datos disponibles en {poblador}
 }
