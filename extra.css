@@ -1,0 +1,46 @@
+/* bloques de código */
+pre {
+  background-color: #F6FAF1 !important;
+  border: solid 1px #dce4d2 !important;
+}
+
+pre code {
+  background-color: none !important;
+}
+
+/* código inline */
+p code, dt code, li code, a code, h1 code, h2 code, h3 code {
+  background-color: #dfead8 !important;
+}
+
+/* tokens de sintaxis */
+pre code span.va { color: #4a6b5a !important; } /* variables */
+pre code span.st { color: #3f8f6b !important; } /* strings */
+pre code span.co { color: #799684; font-style: italic; } /* comentarios */
+pre code span.fu { color: #2f6f5e !important; } /* funciones */
+pre code span.dv, pre code span.fl, pre code span.cf { color: #7a9a45 !important; } /* números y control de flujo */
+pre code span.kw { color: #51685F !important; font-weight: bold; } /* palabras clave */
+pre code span.op { color: #6f8a7c !important; } /* operadores */
+pre code span.er { color: #c0675a; text-decoration: none; } /* errores */
+pre code span.cn { color: #c89243; text-decoration: none; } /* nulos */
+pre code span.r-out {
+  font-style: none !important;
+} /* output de R */
+
+code a:any-link {
+  color: inherit;
+  text-decoration-color: inherit !important;
+}
+
+/* logo del paquete */
+img.logo {
+  border: none !important;
+}
+
+/* imágenes */
+main img {
+  max-width: 100%;
+  height: auto;
+  border: solid 1px #b9d3c3;
+  border-radius: 6px;
+}

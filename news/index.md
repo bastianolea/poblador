@@ -4,7 +4,7 @@
 
 - Función
   [`obtener_poblacion()`](https://bastianolea.github.io/poblador/reference/obtener_poblacion.md)
-  para obtener la población de vectores con nomrbs o códigos
+  para obtener la población de vectores con nombres o códigos
   territoriales.
 
 ## poblador 0.1.1 (2026/11/11)
