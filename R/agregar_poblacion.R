@@ -7,10 +7,9 @@
 #' @param datos Dataframe al que deseas agregar población
 #' @param nivel Nivel del dato a agregar. Puede ser "regional", "comunal" o "nacional", pero si no se indica, se infiere a partir de los datos.
 #' @param años Año de la población, para las bases de población que cubren múltiples años.
-#' @param base Base de datos de población a utilizar. Por defecto es [poblador::censo_poblacion_proyeccion].
+#' @param base Base de datos de población a utilizar. Por defecto es [poblador::censo_poblacion_proyeccion]. Ver [poblador::datos()] para una lista de fuentes de datos posibles.
 #'
-#' @seealso [poblador::obtener_poblacion()] para obtener poblaciones de vectores con códigos o nombres de unidades territoriales.
-#' @returns Dataframe con la columna `poblacion`.
+#' @seealso [poblador::obtener_poblacion()] para obtener poblaciones de vectores con códigos o nombres de unidades territoriales. Ver [poblador::datos()] para una lista de fuentes de datos posibles.
 #' @export
 #'
 #' @examples
@@ -35,14 +34,6 @@
 #'
 #' regiones |>
 #'   agregar_poblacion(años = 2023)
-#'
-#' # vector de códigos: devuelve un vector con las cifras de población
-#' c(1101, 2102) |>
-#'   agregar_poblacion(nivel = "comunal", años = 2023)
-#'
-#' # crear una variable de población dentro de una tabla
-#' comunas |>
-#'   dplyr::mutate(poblacion = agregar_poblacion(codigo_comuna, años = 2023))
 #'
 agregar_poblacion <- function(
   datos,

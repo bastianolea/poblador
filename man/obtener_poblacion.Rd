@@ -18,7 +18,7 @@ obtener_poblacion(
 
 \item{años}{Año de la población, para las bases de población que cubren múltiples años.}
 
-\item{base}{Base de datos de población a utilizar. Por defecto es \link{censo_poblacion_proyeccion}.}
+\item{base}{Base de datos de población a utilizar. Por defecto es \link{censo_poblacion_proyeccion}. Ver \code{\link[=datos]{datos()}} para una lista de fuentes de datos posibles.}
 }
 \value{
 Vector de las cifras de población correspondientes.
@@ -35,7 +35,15 @@ obtener_poblacion(c(1101, 2102))
 obtener_poblacion("La Florida", años = 2023)
 
 obtener_poblacion("La Florida", base = censo_poblacion_2017)
+
+# crear una variable de población dentro de una tabla
+comunas <- territorial::territorios |>
+  dplyr::filter(codigo_comuna \%in\% c(1101, 2102)) |>
+  dplyr::select(nombre_comuna, codigo_comuna)
+
+comunas |>
+  dplyr::mutate(poblacion = obtener_poblacion(codigo_comuna, años = 2023))
 }
 \seealso{
-\code{\link[=agregar_poblacion]{agregar_poblacion()}} para agregar una columna de población sobre dataframes.
+\code{\link[=agregar_poblacion]{agregar_poblacion()}} para agregar una columna de población sobre dataframes. Ver \code{\link[=datos]{datos()}} para una lista de fuentes de datos posibles.
 }

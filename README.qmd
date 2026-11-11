@@ -38,7 +38,7 @@ install.packages("territorial", repos = "https://bastianolea.r-universe.dev")
 
 La función `datos()` entrega una lista con todas las fuentes de datos disponibles en el paquete:
 
-```r
+```{r}
 library(poblador)
 
 datos()
@@ -55,6 +55,11 @@ Primero creemos una tabla de datos de ejemplo:
 ```{r}
 #| warning: false
 library(dplyr)
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Ver código de tabla"
 
 comunas <- tibble::tribble(
   ~nombre_comuna, ~codigo_comuna,
@@ -94,6 +99,9 @@ comunas |>
 Ahora probemos con datos regionales. Creamos una tabla de muestra:
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Ver código de tabla"
+
 regiones <- tibble::tribble(
   ~nombre_region, ~codigo_region,
   "Maule",         7,
@@ -127,7 +135,7 @@ Al agregar datos regionales, el paquete toma los datos comunales y los suma para
 También se pueden obtener las poblaciones nacionales: ¿Cuál será la población de Chile el año 2030?
 
 ```{r}
-dplyr::tibble(país = "Chile") |> 
+tibble(país = "Chile") |> 
   agregar_poblacion(
     nivel = "nacional",
     años = 2030)
@@ -156,7 +164,8 @@ Solicitar la proyección de población de un año específico:
 obtener_poblacion("La Florida", años = 2002)
 ```
 
-Obtener la población de una comuna en el Censo 2017 y en el Censo 2024
+Obtener la población de una comuna en el Censo 2017 y en el Censo 2024:
+
 ```{r}
 obtener_poblacion(
   "La Florida", 
@@ -165,5 +174,34 @@ obtener_poblacion(
 obtener_poblacion(
   "La Florida", 
   base = censo_poblacion_2024)
+```
+
+Esta forma de obtener datos de población también sirve para usarla dentro de `dplyr::mutate()` al crear o modificar columnas de un _dataframe_:
+
+```{r}
+#| warning: false
+#| code-fold: true
+#| code-summary: "Ver código de tabla"
+
+library(dplyr)
+
+comunas <- territorial::territorios |>
+  filter(codigo_region == 15) |>
+  select(nombre_comuna, codigo_comuna)
+```
+
+```{r}
+comunas |>
+  mutate(poblacion = obtener_poblacion(codigo_comuna, años = 2027))
+```
+
+
+Otro uso útil es para [reportes Quarto](https://bastianolea.rbind.io/blog/quarto_reportes/) o [aplicaciones Shiny](https://bastianolea.rbind.io/blog/shiny/); por ejemplo, en la [redacción de un párrafo](https://bastianolea.rbind.io/blog/redactar_texto/) basado en datos:
+
+```{r}
+#| warning: false
+comuna <- "Ñuñoa"
+
+glue::glue("La comuna de {comuna} tiene una población de {obtener_poblacion(comuna)} habitantes.")
 ```
 

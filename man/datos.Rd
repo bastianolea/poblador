@@ -7,5 +7,12 @@
 datos()
 }
 \description{
-Lista de fuentes de datos disponibles en {poblador}
+Imprime en la consola una lista de todas las fuentes de datos incluídas en el paquete.
+}
+\examples{
+datos()
+
+}
+\seealso{
+\code{\link[=agregar_poblacion]{agregar_poblacion()}} y \code{\link[=obtener_poblacion]{obtener_poblacion()}} para hacer uso de estas fuentes de datos sobre dataframes y vectores, respectivamente.
 }

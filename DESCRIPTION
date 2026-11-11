@@ -28,7 +28,8 @@ Suggests:
     knitr,
     quarto,
     ggplot2,
-    scales
+    scales,
+    tibble
 Remotes:
     bastianolea/territorial
 Depends: 

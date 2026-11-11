@@ -7,9 +7,9 @@
 #'@param datos Vector de datos para obtener su población
 #' @param nivel Nivel del dato a obtener. Puede ser "regional", "comunal" o "nacional", pero si no se indica, se infiere a partir de los datos.
 #' @param años Año de la población, para las bases de población que cubren múltiples años.
-#' @param base Base de datos de población a utilizar. Por defecto es [poblador::censo_poblacion_proyeccion].
+#' @param base Base de datos de población a utilizar. Por defecto es [poblador::censo_poblacion_proyeccion]. Ver [poblador::datos()] para una lista de fuentes de datos posibles.
 #'
-#' @seealso [agregar_poblacion()] para agregar una columna de población sobre dataframes.
+#' @seealso [agregar_poblacion()] para agregar una columna de población sobre dataframes. Ver [poblador::datos()] para una lista de fuentes de datos posibles.
 #' @returns Vector de las cifras de población correspondientes.
 #' @export
 #'
@@ -19,6 +19,14 @@
 #' obtener_poblacion("La Florida", años = 2023)
 #'
 #' obtener_poblacion("La Florida", base = censo_poblacion_2017)
+#'
+#' # crear una variable de población dentro de una tabla
+#' comunas <- territorial::territorios |>
+#'   dplyr::filter(codigo_comuna %in% c(1101, 2102)) |>
+#'   dplyr::select(nombre_comuna, codigo_comuna)
+#'
+#' comunas |>
+#'   dplyr::mutate(poblacion = obtener_poblacion(codigo_comuna, años = 2023))
 
 obtener_poblacion <- function(
   datos,
