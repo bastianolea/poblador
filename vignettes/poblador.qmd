@@ -18,6 +18,36 @@ library(poblador)
 library(dplyr)
 ```
 
+El paquete incluye tablas de datos de los últimos censos de Chile:
+
+```{r}
+library(poblador)
+
+censo_poblacion_2024
+
+censo_poblacion_2017
+```
+
+También incluye las últimas proyecciones de población disponibles a nivel de comuna, que son en base al Censo 2017, y que pueden filtrarse por año:
+
+```{r}
+#| warning: false
+
+library(dplyr)
+
+censo_poblacion_proyeccion |> 
+  filter(año == 2030)
+```
+
+Finalmente, el paquete incluye datos sociales relacionados a población, como son las estimaciones de pobreza por ingreso y pobreza multidimensional en base a Casen 2024:
+
+```{r}
+mideso_pobreza_ingresos
+
+mideso_pobreza_multi
+```
+
+
 ## Gráfico de población regional de Chile
 
 ```{r}

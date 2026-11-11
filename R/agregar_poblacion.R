@@ -2,9 +2,10 @@
 #'
 #' Esta función sirve para agregar cifras de población oficiales a comunas de Chile. Se debe entregar un código comunal válido, como los que aparecen en [territorial::territorios]. Se debe especificar la base de datos de población a utilizar entre varias: Proyecciones del Censo (base 2017), Censo 2024 (población censada). Se puede consultar la población para más de una comuna a la vez, para un mismo o distintos años.
 #'
-#' @param codigo_comuna Códigos comunales de las comunas para entregar su población. Ver [territorial::territorios]
-#' @param año Opcional: si se va a elegir proyecciones de población, año de la estimación
-#' @param base Base de datos de población a utilizar. Puede ser `proyección`.
+#' @param nivel Nivel del dato a agregar. Puede ser "regional", "comunal" o "nacional".
+#' @param codigo Códigos de las comunas o regiones para entregar su población. Ver [territorial::territorios]. Si es país, se omite.
+#' @param año Opcional: si se va a elegir proyecciones de población, año de la estimación.
+#' @param base Base de datos de población a utilizar. Por defecto es [poblador::censo_poblacion_proyeccion].
 #'
 #' @returns Vector con cifras de población para la/s comuna/s consultadas.
 #' @export
