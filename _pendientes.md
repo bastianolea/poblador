@@ -1,4 +1,5 @@
-- [ ] Quizás agregar_poblacion (para tablas) y obtener_población (para vectores)
+- [ ] hacer función datos() a mano o de alguna otra forma?
+- [x] Quizás agregar_poblacion (para tablas) y obtener_población (para vectores)
 
 - [x] mensaje de qué se está agregando
 - [ ] en qué casos se podría entregar más de un año?! no debería asumirse desde los datos eso?
