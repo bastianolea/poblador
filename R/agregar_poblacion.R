@@ -47,7 +47,6 @@
 agregar_poblacion <- function(
   datos,
   nivel = NULL,
-  codigo = NULL,
   años = NULL,
   base = "censo_poblacion_proyeccion"
 ) {
@@ -74,77 +73,23 @@ agregar_poblacion <- function(
   # browser()
 
   # datos ----
-  if (!is.data.frame(datos) & !is.vector(datos)) {
+  # sólo dataframes
+  if (is.vector(datos)) {
     cli::cli_abort(
-      "El argumento {.arg datos} debe ser un dataframe o un vector."
+      "Esta función se aplica a tablas de datos. Usa {.fn poblador::obtener_poblacion} para vectores de datos."
     )
   }
 
-  if (is.data.frame(datos) && "poblacion" %in% colnames(datos)) {
+  # si ya tiene población
+  if ("poblacion" %in% colnames(datos)) {
     cli::cli_abort(
       "Los datos ya tienen una columna {.col poblacion}. Renómbrala o elimínala antes de agregar población."
     )
   }
 
   # niveles ----
-  # si no se especifica el nivel, intentar asumir
-  if (is.null(nivel)) {
-    if (is.data.frame(datos)) {
-      if ("codigo_comuna" %in% colnames(datos)) {
-        nivel <- "comunal"
-        cli::cli_alert_warning(
-          "Se detectó la columna {.col codigo_comuna}. Se asumirá el nivel {.val comunal}."
-        )
-      } else if ("codigo_region" %in% colnames(datos)) {
-        nivel <- "regional"
-        cli::cli_alert_warning(
-          "Se detectó la columna {.col codigo_region}. Se asumirá el nivel {.val regional}."
-        )
-      } else if ("pais" %in% colnames(datos) | "chile" %in% colnames(datos)) {
-        nivel <- "nacional"
-        cli::cli_alert_warning(
-          "Se asumirá el nivel {.val nacional}."
-        )
-      } else {
-        cli::cli_abort(
-          "No se pudo detectar el nivel de los datos. Especifica el argumento {.arg nivel} como 'regional', 'comunal' o 'nacional'."
-        )
-      }
-    } else if (is.vector(datos)) {
-      # si el texto no es convertible a número, no puede ser un código
-      puede_ser_codigo <- !is.character(datos) ||
-        !anyNA(suppressWarnings(as.numeric(datos)))
-
-      if (puede_ser_codigo && all(territorial::is_codigo_comuna(datos))) {
-        nivel <- "comunal"
-        cli::cli_alert_warning(
-          "Se detectó que los datos son códigos comunales. Se asumirá el nivel {.val comunal}."
-        )
-      } else if (is.character(datos) && all(territorial::is_nombre_comuna(datos))) {
-        nivel <- "comunal"
-        cli::cli_alert_warning(
-          "Se detectó que los datos son nombres de comunas. Se asumirá el nivel {.val comunal}."
-        )
-      } else if (puede_ser_codigo && all(territorial::is_codigo_region(datos))) {
-        nivel <- "regional"
-        cli::cli_alert_warning(
-          "Se detectó que los datos son códigos regionales Se asumirá el nivel {.val regional}."
-        )
-      } else if (is.character(datos) && all(territorial::is_nombre_region(datos))) {
-        nivel <- "regional"
-        cli::cli_alert_warning(
-          "Se detectó que los datos son nombres de regiones. Se asumirá el nivel {.val regional}."
-        )
-      } else {
-        cli::cli_abort(
-          "No se pudo detectar el nivel de los datos. Especifica el argumento {.arg nivel} como 'regional', 'comunal' o 'nacional'."
-        )
-      }
-    }
-  }
-
   # si no es válido, corregir
-  if (!nivel %in% c("regional", "comunal", "nacional")) {
+  if (!is.null(nivel) && !nivel %in% c("regional", "comunal", "nacional")) {
     nivel <- dplyr::case_when(
       tolower(nivel) %in% c("región", "region", "codigo_region") ~ "regional",
       tolower(nivel) %in% c("comuna", "codigo_comuna") ~ "comunal",
@@ -159,55 +104,50 @@ agregar_poblacion <- function(
     }
   }
 
+  # si no se especifica el nivel, intentar asumir
+  if (is.null(nivel)) {
+    if ("codigo_comuna" %in% colnames(datos)) {
+      nivel <- "comunal"
+      cli::cli_alert_warning(
+        "Se detectó la columna {.col codigo_comuna}. Se asumirá el nivel {.val comunal}."
+      )
+    } else if ("codigo_region" %in% colnames(datos)) {
+      nivel <- "regional"
+      cli::cli_alert_warning(
+        "Se detectó la columna {.col codigo_region}. Se asumirá el nivel {.val regional}."
+      )
+    } else if ("pais" %in% colnames(datos) | "chile" %in% colnames(datos)) {
+      nivel <- "nacional"
+      cli::cli_alert_warning(
+        "Se asumirá el nivel {.val nacional}."
+      )
+    } else {
+      cli::cli_abort(
+        "No se pudo detectar el nivel de los datos. Especifica el argumento {.arg nivel} como 'regional', 'comunal' o 'nacional'."
+      )
+    }
+  }
+
   # códigos ----
 
   # datos <- "Coyhaique"
-  # si los datos son vector, usarlo como código
-  if (is.vector(datos)) {
-    codigo <- datos
-
-    # si son caracter, convertir a comuna o región
-    # codigo <- "La Florida"
-    # codigo <- "Atacama"
-    if (is.character(codigo) && nivel != "nacional") {
-      # si es el nombre de una comuna, convertir y alertar
-      if (all(territorial::is_nombre_comuna(codigo))) {
-        nivel <- "comunal"
-        codigo <- territorial::as_codigo_comuna(codigo)
-        cli::cli_alert_info(
-          "Encontrado código comunal: {.val {codigo}}."
-        )
-      } else if (all(territorial::is_nombre_region(codigo))) {
-        nivel <- "regional"
-        codigo <- territorial::as_codigo_region(codigo)
-        cli::cli_alert_info(
-          "Encontrado código regional: {.val {codigo}}."
-        )
-      } else {
-        cli::cli_abort(
-          "No se pudo detectar el nivel de los datos. Especifica el argumento {.arg nivel} como 'regional', 'comunal' o 'nacional'."
-        )
-      }
+  # si los datos son dataframe, usar la columna correspondiente al nivel
+  if (nivel == "comunal") {
+    if (!"codigo_comuna" %in% colnames(datos)) {
+      cli::cli_abort(
+        "Los datos no tienen la columna {.col codigo_comuna}. No se puede agregar población a nivel comunal."
+      )
     }
-  } else if (is.data.frame(datos)) {
-    # si los datos son dataframe, usar la columna correspondiente al nivel
-    if (nivel == "comunal") {
-      if (!"codigo_comuna" %in% colnames(datos)) {
-        cli::cli_abort(
-          "Los datos no tienen la columna {.col codigo_comuna}. No se puede agregar población a nivel comunal."
-        )
-      }
-      codigo <- datos$codigo_comuna
-    } else if (nivel == "regional") {
-      if (!"codigo_region" %in% colnames(datos)) {
-        cli::cli_abort(
-          "Los datos no tienen la columna {.col codigo_region}. No se puede agregar población a nivel regional."
-        )
-      }
-      codigo <- datos$codigo_region
-    } else if (nivel == "nacional") {
-      codigo <- 0
+    codigo <- datos$codigo_comuna
+  } else if (nivel == "regional") {
+    if (!"codigo_region" %in% colnames(datos)) {
+      cli::cli_abort(
+        "Los datos no tienen la columna {.col codigo_region}. No se puede agregar población a nivel regional."
+      )
     }
+    codigo <- datos$codigo_region
+  } else if (nivel == "nacional") {
+    codigo <- 0
   }
 
   # TODO: si los códigos no son códigos, convertir o luego error
@@ -291,13 +231,6 @@ agregar_poblacion <- function(
     }
   }
 
-  # si es vector, sólo se puede pedir un año
-  if (is.vector(datos) & length(años) > 1) {
-    cli::cli_abort(
-      "Si los datos son un vector, sólo se puede especificar un año en el argumento {.arg años}."
-    )
-  }
-
   # revisar si se puden más años que los disponibles en datos
   if (is.data.frame(datos) & "año" %in% colnames(datos)) {
     if (length(años) > 1 & !all(años %in% datos$año)) {
@@ -345,9 +278,9 @@ agregar_poblacion <- function(
   # columnas para unir: código del nivel, y año si los datos lo tienen
   columna_codigo <- switch(
     nivel,
-    comunal = "codigo_comuna",
-    regional = "codigo_region",
-    nacional = NULL
+    "comunal" = "codigo_comuna",
+    "regional" = "codigo_region",
+    "nacional" = NULL
   )
   columnas_cruce <- c(columna_codigo, if ("año" %in% colnames(datos)) "año")
 
@@ -356,71 +289,31 @@ agregar_poblacion <- function(
     dplyr::ungroup() |>
     dplyr::select(dplyr::all_of(columnas_cruce), poblacion)
 
-  # si los datos son tabla
-  if (is.data.frame(datos)) {
-    if (length(columnas_cruce) > 0) {
-      cruce <- dplyr::left_join(datos, cruzar, by = columnas_cruce)
-    } else {
-      # nivel nacional sin año en los datos: una sola cifra para todas las filas
-      cruce <- dplyr::cross_join(datos, cruzar)
-    }
-
-    if (nrow(cruce) > nrow(datos)) {
-      cli::cli_abort(
-        "Se obtuvieron más filas en la base cruzada ({nrow(cruce)}) que en los datos originales ({nrow(datos)}). Revisa los años especificados."
-      )
-    }
-    # si los datos son vector
-  } else if (is.vector(datos)) {
-    if (nivel == "comunal") {
-      cruce <- cruzar$poblacion[match(
-        codigo,
-        cruzar$codigo_comuna
-      )]
-    } else if (nivel == "regional") {
-      cruce <- cruzar$poblacion[match(
-        codigo,
-        cruzar$codigo_region
-      )]
-    } else if (nivel == "nacional") {
-      # la misma cifra nacional para cada elemento del vector
-      cruce <- rep(cruzar$poblacion, length(datos))
-    }
+  # realizar cruce
+  if (length(columnas_cruce) > 0) {
+    cruce <- dplyr::left_join(datos, cruzar, by = columnas_cruce)
+  } else {
+    # nivel nacional sin año en los datos: una sola cifra para todas las filas
+    cruce <- dplyr::cross_join(datos, cruzar)
   }
 
-  # revisar resultado
-  if (is.data.frame(cruce)) {
-    # revisar mismas columnas + población
-    if (length(cruce) != length(datos) + 1) {
-      cli::cli_abort(
-        "Se obtuvieron más columnas en la base cruzada ({length(cruce)}) que en los datos originales ({length(datos)}). Revisa los años especificados."
-      )
-    }
-    # revisar mismas filas
-    if (nrow(cruce) != nrow(datos)) {
-      cli::cli_abort(
-        "Se obtuvieron más filas en la base cruzada ({nrow(cruce)}) que los datos originales ({nrow(datos)})."
-      )
-    }
-    if (all(is.na(cruce$poblacion))) {
-      cli::cli_abort(
-        "No se encontraron cifras de población para los códigos y años especificados. Revisa los argumentos {.arg nivel}, {.arg codigo} y {.arg años}."
-      )
-    }
-  } else if (is.vector(cruce)) {
-    # revisar NA
-    if (all(is.na(cruce))) {
-      cli::cli_abort(
-        "No se encontraron cifras de población. Revisa los argumentos {.arg nivel}, {.arg codigo} y {.arg años}."
-      )
-    }
-
-    # revisar mismo largo
-    if (length(cruce) != length(datos)) {
-      cli::cli_abort(
-        "Se obtuvieron más cifras ({length(cruce)}) que las entregadas ({length(datos)})."
-      )
-    }
+  ## revisar  ----
+  # revisar mismas columnas + población
+  if (length(cruce) != length(datos) + 1) {
+    cli::cli_abort(
+      "Se obtuvieron más columnas en la base cruzada ({length(cruce)}) que en los datos originales ({length(datos)}). Revisa los años especificados."
+    )
+  }
+  # revisar mismas filas
+  if (nrow(cruce) != nrow(datos)) {
+    cli::cli_abort(
+      "Se obtuvieron más filas en la base cruzada ({nrow(cruce)}) que los datos originales ({nrow(datos)})."
+    )
+  }
+  if (all(is.na(cruce$poblacion))) {
+    cli::cli_abort(
+      "No se encontraron cifras de población para los códigos y años especificados. Revisa los argumentos {.arg nivel}, {.arg codigo} y {.arg años}."
+    )
   }
 
   # cruce

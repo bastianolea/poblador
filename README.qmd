@@ -131,16 +131,15 @@ dplyr::tibble(país = "Chile") |>
 ```
 
 
-## Agregar población de vectores
+## Obtener población de vectores
 
 También se puede agregar 
 
 ```{r}
-agregar_poblacion("La Florida")
+obtener_poblacion("La Florida")
 ```
 
 ```{r}
-
-agregar_poblacion(13102) # Cerrillos
+obtener_poblacion(13102) # Cerrillos
 ```
 
