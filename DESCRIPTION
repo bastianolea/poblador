@@ -2,9 +2,12 @@ Package: poblador
 Title: Datos de población para Chile y utilidades relacionadas
 Version: 0.1.1
 Authors@R: 
-    person("Bastián", "Olea", , "bastianolea@gmail.com", role = c("aut", "cre"))
+    person("Bastián", "Olea Herrera", , "bastianolea@gmail.com", role = c("aut", "cre"),
+             comment = c(url = "https://bastianolea.rbind.io",
+                         ORCID = "0000-0001-6541-0367"))
 Description: Tablas de datos de población oficiales de Chile, junto a funciones para simplificar el uso de estos datos como complemento a otros conjuntos de datos, por ejemplo, para agregar población oficial a otras fuentes, calcular tasas de población, entre otros.
 License: GPL (>= 3)
+Language: es
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Imports: 
@@ -28,11 +31,13 @@ Suggests:
 Remotes:
     bastianolea/territorial
 Depends: 
-    R (>= 3.5)
+    R (>= 4.1.0)
 LazyData: true
 Config/Needs/website: quarto, rmarkdown
 Config/testthat/edition: 3
 URL: https://bastianolea.github.io/poblador/, https://github.com/bastianolea/poblador
 BugReports: https://github.com/bastianolea/poblador/issues
-VignetteBuilder: quarto
+VignetteBuilder: 
+    knitr,
+    quarto
 Config/roxygen2/version: 8.1.1
