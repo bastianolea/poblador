@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">poblador</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,8 +51,212 @@
 <div class="page-header"><h1 id="paquete-poblador">Paquete <code>{poblador}</code>
 <a class="anchor" aria-label="anchor" href="#paquete-poblador"></a>
 </h1></div>
-<p>Datos de población para Chile y utilidades relacionadas</p>
-<p>Este paquete ofrece tablas de datos de población oficiales de Chile, así como funciones para simplificar el uso de estos datos como complemento a otros conjuntos de datos, por ejemplo, para agregar población oficial a otras fuentes, calcular tasas de población, entre otros.</p>
+<p>Datos de población para Chile y funciones para agregar datos poblacionales fácilmente.</p>
+<p>Este paquete ofrece tablas de datos de población desde fuentes oficiales de Chile, así como funciones para simplificar el uso de estos datos como complemento a otros conjuntos de datos, por ejemplo, para agregar población oficial a una tabla de comunas o regiones, entre otros.</p>
+<p>El funcionamiento interno de este paquete depende bastante de <a href="https://bastianolea.github.io/territorial/" class="external-link">mi paquete <code>territorial</code></a>, que entrega herramientas para trabajar con datos qeu representan comunas y regiones de Chile.</p>
+<div class="section level2">
+<h2 id="instalación">Instalación<a class="anchor" aria-label="anchor" href="#instalaci%C3%B3n"></a>
+</h2>
+<p>Instala el paquete a R desde <a href="https://bastianolea.r-universe.dev/poblador" class="external-link">R-Universe</a>:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'poblador'</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'https://bastianolea.r-universe.dev'</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>También puedes instalar desde GitHub:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"bastianolea/poblador"</span><span class="op">)</span></span></code></pre></div>
+<p>Para que <a href="https://bastianolea.github.io/poblador/">poblador</a> funcione, necesitas tener instalado <a href="https://bastianolea.github.io/territorial" class="external-link">territorial</a>. Si no lo tienes, instálalo con:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"territorial"</span>, repos <span class="op">=</span> <span class="st">"https://bastianolea.r-universe.dev"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="datos-de-población">Datos de población<a class="anchor" aria-label="anchor" href="#datos-de-poblaci%C3%B3n"></a>
+</h2>
+<p>La función <code><a href="reference/datos.html">datos()</a></code> entrega una lista con todas las fuentes de datos disponibles en el paquete:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bastianolea.github.io/poblador/">poblador</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/datos.html">datos</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>Puedes usar estas fuentes de datos para consularlas, cruzarlas con otras tablas, o su uso principal, que es usarlas para alimentar a la función <code><a href="reference/agregar_poblacion.html">agregar_poblacion()</a></code>, como veremos a continuación.</p>
+</div>
+<div class="section level2">
+<h2 id="agregar-población-a-tus-datos">Agregar población a tus datos<a class="anchor" aria-label="anchor" href="#agregar-poblaci%C3%B3n-a-tus-datos"></a>
+</h2>
+<p>La función <code><a href="reference/agregar_poblacion.html">agregar_poblacion()</a></code> recibe una tabla de datos o <em>dataframe</em> y le agrega una columna <code>poblacion</code> con los datos oficiales de población.</p>
+<p>Primero creemos una tabla de datos de ejemplo:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">comunas</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html" class="external-link">tribble</a></span><span class="op">(</span></span>
+<span>  <span class="op">~</span><span class="va">nombre_comuna</span>, <span class="op">~</span><span class="va">codigo_comuna</span>,</span>
+<span>  <span class="st">"Iquique"</span>,       <span class="fl">1101</span>,</span>
+<span>  <span class="st">"Mejillones"</span>,    <span class="fl">2102</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">comunas</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># A tibble: 2 × 2</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  nombre_comuna codigo_comuna</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>                 <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="dv">1</span> Iquique                <span class="dv">1101</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="dv">2</span> Mejillones             <span class="dv">2102</span></span></code></pre></div>
+<p>Ahora agreguémosle la población:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bastianolea.github.io/poblador/">poblador</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">comunas</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/agregar_poblacion.html">agregar_poblacion</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="sc">!</span> Se detectó la columna <span class="st">`</span><span class="at">codigo_comuna</span><span class="st">`</span>. Se asumirá el nivel <span class="st">"comunal"</span>.</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="sc">!</span> Considerando datos para el año <span class="fu">actual</span> (<span class="dv">2026</span>). Cambiar con el argumento <span class="st">`</span><span class="at">años</span><span class="st">`</span>.</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>ℹ Agregando datos de población de nivel comunal del año <span class="dv">2026</span> desde la base <span class="st">`</span><span class="at">poblador::censo_poblacion_proyeccion()</span><span class="st">`</span>.</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co"># A tibble: 2 × 3</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>  nombre_comuna codigo_comuna poblacion</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>                 <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="dv">1</span> Iquique                <span class="dv">1101</span>    <span class="dv">234407</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="dv">2</span> Mejillones             <span class="dv">2102</span>     <span class="dv">16291</span></span></code></pre></div>
+<p>Así de simple! La tabla recibe una columna de población.</p>
+<p>Por defecto, la población se obtiene de las <a href="https://www.ine.gob.cl/estadisticas-por-tema/demografia-y-poblacion/estimaciones-y-proyecciones-de-poblacion" class="external-link">proyecciones oficiales del INE</a> (ver <code><a href="reference/censo_poblacion_proyeccion.html">poblador::censo_poblacion_proyeccion</a></code>).</p>
+<p>La función detectó automáticamente que se trataba de datos comunales, y puso el año actual por defecto.</p>
+<p>Puedes agregar datos de otro año, por ejemplo, de 2020:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">comunas</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/agregar_poblacion.html">agregar_poblacion</a></span><span class="op">(</span></span>
+<span>    nivel <span class="op">=</span> <span class="st">"comunal"</span>,</span>
+<span>    años <span class="op">=</span> <span class="fl">2020</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>ℹ Agregando datos de población de nivel comunal del año <span class="dv">2020</span> desde la base <span class="st">`</span><span class="at">poblador::censo_poblacion_proyeccion()</span><span class="st">`</span>.</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co"># A tibble: 2 × 3</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  nombre_comuna codigo_comuna poblacion</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>                 <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="dv">1</span> Iquique                <span class="dv">1101</span>    <span class="dv">223463</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="dv">2</span> Mejillones             <span class="dv">2102</span>     <span class="dv">14776</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="datos-regionales">Datos regionales<a class="anchor" aria-label="anchor" href="#datos-regionales"></a>
+</h3>
+<p>Ahora probemos con datos regionales. Creamos una tabla de muestra:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">regiones</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html" class="external-link">tribble</a></span><span class="op">(</span></span>
+<span>  <span class="op">~</span><span class="va">nombre_region</span>, <span class="op">~</span><span class="va">codigo_region</span>,</span>
+<span>  <span class="st">"Maule"</span>,         <span class="fl">7</span>,</span>
+<span>  <span class="st">"Ñuble"</span>,         <span class="fl">16</span>,</span>
+<span>  <span class="st">"Biobío"</span>,        <span class="fl">8</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">regiones</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># A tibble: 3 × 2</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  nombre_region codigo_region</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>                 <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="dv">1</span> Maule                     <span class="dv">7</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="dv">2</span> Ñuble                    <span class="dv">16</span></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="dv">3</span> Biobío                    <span class="dv">8</span></span></code></pre></div>
+<p>Y agregamos la población con <code><a href="reference/agregar_poblacion.html">agregar_poblacion()</a></code>:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">regiones</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/agregar_poblacion.html">agregar_poblacion</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="sc">!</span> Se detectó la columna <span class="st">`</span><span class="at">codigo_region</span><span class="st">`</span>. Se asumirá el nivel <span class="st">"regional"</span>.</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="sc">!</span> Considerando datos para el año <span class="fu">actual</span> (<span class="dv">2026</span>). Cambiar con el argumento <span class="st">`</span><span class="at">años</span><span class="st">`</span>.</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>ℹ Agregando datos de población de nivel regional del año <span class="dv">2026</span> desde la base <span class="st">`</span><span class="at">poblador::censo_poblacion_proyeccion()</span><span class="st">`</span>.</span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="co"># A tibble: 3 × 3</span></span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>  nombre_region codigo_region poblacion</span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>                 <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a><span class="dv">1</span> Maule                     <span class="dv">7</span>   <span class="dv">1189907</span></span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a><span class="dv">2</span> Ñuble                    <span class="dv">16</span>    <span class="dv">525925</span></span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a><span class="dv">3</span> Biobío                    <span class="dv">8</span>   <span class="dv">1694602</span></span></code></pre></div>
+<p>Nuevamente el nivel territorial se asume automático. Probemos agregando a las ergiones datos de un Censo oficial específico:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">regiones</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/agregar_poblacion.html">agregar_poblacion</a></span><span class="op">(</span></span>
+<span>    nivel <span class="op">=</span> <span class="st">"regional"</span>,</span>
+<span>    base <span class="op">=</span> <span class="va">censo_poblacion_2017</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="sc">!</span> Considerando el año más <span class="fu">reciente</span> (<span class="dv">2017</span>) para la base <span class="st">"censo_poblacion_2017"</span>.</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>ℹ Agregando datos de población de nivel regional del año <span class="dv">2017</span> desde la base <span class="st">`</span><span class="at">poblador::censo_poblacion_2017()</span><span class="st">`</span>.</span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a><span class="co"># A tibble: 3 × 3</span></span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>  nombre_region codigo_region poblacion</span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>                 <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a><span class="dv">1</span> Maule                     <span class="dv">7</span>   <span class="dv">1044950</span></span>
+<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a><span class="dv">2</span> Ñuble                    <span class="dv">16</span>    <span class="dv">480609</span></span>
+<span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a><span class="dv">3</span> Biobío                    <span class="dv">8</span>   <span class="dv">1556805</span></span></code></pre></div>
+<p>Al agregar datos regionales, el paquete toma los datos comunales y los suma para obtener los regionales.</p>
+</div>
+<div class="section level3">
+<h3 id="datos-nacionales">Datos nacionales<a class="anchor" aria-label="anchor" href="#datos-nacionales"></a>
+</h3>
+<p>También se pueden obtener las poblaciones nacionales: ¿Cuál será la población de Chile el año 2030?</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>país <span class="op">=</span> <span class="st">"Chile"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="reference/agregar_poblacion.html">agregar_poblacion</a></span><span class="op">(</span></span>
+<span>    nivel <span class="op">=</span> <span class="st">"nacional"</span>,</span>
+<span>    años <span class="op">=</span> <span class="fl">2030</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>ℹ Agregando datos de población de nivel nacional del año <span class="dv">2030</span> desde la base <span class="st">`</span><span class="at">poblador::censo_poblacion_proyeccion()</span><span class="st">`</span>.</span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="co"># A tibble: 1 × 2</span></span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>  país  poblacion</span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>     <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a><span class="dv">1</span> Chile  <span class="dv">20735289</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="obtener-población-de-territorios">Obtener población de territorios<a class="anchor" aria-label="anchor" href="#obtener-poblaci%C3%B3n-de-territorios"></a>
+</h2>
+<p>También se puede obtener la población de territorios específicos con <code><a href="reference/obtener_poblacion.html">obtener_poblacion()</a></code>. Funciona casi idéntico a <code><a href="reference/agregar_poblacion.html">agregar_poblacion()</a></code>, sólo qeu sobre vectores de datos como nombres o códigos territoriales.</p>
+<p>De esta manera podemos obtener fácilmente la población de una comuna, notando que la función infiere que se trata de una comuna:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/obtener_poblacion.html">obtener_poblacion</a></span><span class="op">(</span><span class="st">"La Florida"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="sc">!</span> Se detectó que los datos son nombres de comunas. Se asumirá el nivel <span class="st">"comunal"</span>.</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a><span class="sc">!</span> Considerando datos para el año <span class="fu">actual</span> (<span class="dv">2026</span>). Cambiar con el argumento <span class="st">`</span><span class="at">años</span><span class="st">`</span>.</span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>ℹ Agregando datos de población de nivel comunal del año <span class="dv">2026</span> desde la base <span class="st">`</span><span class="at">poblador::censo_poblacion_proyeccion()</span><span class="st">`</span>.</span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a>[<span class="dv">1</span>] <span class="dv">408195</span></span></code></pre></div>
+<p>También podemos entregar algunos <a href="https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html" class="external-link">códigos únicos territoriales</a>:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/obtener_poblacion.html">obtener_poblacion</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">13102</span>, <span class="fl">13201</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="sc">!</span> Se detectó que los datos son códigos comunales. Se asumirá el nivel <span class="st">"comunal"</span>.</span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a><span class="sc">!</span> Considerando datos para el año <span class="fu">actual</span> (<span class="dv">2026</span>). Cambiar con el argumento <span class="st">`</span><span class="at">años</span><span class="st">`</span>.</span>
+<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a>ℹ Agregando datos de población de nivel comunal del año <span class="dv">2026</span> desde la base <span class="st">`</span><span class="at">poblador::censo_poblacion_proyeccion()</span><span class="st">`</span>.</span>
+<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" tabindex="-1"></a>[<span class="dv">1</span>]  <span class="dv">90328</span> <span class="dv">674064</span></span></code></pre></div>
+<p>Solicitar la proyección de población de un año específico:</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/obtener_poblacion.html">obtener_poblacion</a></span><span class="op">(</span><span class="st">"La Florida"</span>, años <span class="op">=</span> <span class="fl">2002</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="sc">!</span> Se detectó que los datos son nombres de comunas. Se asumirá el nivel <span class="st">"comunal"</span>.</span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>ℹ Agregando datos de población de nivel comunal del año <span class="dv">2002</span> desde la base <span class="st">`</span><span class="at">poblador::censo_poblacion_proyeccion()</span><span class="st">`</span>.</span>
+<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>[<span class="dv">1</span>] <span class="dv">376943</span></span></code></pre></div>
+<p>Obtener la población de una comuna en el Censo 2017 y en el Censo 2024</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/obtener_poblacion.html">obtener_poblacion</a></span><span class="op">(</span></span>
+<span>  <span class="st">"La Florida"</span>, </span>
+<span>  base <span class="op">=</span> <span class="va">censo_poblacion_2017</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="sc">!</span> Se detectó que los datos son nombres de comunas. Se asumirá el nivel <span class="st">"comunal"</span>.</span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a><span class="sc">!</span> Considerando el año más <span class="fu">reciente</span> (<span class="dv">2017</span>) para la base <span class="st">"censo_poblacion_2017"</span>.</span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>ℹ Agregando datos de población de nivel comunal del año <span class="dv">2017</span> desde la base <span class="st">`</span><span class="at">poblador::censo_poblacion_2017()</span><span class="st">`</span>.</span>
+<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a>[<span class="dv">1</span>] <span class="dv">366916</span></span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/obtener_poblacion.html">obtener_poblacion</a></span><span class="op">(</span></span>
+<span>  <span class="st">"La Florida"</span>, </span>
+<span>  base <span class="op">=</span> <span class="va">censo_poblacion_2024</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="sc">!</span> Se detectó que los datos son nombres de comunas. Se asumirá el nivel <span class="st">"comunal"</span>.</span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a><span class="sc">!</span> Considerando el año más <span class="fu">reciente</span> (<span class="dv">2024</span>) para la base <span class="st">"censo_poblacion_2024"</span>.</span>
+<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a>ℹ Agregando datos de población de nivel comunal del año <span class="dv">2024</span> desde la base <span class="st">`</span><span class="at">poblador::censo_poblacion_2024()</span><span class="st">`</span>.</span>
+<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a>[<span class="dv">1</span>] <span class="dv">374836</span></span></code></pre></div>
+</div>
 </div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
@@ -83,7 +287,9 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Bastián Olea <br><small class="roles"> Author, maintainer </small>   </li>
+<li>
+<a href="https://bastianolea.rbind.io" class="external-link">Bastián Olea Herrera</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-6541-0367" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
 
@@ -94,7 +300,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Bastián Olea.</p>
+  <p>Developed by <a href="https://bastianolea.rbind.io" class="external-link">Bastián Olea Herrera</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

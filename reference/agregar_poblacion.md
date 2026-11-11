@@ -1,62 +1,123 @@
-# Agregar población a códigos comunales
+# Agregar población de Chile a datos existentes
 
-Esta función sirve para agregar cifras de población oficiales a comunas
-de Chile. Se debe entregar un código comunal válido, como los que
-aparecen en
-[territorial::territorios](https://bastianolea.github.io/territorial/reference/territorios.html).
-Se debe especificar la base de datos de población a utilizar entre
-varias: Proyecciones del Censo (base 2017), Censo 2024 (población
-censada). Se puede consultar la población para más de una comuna a la
-vez, para un mismo o distintos años.
+Agrega cifras de población oficiales a datos territoriales de Chile.
+Esta función opera sobre tablas de datos (*dataframes*) agregando una
+nueva columna llamada `poblacion`, y se espeta que estos datos tengan
+columnas `nombre_comuna`, `codigo_comuna`, `nombre_region` o
+`codigo_region`, como en la tabla
+[territorial::territorios](https://bastianolea.github.io/territorial/reference/territorios.html)
+del [paquete de R
+territorial](https://bastianolea.github.io/territorial). Para obtener la
+población de vectores, usar
+[`obtener_poblacion()`](https://bastianolea.github.io/poblador/reference/obtener_poblacion.md).
 
 ## Usage
 
 ``` r
-agregar_poblacion(codigo_comuna, año, base = "proyección")
+agregar_poblacion(
+  datos,
+  nivel = NULL,
+  años = NULL,
+  base = "censo_poblacion_proyeccion"
+)
 ```
 
 ## Arguments
 
-- año:
+- datos:
 
-  Opcional: si se va a elegir proyecciones de población, año de la
-  estimación.
+  Dataframe al que deseas agregar población
+
+- nivel:
+
+  Nivel del dato a agregar. Puede ser "regional", "comunal" o
+  "nacional", pero si no se indica, se infiere a partir de los datos.
+
+- años:
+
+  Año de la población, para las bases de población que cubren múltiples
+  años.
 
 - base:
 
   Base de datos de población a utilizar. Por defecto es
   [censo_poblacion_proyeccion](https://bastianolea.github.io/poblador/reference/censo_poblacion_proyeccion.md).
 
-- nivel:
-
-  Nivel del dato a agregar. Puede ser "regional", "comunal" o
-  "nacional".
-
-- codigo:
-
-  Códigos de las comunas o regiones para entregar su población. Ver
-  [territorial::territorios](https://bastianolea.github.io/territorial/reference/territorios.html).
-  Si es país, se omite.
-
 ## Value
 
-Vector con cifras de población para la/s comuna/s consultadas.
+Dataframe con la columna `poblacion`.
+
+## Details
+
+Se puede especificar la base de datos de a utilizar entre las que ofrece
+este paquete (revísalas con
+[`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)),
+o una distinta que siga las mismas convenciones.
+
+## See also
+
+[`obtener_poblacion()`](https://bastianolea.github.io/poblador/reference/obtener_poblacion.md)
+para obtener poblaciones de vectores con códigos o nombres de unidades
+territoriales.
 
 ## Examples
 
 ``` r
-# varios años para una comuna
-agregar_poblacion(codigo_comuna = 1101, año = 2020:2026)
-#> Error in is_codigo_comuna(codigo_comuna): could not find function "is_codigo_comuna"
+# tabla de datos con un par de comunas: el nivel comunal se detecta
+# desde la columna `codigo_comuna`
+comunas <- territorial::territorios |>
+  dplyr::filter(codigo_comuna %in% c(1101, 2102)) |>
+  dplyr::select(nombre_comuna, codigo_comuna)
 
-# varias comunas para un año
-agregar_poblacion(codigo_comuna = c(1101, 1107, 1401, 1402, 1403), año = 2026)
-#> Error in is_codigo_comuna(codigo_comuna): could not find function "is_codigo_comuna"
+comunas |>
+  agregar_poblacion(años = 2023)
+#> ! Se detectó la columna `codigo_comuna`. Se asumirá el nivel "comunal".
+#> ℹ Agregando datos de población de nivel comunal del año 2023 desde la base `poblador::censo_poblacion_proyeccion()`.
+#> # A tibble: 2 × 3
+#>   nombre_comuna codigo_comuna poblacion
+#>   <chr>                 <dbl>     <dbl>
+#> 1 Iquique                1101    230595
+#> 2 Mejillones             2102     15659
 
-# crear variable población para una tabla de datos
-territorial::territorios |>
-  dplyr::mutate(poblacion = agregar_poblacion(codigo_comuna, 2026))
-#> Error in dplyr::mutate(territorial::territorios, poblacion = agregar_poblacion(codigo_comuna,     2026)): ℹ In argument: `poblacion = agregar_poblacion(codigo_comuna, 2026)`.
-#> Caused by error in `is_codigo_comuna()`:
-#> ! could not find function "is_codigo_comuna"
+# especificar el nivel y usar otra base de datos
+comunas |>
+  agregar_poblacion(nivel = "comunal", base = censo_poblacion_2017)
+#> ! Considerando el año más reciente (2017) para la base "censo_poblacion_2017".
+#> ℹ Agregando datos de población de nivel comunal del año 2017 desde la base `poblador::censo_poblacion_2017()`.
+#> # A tibble: 2 × 3
+#>   nombre_comuna codigo_comuna poblacion
+#>   <chr>                 <dbl>     <dbl>
+#> 1 Iquique                1101    191468
+#> 2 Mejillones             2102     13467
+
+# tabla de datos con un par de regiones: el nivel regional se detecta
+# desde la columna `codigo_region`
+regiones <- territorial::territorios |>
+  dplyr::filter(codigo_region %in% c(1, 2)) |>
+  dplyr::distinct(nombre_region, codigo_region)
+
+regiones |>
+  agregar_poblacion(años = 2023)
+#> ! Se detectó la columna `codigo_region`. Se asumirá el nivel "regional".
+#> ℹ Agregando datos de población de nivel regional del año 2023 desde la base `poblador::censo_poblacion_proyeccion()`.
+#> # A tibble: 2 × 3
+#>   nombre_region codigo_region poblacion
+#>   <chr>                 <dbl>     <dbl>
+#> 1 Tarapacá                  1    401588
+#> 2 Antofagasta               2    714142
+
+# vector de códigos: devuelve un vector con las cifras de población
+c(1101, 2102) |>
+  agregar_poblacion(nivel = "comunal", años = 2023)
+#> Error in agregar_poblacion(c(1101, 2102), nivel = "comunal", años = 2023): Esta función se aplica a tablas de datos. Usa
+#> `poblador::obtener_poblacion()` para vectores de datos.
+
+# crear una variable de población dentro de una tabla
+comunas |>
+  dplyr::mutate(poblacion = agregar_poblacion(codigo_comuna, años = 2023))
+#> Error in dplyr::mutate(comunas, poblacion = agregar_poblacion(codigo_comuna,     años = 2023)): ℹ In argument: `poblacion = agregar_poblacion(codigo_comuna, años =
+#>   2023)`.
+#> Caused by error in `agregar_poblacion()`:
+#> ! Esta función se aplica a tablas de datos. Usa
+#>   `poblador::obtener_poblacion()` para vectores de datos.
 ```

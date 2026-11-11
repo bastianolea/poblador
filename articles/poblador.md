@@ -6,6 +6,8 @@ library(poblador)
 library(dplyr)
 ```
 
+*En construcción*
+
 El paquete incluye tablas de datos de los últimos censos de Chile:
 
 ``` r
