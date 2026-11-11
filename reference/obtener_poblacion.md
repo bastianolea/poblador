@@ -40,6 +40,9 @@ obtener_poblacion(
 
   Base de datos de población a utilizar. Por defecto es
   [censo_poblacion_proyeccion](https://bastianolea.github.io/poblador/reference/censo_poblacion_proyeccion.md).
+  Ver
+  [`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
+  para una lista de fuentes de datos posibles.
 
 ## Value
 
@@ -55,7 +58,9 @@ o una distinta que siga las mismas convenciones.
 ## See also
 
 [`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md)
-para agregar una columna de población sobre dataframes.
+para agregar una columna de población sobre dataframes. Ver
+[`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
+para una lista de fuentes de datos posibles.
 
 ## Examples
 
@@ -68,9 +73,27 @@ obtener_poblacion(c(1101, 2102))
 
 obtener_poblacion("La Florida", años = 2023)
 #> ! Se detectó que los datos son nombres de comunas. Se asumirá el nivel "comunal".
-#> Error in territorial::as_codigo_comuna(datos): object 'territorios' not found
+#> ℹ Agregando datos de población de nivel comunal del año 2023 desde la base `poblador::censo_poblacion_proyeccion()`.
+#> [1] 406796
 
 obtener_poblacion("La Florida", base = censo_poblacion_2017)
 #> ! Se detectó que los datos son nombres de comunas. Se asumirá el nivel "comunal".
-#> Error in territorial::as_codigo_comuna(datos): object 'territorios' not found
+#> ! Considerando el año más reciente (2017) para la base "censo_poblacion_2017".
+#> ℹ Agregando datos de población de nivel comunal del año 2017 desde la base `poblador::censo_poblacion_2017()`.
+#> [1] 366916
+
+# crear una variable de población dentro de una tabla
+comunas <- territorial::territorios |>
+  dplyr::filter(codigo_comuna %in% c(1101, 2102)) |>
+  dplyr::select(nombre_comuna, codigo_comuna)
+
+comunas |>
+  dplyr::mutate(poblacion = obtener_poblacion(codigo_comuna, años = 2023))
+#> ! Se detectó que los datos son códigos comunales. Se asumirá el nivel "comunal".
+#> ℹ Agregando datos de población de nivel comunal del año 2023 desde la base `poblador::censo_poblacion_proyeccion()`.
+#> # A tibble: 2 × 3
+#>   nombre_comuna codigo_comuna poblacion
+#>   <chr>                 <dbl>     <dbl>
+#> 1 Iquique                1101    230595
+#> 2 Mejillones             2102     15659
 ```

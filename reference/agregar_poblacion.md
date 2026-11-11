@@ -42,10 +42,9 @@ agregar_poblacion(
 
   Base de datos de población a utilizar. Por defecto es
   [censo_poblacion_proyeccion](https://bastianolea.github.io/poblador/reference/censo_poblacion_proyeccion.md).
-
-## Value
-
-Dataframe con la columna `poblacion`.
+  Ver
+  [`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
+  para una lista de fuentes de datos posibles.
 
 ## Details
 
@@ -58,7 +57,9 @@ o una distinta que siga las mismas convenciones.
 
 [`obtener_poblacion()`](https://bastianolea.github.io/poblador/reference/obtener_poblacion.md)
 para obtener poblaciones de vectores con códigos o nombres de unidades
-territoriales.
+territoriales. Ver
+[`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
+para una lista de fuentes de datos posibles.
 
 ## Examples
 
@@ -105,19 +106,4 @@ regiones |>
 #>   <chr>                 <dbl>     <dbl>
 #> 1 Tarapacá                  1    401588
 #> 2 Antofagasta               2    714142
-
-# vector de códigos: devuelve un vector con las cifras de población
-c(1101, 2102) |>
-  agregar_poblacion(nivel = "comunal", años = 2023)
-#> Error in agregar_poblacion(c(1101, 2102), nivel = "comunal", años = 2023): Esta función se aplica a tablas de datos. Usa
-#> `poblador::obtener_poblacion()` para vectores de datos.
-
-# crear una variable de población dentro de una tabla
-comunas |>
-  dplyr::mutate(poblacion = agregar_poblacion(codigo_comuna, años = 2023))
-#> Error in dplyr::mutate(comunas, poblacion = agregar_poblacion(codigo_comuna,     años = 2023)): ℹ In argument: `poblacion = agregar_poblacion(codigo_comuna, años =
-#>   2023)`.
-#> Caused by error in `agregar_poblacion()`:
-#> ! Esta función se aplica a tablas de datos. Usa
-#>   `poblador::obtener_poblacion()` para vectores de datos.
 ```
