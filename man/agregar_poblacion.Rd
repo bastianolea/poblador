@@ -2,24 +2,32 @@
 % Please edit documentation in R/agregar_poblacion.R
 \name{agregar_poblacion}
 \alias{agregar_poblacion}
-\title{Agregar población a códigos comunales}
+\title{Agregar población de Chile a datos existentes}
 \usage{
-agregar_poblacion(codigo_comuna, año, base = "proyección")
+agregar_poblacion(
+  datos,
+  nivel,
+  codigo = NULL,
+  años = NULL,
+  base = "censo_poblacion_proyeccion"
+)
 }
 \arguments{
-\item{año}{Opcional: si se va a elegir proyecciones de población, año de la estimación.}
-
-\item{base}{Base de datos de población a utilizar. Por defecto es \link{censo_poblacion_proyeccion}.}
+\item{datos}{Dataframe o vector al que deseas agregar población}
 
 \item{nivel}{Nivel del dato a agregar. Puede ser "regional", "comunal" o "nacional".}
 
 \item{codigo}{Códigos de las comunas o regiones para entregar su población. Ver \link[territorial:territorios]{territorial::territorios}. Si es país, se omite.}
+
+\item{años}{Opcional: si se va a elegir proyecciones de población, año de la estimación.}
+
+\item{base}{Base de datos de población a utilizar. Por defecto es \link{censo_poblacion_proyeccion}.}
 }
 \value{
 Vector con cifras de población para la/s comuna/s consultadas.
 }
 \description{
-Esta función sirve para agregar cifras de población oficiales a comunas de Chile. Se debe entregar un código comunal válido, como los que aparecen en \link[territorial:territorios]{territorial::territorios}. Se debe especificar la base de datos de población a utilizar entre varias: Proyecciones del Censo (base 2017), Censo 2024 (población censada). Se puede consultar la población para más de una comuna a la vez, para un mismo o distintos años.
+Agrega cifras de población oficiales a datos territoriales de Chile. Esta función opera tanto sobre tablas de datos (\emph{dataframes}) o vectores de datos. En ambos casos, se esperan Códigos Únicos Territoriales válidos, como los que aparecen en \link[territorial:territorios]{territorial::territorios}. Para conocer más sobre estos códigos, revisa la \href{https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html}{viñeta sobre códigos únicos territoriales}. Se debe especificar la base de datos de población a utilizar entre varias: Proyecciones del Censo (base 2017), Censo 2024 (población censada). Se puede consultar la población para más de una comuna a la vez, para un mismo o distintos años.
 }
 \examples{
 # varios años para una comuna
