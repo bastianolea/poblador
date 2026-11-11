@@ -1,8 +1,8 @@
 #' Agregar población de Chile a datos existentes
 #'
-#' Agrega cifras de población oficiales a datos territoriales de Chile. Esta función opera tanto sobre tablas de datos (_dataframes_) o vectores de datos. En ambos casos, se esperan Códigos Únicos Territoriales válidos, como los que aparecen en [territorial::territorios]. Para conocer más sobre estos códigos, revisa la [viñeta sobre códigos únicos territoriales](https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html).
+#' Agrega cifras de población oficiales a datos territoriales de Chile. Esta función opera sobre tablas de datos (_dataframes_) agregando una nueva columna llamada `poblacion`. En ambos casos, se esperan Códigos Únicos Territoriales válidos, como los que aparecen en [territorial::territorios]. Para conocer más sobre estos códigos, revisa la [viñeta sobre códigos únicos territoriales](https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html).
 #'
-#'  Para agregar población, se debe especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con [poblador::datos()].
+#' Se puede especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con [poblador::datos()]), o una distinta que siga las mismas convenciones.
 #'
 #' @param datos Dataframe o vector al que deseas agregar población
 #' @param nivel Nivel del dato a agregar. Puede ser "regional", "comunal" o "nacional".
@@ -10,7 +10,8 @@
 #' @param años Opcional: si se va a elegir proyecciones de población, año de la estimación.
 #' @param base Base de datos de población a utilizar. Por defecto es [poblador::censo_poblacion_proyeccion].
 #'
-#' @returns Dataframe con la columna `poblacion`, o vector de las cifras de población correspondientes.
+#' @seealso [poblador::obtener_poblacion()] para obtener poblaciones de vectores con códigos o nombres de unidades territoriales.
+#' @returns Dataframe con la columna `poblacion`.
 #' @export
 #'
 #' @examples
@@ -88,16 +89,26 @@ agregar_poblacion <- function(
   }
 
   # niveles ----
+  if (
+    !is.null(nivel) &&
+      (!is.character(nivel) || length(nivel) != 1 || is.na(nivel))
+  ) {
+    cli::cli_abort(
+      "El argumento {.arg nivel} debe ser un texto: 'regional', 'comunal' o 'nacional'."
+    )
+  }
+
   # si no es válido, corregir
   if (!is.null(nivel) && !nivel %in% c("regional", "comunal", "nacional")) {
     nivel <- dplyr::case_when(
+      tolower(nivel) %in% c("regional", "comunal", "nacional") ~ tolower(nivel),
       tolower(nivel) %in% c("región", "region", "codigo_region") ~ "regional",
       tolower(nivel) %in% c("comuna", "codigo_comuna") ~ "comunal",
       tolower(nivel) %in% c("pais", "país", "chile") ~ "nacional"
     )
 
     # error si no coincide
-    if (!nivel %in% c("regional", "comunal", "nacional")) {
+    if (is.na(nivel)) {
       cli::cli_abort(
         "El nivel especificado no es válido. Debe ser 'regional', 'comunal' o 'nacional'."
       )
@@ -150,7 +161,12 @@ agregar_poblacion <- function(
     codigo <- 0
   }
 
-  # TODO: si los códigos no son códigos, convertir o luego error
+  # los códigos deben ser numéricos para poder cruzarse con la base
+  if (nivel != "nacional" && !is.numeric(codigo)) {
+    cli::cli_abort(
+      "La columna de códigos del nivel {nivel} debe ser numérica, pero es de clase {.cls {class(codigo)[1]}}."
+    )
+  }
 
   # si es comunal o regional, revisar si son válidos
   if (nivel == "comunal") {
@@ -183,12 +199,12 @@ agregar_poblacion <- function(
     pob <- base
     nombre_base <- deparse(substitute(base))
   } else if (is.character(base)) {
-    pob <- get(base) # obtener desde el paquete
+    pob <- tryCatch(get(base), error = function(e) NULL) # obtener desde el paquete
     nombre_base <- as.character(base)
     # si con get no se obtiene, error
     if (!is.data.frame(pob) | length(pob) == 0) {
       cli::cli_abort(
-        "El argumento {.arg base} debe ser un dataframe o el nombre de un dataframe válido."
+        "El argumento {.arg base} debe ser un dataframe o el nombre de un dataframe válido. No se encontró la base {.val {base}}."
       )
     }
   }
@@ -206,7 +222,12 @@ agregar_poblacion <- function(
   # si no se especifica año, usar el año más reciente de la base
   # si se especifica y no está, error
   if (is.null(años)) {
-    if (nombre_base == "censo_poblacion_proyeccion") {
+    if ("año" %in% colnames(datos)) {
+      años <- sort(unique(datos$año))
+      cli::cli_alert_warning(
+        "Considerando los años presentes en la columna {.col año} de los datos."
+      )
+    } else if (nombre_base == "censo_poblacion_proyeccion") {
       años <- as.integer(format(Sys.Date(), "%Y"))
       cli::cli_alert_warning(
         "Considerando datos para el año actual ({años}). Cambiar con el argumento {.arg años}."
@@ -217,7 +238,9 @@ agregar_poblacion <- function(
         "Considerando el año más reciente ({años}) para la base {.val {nombre_base}}."
       )
     }
-  } else {
+  }
+
+  {
     if (!all(años %in% pob$año)) {
       texto_años <- ifelse(
         dplyr::n_distinct(pob$año) > 1,
@@ -310,7 +333,7 @@ agregar_poblacion <- function(
       "Se obtuvieron más filas en la base cruzada ({nrow(cruce)}) que los datos originales ({nrow(datos)})."
     )
   }
-  if (all(is.na(cruce$poblacion))) {
+  if (nrow(cruce) > 0 && all(is.na(cruce$poblacion))) {
     cli::cli_abort(
       "No se encontraron cifras de población para los códigos y años especificados. Revisa los argumentos {.arg nivel}, {.arg codigo} y {.arg años}."
     )

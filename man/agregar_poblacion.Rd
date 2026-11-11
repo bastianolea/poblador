@@ -7,7 +7,6 @@
 agregar_poblacion(
   datos,
   nivel = NULL,
-  codigo = NULL,
   años = NULL,
   base = "censo_poblacion_proyeccion"
 )
@@ -17,20 +16,20 @@ agregar_poblacion(
 
 \item{nivel}{Nivel del dato a agregar. Puede ser "regional", "comunal" o "nacional".}
 
-\item{codigo}{Códigos de las comunas o regiones para entregar su población. Ver \link[territorial:territorios]{territorial::territorios}. Si es país, se omite.}
-
 \item{años}{Opcional: si se va a elegir proyecciones de población, año de la estimación.}
 
 \item{base}{Base de datos de población a utilizar. Por defecto es \link{censo_poblacion_proyeccion}.}
+
+\item{codigo}{Códigos de las comunas o regiones para entregar su población. Ver \link[territorial:territorios]{territorial::territorios}. Si es país, se omite.}
 }
 \value{
-Dataframe con la columna \code{poblacion}, o vector de las cifras de población correspondientes.
+Dataframe con la columna \code{poblacion}.
 }
 \description{
-Agrega cifras de población oficiales a datos territoriales de Chile. Esta función opera tanto sobre tablas de datos (\emph{dataframes}) o vectores de datos. En ambos casos, se esperan Códigos Únicos Territoriales válidos, como los que aparecen en \link[territorial:territorios]{territorial::territorios}. Para conocer más sobre estos códigos, revisa la \href{https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html}{viñeta sobre códigos únicos territoriales}.
+Agrega cifras de población oficiales a datos territoriales de Chile. Esta función opera sobre tablas de datos (\emph{dataframes}) agregando una nueva columna llamada \code{poblacion}. En ambos casos, se esperan Códigos Únicos Territoriales válidos, como los que aparecen en \link[territorial:territorios]{territorial::territorios}. Para conocer más sobre estos códigos, revisa la \href{https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html}{viñeta sobre códigos únicos territoriales}.
 }
 \details{
-Para agregar población, se debe especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con \code{\link[=datos]{datos()}}.
+Se puede especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con \code{\link[=datos]{datos()}}), o una distinta que siga las mismas convenciones.
 }
 \examples{
 # tabla de datos con un par de comunas: el nivel comunal se detecta
@@ -63,4 +62,7 @@ c(1101, 2102) |>
 comunas |>
   dplyr::mutate(poblacion = agregar_poblacion(codigo_comuna, años = 2023))
 
+}
+\seealso{
+\code{\link[=obtener_poblacion]{obtener_poblacion()}} para obtener poblaciones de vectores con códigos o nombres de unidades territoriales.
 }

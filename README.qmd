@@ -127,13 +127,13 @@ También se pueden obtener las poblaciones nacionales: ¿Cuál será la poblaci�
 dplyr::tibble(país = "Chile") |> 
   agregar_poblacion(
     nivel = "nacional",
-    año = 2030)
+    años = 2030)
 ```
 
 
 ## Obtener población de vectores
 
-También se puede agregar 
+También se puede obtener la población 
 
 ```{r}
 obtener_poblacion("La Florida")
@@ -141,5 +141,15 @@ obtener_poblacion("La Florida")
 
 ```{r}
 obtener_poblacion(13102) # Cerrillos
+```
+
+```{r}
+obtener_poblacion("La Florida", años = 2002)
+```
+
+```{r}
+obtener_poblacion(
+  "La Florida", 
+  base = censo_poblacion_2017)
 ```
 

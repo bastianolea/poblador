@@ -238,3 +238,155 @@ describe("obtener_poblacion() con nombres de territorios", {
     )
   })
 })
+
+describe("obtener_poblacion() validación de entrada", {
+  it("falla si los datos son un dataframe", {
+    expect_error(
+      obtener_poblacion(data.frame(codigo_comuna = 1101)),
+      "se aplica a vectores"
+    )
+  })
+
+  it("falla si no se encuentra ninguna cifra de población", {
+    expect_error(
+      suppressWarnings(suppressMessages(
+        obtener_poblacion(c(99999, 88888), nivel = "comunal", años = 2023)
+      )),
+      "No se encontraron cifras"
+    )
+  })
+
+  it("falla con un vector vacío", {
+    expect_error(
+      suppressMessages(
+        obtener_poblacion(numeric(0), nivel = "comunal", años = 2023)
+      ),
+      "No se encontraron cifras"
+    )
+  })
+
+  it("falla si el nivel no se puede detectar por ambigüedad de nombres", {
+    expect_error(
+      obtener_poblacion("Coquimbo", años = 2023),
+      "ambigüedad"
+    )
+  })
+})
+
+describe("obtener_poblacion() nivel regional", {
+  it("suma las comunas de cada región", {
+    esperado <- censo_poblacion_proyeccion |>
+      dplyr::filter(año == 2023, codigo_region %in% c(2, 1)) |>
+      dplyr::summarize(poblacion = sum(poblacion), .by = codigo_region)
+
+    resultado <- suppressMessages(
+      obtener_poblacion(c(2, 1), nivel = "regional", años = 2023)
+    )
+
+    expect_equal(
+      resultado,
+      esperado$poblacion[match(c(2, 1), esperado$codigo_region)]
+    )
+  })
+
+  it("advierte y devuelve NA para códigos regionales inválidos", {
+    suppressMessages(
+      expect_warning(
+        resultado <- obtener_poblacion(c(1, 99), nivel = "regional", años = 2023),
+        "no son válidos"
+      )
+    )
+    expect_false(is.na(resultado[1]))
+    expect_true(is.na(resultado[2]))
+  })
+})
+
+describe("obtener_poblacion() nivel nacional", {
+  it("acepta sinónimos de nivel nacional", {
+    suppressMessages({
+      referencia <- obtener_poblacion(1:2, nivel = "nacional", años = 2023)
+
+      expect_equal(
+        obtener_poblacion(1:2, nivel = "chile", años = 2023),
+        referencia
+      )
+      expect_equal(
+        obtener_poblacion(1:2, nivel = "país", años = 2023),
+        referencia
+      )
+    })
+  })
+
+  it("devuelve una cifra por cada elemento del vector", {
+    resultado <- suppressMessages(
+      obtener_poblacion(1:5, nivel = "nacional", años = 2023)
+    )
+    expect_length(resultado, 5)
+  })
+})
+
+describe("obtener_poblacion() casos de borde en vectores", {
+  it("conserva el orden y repite cifras con códigos duplicados", {
+    resultado <- suppressMessages(
+      obtener_poblacion(c(1101, 2102, 1101), nivel = "comunal", años = 2023)
+    )
+    expect_length(resultado, 3)
+    expect_equal(resultado[1], resultado[3])
+  })
+
+  it("devuelve NA con advertencia para códigos faltantes", {
+    suppressMessages(
+      expect_warning(
+        resultado <- obtener_poblacion(
+          c(1101, NA),
+          nivel = "comunal",
+          años = 2023
+        ),
+        "no son válidos"
+      )
+    )
+    expect_true(is.na(resultado[2]))
+  })
+
+  it("falla si el año no existe en una base de un solo año", {
+    expect_error(
+      obtener_poblacion(
+        1101,
+        nivel = "comunal",
+        años = 2023,
+        base = "censo_poblacion_2017"
+      ),
+      "2017"
+    )
+  })
+})
+
+describe("obtener_poblacion() nombres con nivel explícito", {
+  it("resuelve nombres ambiguos según el nivel indicado", {
+    suppressMessages({
+      comuna <- obtener_poblacion("Coquimbo", nivel = "comunal", años = 2023)
+      region <- obtener_poblacion("Coquimbo", nivel = "regional", años = 2023)
+    })
+    expect_gt(region, comuna)
+  })
+
+  it("acepta varios nombres de comunas", {
+    resultado <- suppressWarnings(suppressMessages(
+      obtener_poblacion(c("La Florida", "Lampa"), años = 2023)
+    ))
+    esperado <- suppressMessages(
+      obtener_poblacion(c(13110, 13302), nivel = "comunal", años = 2023)
+    )
+    expect_equal(resultado, esperado)
+  })
+
+  it("acepta varios nombres de regiones", {
+    resultado <- suppressWarnings(suppressMessages(
+      obtener_poblacion(c("Arica y Parinacota", "Los Ríos"), años = 2023)
+    ))
+    esperado <- suppressMessages(
+      obtener_poblacion(c(15, 14), nivel = "regional", años = 2023)
+    )
+    expect_equal(resultado, esperado)
+  })
+})

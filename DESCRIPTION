@@ -14,7 +14,8 @@ Imports:
     dplyr,
     cli,
     purrr,
-    territorial
+    territorial,
+    glue
 Additional_repositories: https://bastianolea.r-universe.dev
 Suggests: 
     arrow,

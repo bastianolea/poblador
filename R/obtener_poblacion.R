@@ -1,7 +1,23 @@
+#' Obtener la población una unidad territorial
+#'
+#' A partir del código único territorial (ver [viñeta sobre códigos únicos territoriales](https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html)) de una unidad territorial (comuna, región o país) de Chile, obtiene la población correspondiente en un año específico. Esta función opera sobre vectores, retornando un vector con las cifras de población correspondientes en el mismo orden que fueron entregadas.
+#'
+#' Se puede especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con [poblador::datos()]), o una distinta que siga las mismas convenciones.
+#'
+#' @seealso [agregar_poblacion()] para agregar una columna de población sobre dataframes.
+#' @returns Vector de las cifras de población correspondientes.
+#' @export
+#'
+#' @examples
+#' obtener_poblacion(c(1101, 2102))
+#'
+#' obtener_poblacion("La Florida", años = 2023)
+#'
+#' obtener_poblacion("La Florida", base = censo_poblacion_2017)
+
 obtener_poblacion <- function(
   datos,
   nivel = NULL,
-  codigo = NULL,
   años = NULL,
   base = "censo_poblacion_proyeccion"
 ) {
@@ -59,30 +75,30 @@ obtener_poblacion <- function(
     } |>
       suppressWarnings()
 
-    if (es_nombre_comuna & !es_nombre_region) {
+    if (all(es_nombre_comuna & !es_nombre_region)) {
       # es nombre comuna
       nivel <- "comunal"
       cli::cli_alert_warning(
         "Se detectó que los datos son nombres de comunas. Se asumirá el nivel {.val comunal}."
       )
-    } else if (es_nombre_comuna & es_nombre_region) {
+    } else if (all(es_nombre_comuna & es_nombre_region)) {
       # indefinido
       cli::cli_abort(
         "No se pudo detectar el nivel de los datos (ambigüedad en nombres de comuna/región). Especifica el argumento {.arg nivel} como 'regional', 'comunal' o 'nacional'."
       )
-    } else if (es_nombre_region) {
+    } else if (all(es_nombre_region)) {
       # es nombre region
       nivel <- "regional"
       cli::cli_alert_warning(
         "Se detectó que los datos son nombres de regiones. Se asumirá el nivel {.val regional}."
       )
-    } else if (es_codigo_comuna) {
+    } else if (all(es_codigo_comuna)) {
       # es codigo comuna
       nivel <- "comunal"
       cli::cli_alert_warning(
         "Se detectó que los datos son códigos comunales. Se asumirá el nivel {.val comunal}."
       )
-    } else if (es_codigo_region) {
+    } else if (all(es_codigo_region)) {
       # es codigo region
       nivel <- "regional"
       cli::cli_alert_warning(
@@ -110,15 +126,16 @@ obtener_poblacion <- function(
   } else if (es_numerico) {
     # si es numérico, validar
     if (nivel == "comunal") {
-      if (!territorial::is_codigo_comuna(datos)) {
-        cli::cli_abort(
-          "Los datos no son códigos comunales válidos. Revisa los datos: usa {.fn territorial::validar_comunas} o {.fn territorial::limpiar_comunas}."
+      # los códigos inválidos no abortan: retornan NA y se advierte
+      if (!all(territorial::is_codigo_comuna(datos))) {
+        cli::cli_warn(
+          "Algunos códigos comunales no son válidos y retornarán {.val NA}. Revisa los datos: usa {.fn territorial::validar_comunas} o {.fn territorial::limpiar_comunas}."
         )
       }
     } else if (nivel == "regional") {
-      if (!territorial::as_codigo_region(datos)) {
-        cli::cli_abort(
-          "Los datos no son códigos regionales válidos. Revisa los datos: usa {.fn territorial::validar_regiones} o {.fn territorial::limpiar_regiones}."
+      if (!all(territorial::is_codigo_region(datos))) {
+        cli::cli_warn(
+          "Algunos códigos regionales no son válidos y retornarán {.val NA}. Revisa los datos: usa {.fn territorial::validar_regiones} o {.fn territorial::limpiar_regiones}."
         )
       }
     }
