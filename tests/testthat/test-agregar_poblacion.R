@@ -4,7 +4,9 @@ describe("agregar_poblacion() con dataframes", {
       dplyr::distinct(codigo_comuna, nombre_comuna) |>
       dplyr::filter(codigo_comuna %in% c(1101, 2102))
 
-    resultado <- agregar_poblacion(datos, nivel = "comunal", años = 2023)
+    resultado <- suppressMessages(
+      agregar_poblacion(datos, nivel = "comunal", años = 2023)
+    )
 
     esperado <- censo_poblacion_proyeccion |>
       dplyr::filter(codigo_comuna %in% c(1101, 2102), año == 2023)
@@ -17,9 +19,11 @@ describe("agregar_poblacion() con dataframes", {
   it("detecta el nivel comunal desde la columna codigo_comuna y avisa", {
     datos <- data.frame(codigo_comuna = c(1101, 2102))
 
-    expect_message(
-      resultado <- agregar_poblacion(datos, años = 2023),
-      "comunal"
+    suppressMessages(
+      expect_message(
+        resultado <- agregar_poblacion(datos, años = 2023),
+        "comunal"
+      )
     )
     expect_equal(nrow(resultado), 2)
     expect_false(anyNA(resultado$poblacion))
@@ -37,13 +41,36 @@ describe("agregar_poblacion() con dataframes", {
     expect_equal(resultado$poblacion, esperado$poblacion)
   })
 
+  it("conserva columnas adicionales que no están en la base", {
+    datos <- data.frame(codigo_region = c(1, 2), valor = c("a", "b"))
+
+    resultado <- suppressMessages(agregar_poblacion(datos, años = 2023))
+
+    expect_named(resultado, c("codigo_region", "valor", "poblacion"))
+    expect_equal(resultado$valor, c("a", "b"))
+    expect_false(anyNA(resultado$poblacion))
+  })
+
+  it("falla si los datos ya tienen una columna poblacion", {
+    datos <- data.frame(codigo_comuna = 1101, poblacion = 1)
+
+    expect_error(
+      suppressMessages(
+        agregar_poblacion(datos, nivel = "comunal", años = 2023)
+      ),
+      "ya tienen una columna"
+    )
+  })
+
   it("agrega varios años cuando los datos tienen columna año", {
     datos <- data.frame(
       codigo_comuna = c(1101, 1101),
       año = c(2023, 2024)
     )
 
-    resultado <- agregar_poblacion(datos, nivel = "comunal", años = 2023:2024)
+    resultado <- suppressMessages(
+      agregar_poblacion(datos, nivel = "comunal", años = 2023:2024)
+    )
 
     expect_equal(nrow(resultado), 2)
     expect_equal(resultado$año, c(2023, 2024))
@@ -56,7 +83,9 @@ describe("agregar_poblacion() con dataframes", {
       año = c(2023, 2024)
     )
 
-    resultado <- agregar_poblacion(datos, nivel = "comunal", años = 2023)
+    resultado <- suppressMessages(
+      agregar_poblacion(datos, nivel = "comunal", años = 2023)
+    )
 
     expect_false(is.na(resultado$poblacion[1]))
     expect_true(is.na(resultado$poblacion[2]))
@@ -100,7 +129,9 @@ describe("agregar_poblacion() con dataframes", {
     datos <- data.frame(codigo_comuna = 9999)
 
     expect_error(
-      suppressWarnings(agregar_poblacion(datos, nivel = "comunal", años = 2023)),
+      suppressMessages(suppressWarnings(
+        agregar_poblacion(datos, nivel = "comunal", años = 2023)
+      )),
       "No se encontraron cifras"
     )
   })
@@ -110,7 +141,9 @@ describe("agregar_poblacion() con vectores", {
   it("devuelve un vector de población en el orden de los códigos", {
     codigos <- c(2102, 1101)
 
-    resultado <- agregar_poblacion(codigos, nivel = "comunal", años = 2023)
+    resultado <- suppressMessages(
+      agregar_poblacion(codigos, nivel = "comunal", años = 2023)
+    )
 
     esperado <- censo_poblacion_proyeccion |>
       dplyr::filter(año == 2023) |>
@@ -122,24 +155,32 @@ describe("agregar_poblacion() con vectores", {
   })
 
   it("detecta el nivel comunal o regional desde los códigos y avisa", {
-    expect_message(
-      comunal <- agregar_poblacion(c(1101, 2102), años = 2023),
-      "comunal"
-    )
-    expect_message(
-      regional <- agregar_poblacion(c(1, 2), años = 2023),
-      "regional"
-    )
-    expect_equal(
-      regional,
-      agregar_poblacion(c(1, 2), nivel = "regional", años = 2023)
-    )
+    suppressMessages({
+      expect_message(
+        comunal <- agregar_poblacion(c(1101, 2102), años = 2023),
+        "comunal"
+      )
+      expect_message(
+        regional <- agregar_poblacion(c(1, 2), años = 2023),
+        "regional"
+      )
+      expect_equal(
+        regional,
+        agregar_poblacion(c(1, 2), nivel = "regional", años = 2023)
+      )
+    })
   })
 
   it("advierte y devuelve NA para códigos inválidos", {
-    expect_warning(
-      resultado <- agregar_poblacion(c(1101, 9999), nivel = "comunal", años = 2023),
-      "no son válidos"
+    suppressMessages(
+      expect_warning(
+        resultado <- agregar_poblacion(
+          c(1101, 9999),
+          nivel = "comunal",
+          años = 2023
+        ),
+        "no son válidos"
+      )
     )
     expect_false(is.na(resultado[1]))
     expect_true(is.na(resultado[2]))
@@ -147,7 +188,9 @@ describe("agregar_poblacion() con vectores", {
 
   it("falla si se piden varios años", {
     expect_error(
-      agregar_poblacion(c(1101, 2102), nivel = "comunal", años = 2023:2024),
+      suppressMessages(
+        agregar_poblacion(c(1101, 2102), nivel = "comunal", años = 2023:2024)
+      ),
       "sólo se puede especificar un año"
     )
   })
@@ -163,14 +206,23 @@ describe("agregar_poblacion() con vectores", {
 describe("agregar_poblacion() argumento nivel", {
   it("normaliza sinónimos del nivel", {
     codigos <- c(1101, 2102)
-    referencia <- agregar_poblacion(codigos, nivel = "comunal", años = 2023)
 
-    expect_equal(agregar_poblacion(codigos, nivel = "comuna", años = 2023), referencia)
-    expect_equal(agregar_poblacion(codigos, nivel = "COMUNA", años = 2023), referencia)
-    expect_equal(
-      agregar_poblacion(c(1, 2), nivel = "región", años = 2023),
-      agregar_poblacion(c(1, 2), nivel = "regional", años = 2023)
-    )
+    suppressMessages({
+      referencia <- agregar_poblacion(codigos, nivel = "comunal", años = 2023)
+
+      expect_equal(
+        agregar_poblacion(codigos, nivel = "comuna", años = 2023),
+        referencia
+      )
+      expect_equal(
+        agregar_poblacion(codigos, nivel = "COMUNA", años = 2023),
+        referencia
+      )
+      expect_equal(
+        agregar_poblacion(c(1, 2), nivel = "región", años = 2023),
+        agregar_poblacion(c(1, 2), nivel = "regional", años = 2023)
+      )
+    })
   })
 
   it("falla con un nivel desconocido", {
@@ -185,15 +237,15 @@ describe("agregar_poblacion() argumento nivel", {
       dplyr::filter(censo_poblacion_proyeccion, año == 2023)$poblacion
     )
 
-    resultado_tabla <- agregar_poblacion(
-      data.frame(pais = "chile"),
-      nivel = "nacional",
-      años = 2023
+    resultado_tabla <- suppressMessages(
+      agregar_poblacion(
+        data.frame(pais = "chile"),
+        nivel = "nacional",
+        años = 2023
+      )
     )
-    resultado_vector <- agregar_poblacion(
-      c("a", "b"),
-      nivel = "nacional",
-      años = 2023
+    resultado_vector <- suppressMessages(
+      agregar_poblacion(c("a", "b"), nivel = "nacional", años = 2023)
     )
 
     expect_equal(resultado_tabla$poblacion, total_2023)
@@ -203,7 +255,9 @@ describe("agregar_poblacion() argumento nivel", {
   it("agrega población nacional por año si los datos tienen columna año", {
     datos <- data.frame(pais = "chile", año = c(2023, 2024))
 
-    resultado <- agregar_poblacion(datos, nivel = "nacional", años = 2023:2024)
+    resultado <- suppressMessages(
+      agregar_poblacion(datos, nivel = "nacional", años = 2023:2024)
+    )
 
     esperado <- censo_poblacion_proyeccion |>
       dplyr::filter(año %in% 2023:2024) |>
@@ -216,22 +270,26 @@ describe("agregar_poblacion() argumento nivel", {
 
 describe("agregar_poblacion() argumento años", {
   it("usa el año actual con la base de proyecciones", {
-    resultado <- agregar_poblacion(c(1101, 2102), nivel = "comunal")
+    suppressMessages({
+      resultado <- agregar_poblacion(c(1101, 2102), nivel = "comunal")
 
-    esperado <- agregar_poblacion(
-      c(1101, 2102),
-      nivel = "comunal",
-      años = as.integer(format(Sys.Date(), "%Y"))
-    )
+      esperado <- agregar_poblacion(
+        c(1101, 2102),
+        nivel = "comunal",
+        años = as.integer(format(Sys.Date(), "%Y"))
+      )
+    })
 
     expect_equal(resultado, esperado)
   })
 
   it("usa el año más reciente en otras bases", {
-    resultado <- agregar_poblacion(
-      c(1101, 2102),
-      nivel = "comunal",
-      base = "censo_poblacion_2017"
+    resultado <- suppressMessages(
+      agregar_poblacion(
+        c(1101, 2102),
+        nivel = "comunal",
+        base = "censo_poblacion_2017"
+      )
     )
 
     esperado <- censo_poblacion_2017 |>
@@ -253,8 +311,18 @@ describe("agregar_poblacion() argumento base", {
   it("acepta el nombre de una base como texto o la base como dataframe", {
     codigos <- c(1101, 2102)
 
-    como_texto <- agregar_poblacion(codigos, nivel = "comunal", base = "censo_poblacion_2017")
-    como_tabla <- agregar_poblacion(codigos, nivel = "comunal", base = censo_poblacion_2017)
+    suppressMessages({
+      como_texto <- agregar_poblacion(
+        codigos,
+        nivel = "comunal",
+        base = "censo_poblacion_2017"
+      )
+      como_tabla <- agregar_poblacion(
+        codigos,
+        nivel = "comunal",
+        base = censo_poblacion_2017
+      )
+    })
 
     expect_equal(como_texto, como_tabla)
   })
@@ -267,10 +335,11 @@ describe("agregar_poblacion() argumento base", {
       poblacion = c(100, 50)
     )
 
-    expect_equal(
-      agregar_poblacion(c(1107, 1101), nivel = "comunal", base = base_propia),
-      c(50, 100)
+    resultado <- suppressMessages(
+      agregar_poblacion(c(1107, 1101), nivel = "comunal", base = base_propia)
     )
+
+    expect_equal(resultado, c(50, 100))
   })
 
   it("falla si base no es texto ni dataframe", {
@@ -299,6 +368,44 @@ describe("agregar_poblacion() argumento datos", {
     expect_error(
       agregar_poblacion(quote(a), nivel = "comunal"),
       "debe ser un dataframe o un vector"
+    )
+  })
+})
+
+describe("agregar_poblacion() con nombres de territorios", {
+  it("detecta nombres de comunas, los convierte a código y avisa", {
+    suppressMessages(
+      expect_message(
+        resultado <- suppressWarnings(
+          agregar_poblacion("La Florida", años = 2023)
+        ),
+        "nombres de comunas"
+      )
+    )
+
+    expect_equal(
+      resultado,
+      suppressMessages(
+        agregar_poblacion(13110, nivel = "comunal", años = 2023)
+      )
+    )
+  })
+
+  it("detecta nombres de regiones, los convierte a código y avisa", {
+    suppressMessages(
+      expect_message(
+        resultado <- suppressWarnings(
+          agregar_poblacion("Arica y Parinacota", años = 2023)
+        ),
+        "nombres de regiones"
+      )
+    )
+
+    expect_equal(
+      resultado,
+      suppressMessages(
+        agregar_poblacion(15, nivel = "regional", años = 2023)
+      )
     )
   })
 })

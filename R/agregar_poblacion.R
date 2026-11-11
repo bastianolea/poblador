@@ -80,6 +80,12 @@ agregar_poblacion <- function(
     )
   }
 
+  if (is.data.frame(datos) && "poblacion" %in% colnames(datos)) {
+    cli::cli_abort(
+      "Los datos ya tienen una columna {.col poblacion}. Renómbrala o elimínala antes de agregar población."
+    )
+  }
+
   # niveles ----
   # si no se especifica el nivel, intentar asumir
   if (is.null(nivel)) {
@@ -105,15 +111,29 @@ agregar_poblacion <- function(
         )
       }
     } else if (is.vector(datos)) {
-      if (all(territorial::is_codigo_comuna(datos))) {
+      # si el texto no es convertible a número, no puede ser un código
+      puede_ser_codigo <- !is.character(datos) ||
+        !anyNA(suppressWarnings(as.numeric(datos)))
+
+      if (puede_ser_codigo && all(territorial::is_codigo_comuna(datos))) {
         nivel <- "comunal"
         cli::cli_alert_warning(
           "Se detectó que los datos son códigos comunales. Se asumirá el nivel {.val comunal}."
         )
-      } else if (all(territorial::is_codigo_region(datos))) {
+      } else if (is.character(datos) && all(territorial::is_nombre_comuna(datos))) {
+        nivel <- "comunal"
+        cli::cli_alert_warning(
+          "Se detectó que los datos son nombres de comunas. Se asumirá el nivel {.val comunal}."
+        )
+      } else if (puede_ser_codigo && all(territorial::is_codigo_region(datos))) {
         nivel <- "regional"
         cli::cli_alert_warning(
           "Se detectó que los datos son códigos regionales Se asumirá el nivel {.val regional}."
+        )
+      } else if (is.character(datos) && all(territorial::is_nombre_region(datos))) {
+        nivel <- "regional"
+        cli::cli_alert_warning(
+          "Se detectó que los datos son nombres de regiones. Se asumirá el nivel {.val regional}."
         )
       } else {
         cli::cli_abort(
@@ -141,9 +161,34 @@ agregar_poblacion <- function(
 
   # códigos ----
 
+  # datos <- "Coyhaique"
   # si los datos son vector, usarlo como código
   if (is.vector(datos)) {
     codigo <- datos
+
+    # si son caracter, convertir a comuna o región
+    # codigo <- "La Florida"
+    # codigo <- "Atacama"
+    if (is.character(codigo) && nivel != "nacional") {
+      # si es el nombre de una comuna, convertir y alertar
+      if (all(territorial::is_nombre_comuna(codigo))) {
+        nivel <- "comunal"
+        codigo <- territorial::as_codigo_comuna(codigo)
+        cli::cli_alert_info(
+          "Encontrado código comunal: {.val {codigo}}."
+        )
+      } else if (all(territorial::is_nombre_region(codigo))) {
+        nivel <- "regional"
+        codigo <- territorial::as_codigo_region(codigo)
+        cli::cli_alert_info(
+          "Encontrado código regional: {.val {codigo}}."
+        )
+      } else {
+        cli::cli_abort(
+          "No se pudo detectar el nivel de los datos. Especifica el argumento {.arg nivel} como 'regional', 'comunal' o 'nacional'."
+        )
+      }
+    }
   } else if (is.data.frame(datos)) {
     # si los datos son dataframe, usar la columna correspondiente al nivel
     if (nivel == "comunal") {
@@ -223,8 +268,14 @@ agregar_poblacion <- function(
   if (is.null(años)) {
     if (nombre_base == "censo_poblacion_proyeccion") {
       años <- as.integer(format(Sys.Date(), "%Y"))
+      cli::cli_alert_warning(
+        "Considerando datos para el año actual ({años}). Cambiar con el argumento {.arg años}."
+      )
     } else {
       años <- max(pob$año)
+      cli::cli_alert_warning(
+        "Considerando el año más reciente ({años}) para la base {.val {nombre_base}}."
+      )
     }
   } else {
     if (!all(años %in% pob$año)) {
@@ -274,12 +325,12 @@ agregar_poblacion <- function(
       dplyr::filter(codigo_region %in% codigo) |>
       dplyr::filter(año %in% años) |>
       dplyr::group_by(codigo_region, año) |>
-      dplyr::summarize(poblacion = sum(poblacion))
+      dplyr::summarize(poblacion = sum(poblacion), .groups = "drop")
   } else if (nivel == "nacional") {
     pob_filtrada <- pob |>
       dplyr::filter(año %in% años) |>
       dplyr::group_by(año) |>
-      dplyr::summarize(poblacion = sum(poblacion))
+      dplyr::summarize(poblacion = sum(poblacion), .groups = "drop")
   }
 
   # pob_filtrada
@@ -339,9 +390,10 @@ agregar_poblacion <- function(
 
   # revisar resultado
   if (is.data.frame(cruce)) {
-    if (all(is.na(cruce$poblacion))) {
+    # revisar mismas columnas + población
+    if (length(cruce) != length(datos) + 1) {
       cli::cli_abort(
-        "No se encontraron cifras de población para los códigos y años especificados. Revisa los argumentos {.arg nivel}, {.arg codigo} y {.arg años}."
+        "Se obtuvieron más columnas en la base cruzada ({length(cruce)}) que en los datos originales ({length(datos)}). Revisa los años especificados."
       )
     }
     # revisar mismas filas
@@ -350,10 +402,9 @@ agregar_poblacion <- function(
         "Se obtuvieron más filas en la base cruzada ({nrow(cruce)}) que los datos originales ({nrow(datos)})."
       )
     }
-    # revisar mismas columnas + población
-    if (length(cruce) != length(datos) + 1) {
+    if (all(is.na(cruce$poblacion))) {
       cli::cli_abort(
-        "Se obtuvieron más columnas en la base cruzada ({length(cruce)}) que en los datos originales ({length(datos)}). Revisa los años especificados."
+        "No se encontraron cifras de población para los códigos y años especificados. Revisa los argumentos {.arg nivel}, {.arg codigo} y {.arg años}."
       )
     }
   } else if (is.vector(cruce)) {
@@ -372,7 +423,17 @@ agregar_poblacion <- function(
     }
   }
 
-  cruce
+  # cruce
+
+  # mensaje ----
+  texto_años <- ifelse(
+    length(años) > 1,
+    glue::glue("para los años entre {min(años)} y {max(años)}"),
+    glue::glue("del año {unique(años)}")
+  )
+  cli::cli_alert_info(
+    "Agregando datos de población de nivel {nivel} {texto_años} desde la base {.fun poblador::{nombre_base}}."
+  )
 
   # retornar tabla si venía dataframe, cifras si era vector
   if (is.data.frame(datos)) {

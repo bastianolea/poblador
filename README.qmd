@@ -53,13 +53,13 @@ Primero creemos una tabla de datos de ejemplo:
 #| warning: false
 library(dplyr)
 
-datos <- tibble::tribble(
+comunas <- tibble::tribble(
   ~nombre_comuna, ~codigo_comuna,
   "Iquique",       1101,
   "Mejillones",    2102
 )
 
-datos
+comunas
 ```
 
 Ahora agreguémosle la población:
@@ -67,42 +67,80 @@ Ahora agreguémosle la población:
 ```{r}
 library(poblador)
 
-datos |> 
+comunas |> 
   agregar_poblacion()
 ```
 
-Así de simple! La tabla recibe una columna de población.
+Así de simple! La tabla recibe una columna de población. 
 
-El nivel territorial puede ser detectado automáticamente desde la tabla de datos, o puede ser especificado manualmente.`poblacion`
+Por defecto, la población se obtiene de las [proyecciones oficiales del INE](https://www.ine.gob.cl/estadisticas-por-tema/demografia-y-poblacion/estimaciones-y-proyecciones-de-poblacion) (ver [poblador::censo_poblacion_proyeccion]).
 
+La función detectó automáticamente que se trataba de datos comunales, y puso el año actual por defecto.
+
+Puedes agregar datos de otro año, por ejemplo, de 2020:
 
 ```{r}
-# tabla de datos con un par de comunas: el nivel comunal se detecta
-# desde la columna `codigo_comuna`
+comunas |> 
+  agregar_poblacion(
+    nivel = "comunal",
+    años = 2020)
+```
+
+### Datos regionales
+
+Ahora probemos con datos regionales. Creamos una tabla de muestra:
+
+```{r}
+regiones <- tibble::tribble(
+  ~nombre_region, ~codigo_region,
+  "Maule",         7,
+  "Ñuble",         16,
+  "Biobío",        8
+)
+
+regiones
+```
+
+Y agregamos la población con `agregar_poblacion()`:
+
+```{r}
+regiones |> 
+  agregar_poblacion()
+```
+
+Nuevamente el nivel territorial se asume automático. Probemos agregando a las ergiones datos de un Censo oficial específico:
+
+```{r}
+regiones |> 
+  agregar_poblacion(
+    nivel = "regional",
+    base = censo_poblacion_2017)
+```
+
+Al agregar datos regionales, el paquete toma los datos comunales y los suma para obtener los regionales.
+
+### Datos nacionales
+
+También se pueden obtener las poblaciones nacionales: ¿Cuál será la población de Chile el año 2030?
+
+```{r}
+dplyr::tibble(país = "Chile") |> 
+  agregar_poblacion(
+    nivel = "nacional",
+    año = 2030)
+```
 
 
-comunas |>
-  agregar_poblacion(años = 2023)
+## Agregar población de vectores
 
-# especificar el nivel y usar otra base de datos
-comunas |>
-  agregar_poblacion(nivel = "comunal", base = censo_poblacion_2017)
+También se puede agregar 
 
-# tabla de datos con un par de regiones: el nivel regional se detecta
-# desde la columna `codigo_region`
-regiones <- territorial::territorios |>
-  dplyr::filter(codigo_region %in% c(1, 2)) |>
-  dplyr::distinct(nombre_region, codigo_region)
+```{r}
+agregar_poblacion("La Florida")
+```
 
-regiones |>
-  agregar_poblacion(años = 2023)
+```{r}
 
-# vector de códigos: devuelve un vector con las cifras de población
-c(1101, 2102) |>
-  agregar_poblacion(nivel = "comunal", años = 2023)
-
-# crear una variable de población dentro de una tabla
-comunas |>
-  dplyr::mutate(poblacion = agregar_poblacion(codigo_comuna, años = 2023))
+agregar_poblacion(13102) # Cerrillos
 ```
 
