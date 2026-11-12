@@ -5,7 +5,7 @@ format:
     preserve-yaml: false
 ---
 
-# Paquete `{poblador}`
+# Paquete `{poblador}` <a href="https://bastianolea.github.io/poblador/"><img src="man/figures/logo.png" align="right" height="180" alt="poblador website" /></a>
 
 Datos de población para Chile y funciones para agregar datos poblacionales fácilmente.
 
@@ -39,10 +39,21 @@ install.packages("territorial", repos = "https://bastianolea.r-universe.dev")
 La función `datos()` entrega una lista con todas las fuentes de datos disponibles en el paquete:
 
 ```{r}
+#| output: false
 library(poblador)
 
 datos()
 ```
+
+<details>
+<summary>Ver _output_ de `datos()`</summary>
+
+```{r}
+#| echo: false
+datos()
+```
+
+</details>
 
 Puedes usar estas fuentes de datos para consularlas, cruzarlas con otras tablas, o su uso principal, que es usarlas para alimentar a la función `agregar_poblacion()`, como veremos a continuación.
 

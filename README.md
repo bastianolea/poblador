@@ -1,6 +1,6 @@
 
 
-# Paquete `{poblador}`
+# Paquete `{poblador}` <a href="https://bastianolea.github.io/poblador/"><img src="man/figures/logo.png" align="right" height="180" alt="poblador website" /></a>
 
 Datos de población para Chile y funciones para agregar datos
 poblacionales fácilmente.
@@ -49,6 +49,13 @@ library(poblador)
 
 datos()
 ```
+
+<details>
+
+<summary>
+
+Ver *output* de `datos()`
+</summary>
 
     ── Datos disponibles en poblador ───────────────────────────────────────────────
 
@@ -137,6 +144,8 @@ datos()
 
     • Fuente: Ministerio de Desarrollo Social y Familia (Mideso),
     <https://bidat.gob.cl/details/ficha/dataset/base-de-datos-pobreza-comunal-2024>
+
+</details>
 
 Puedes usar estas fuentes de datos para consularlas, cruzarlas con otras
 tablas, o su uso principal, que es usarlas para alimentar a la función
