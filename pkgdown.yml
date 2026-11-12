@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   articles/poblacion_nacional: poblacion_nacional.html
   articles/poblacion_regional: poblacion_regional.html
-last_built: 2026-11-12T12:26Z
+last_built: 2026-11-12T13:30Z
 urls:
   reference: https://bastianolea.github.io/poblador/reference
   article: https://bastianolea.github.io/poblador/articles

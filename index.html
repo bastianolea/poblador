@@ -6,6 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Datos de población para Chile y utilidades relacionadas • poblador</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" sizes="any" href="favicon.ico">
+<link rel="manifest" href="site.webmanifest">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -14,6 +19,7 @@
 <meta property="og:title" content="Datos de población para Chile y utilidades relacionadas">
 <meta name="description" content="Tablas de datos de población oficiales de Chile, junto a funciones para simplificar el uso de estos datos como complemento a otros conjuntos de datos, por ejemplo, para agregar población oficial a otras fuentes, calcular tasas de población, entre otros.">
 <meta property="og:description" content="Tablas de datos de población oficiales de Chile, junto a funciones para simplificar el uso de estos datos como complemento a otros conjuntos de datos, por ejemplo, para agregar población oficial a otras fuentes, calcular tasas de población, entre otros.">
+<meta property="og:image" content="https://bastianolea.github.io/poblador/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -55,9 +61,11 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="paquete-poblador">Paquete <code>{poblador}</code>
-<a class="anchor" aria-label="anchor" href="#paquete-poblador"></a>
-</h1></div>
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="paquete-poblador-">Paquete <code>{poblador}</code> 
+<a class="anchor" aria-label="anchor" href="#paquete-poblador-"></a>
+</h1>
+</div>
 <p>Datos de población para Chile y funciones para agregar datos poblacionales fácilmente.</p>
 <p>Este paquete ofrece tablas de datos de población desde fuentes oficiales de Chile, así como funciones para simplificar el uso de estos datos como complemento a otros conjuntos de datos, por ejemplo, para agregar población oficial a una tabla de comunas o regiones, entre otros.</p>
 <p>El funcionamiento interno de este paquete depende bastante de <a href="https://bastianolea.github.io/territorial/" class="external-link">mi paquete <code>territorial</code></a>, que entrega herramientas para trabajar con datos qeu representan comunas y regiones de Chile.</p>
@@ -83,7 +91,9 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bastianolea.github.io/poblador/">poblador</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/datos.html">datos</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>── Datos disponibles en poblador ───────────────────────────────────────────────</span>
+<details><summary>
+Ver <em>output</em> de <code>datos()</code>
+</summary><div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>── Datos disponibles en poblador ───────────────────────────────────────────────</span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>── Población a nivel comunal de <span class="fu">Chile</span> (<span class="dv">2017</span>) ──</span>
 <span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a></span>
@@ -170,7 +180,7 @@
 <span id="cb5-85"><a href="#cb5-85" tabindex="-1"></a></span>
 <span id="cb5-86"><a href="#cb5-86" tabindex="-1"></a>• Fuente<span class="sc">:</span> Ministerio de Desarrollo Social y <span class="fu">Familia</span> (Mideso),</span>
 <span id="cb5-87"><a href="#cb5-87" tabindex="-1"></a><span class="sc">&lt;</span>https<span class="sc">:</span><span class="er">//</span>bidat.gob.cl<span class="sc">/</span>details<span class="sc">/</span>ficha<span class="sc">/</span>dataset<span class="sc">/</span>base<span class="sc">-</span>de<span class="sc">-</span>datos<span class="sc">-</span>pobreza<span class="sc">-</span>comunal<span class="dv">-2024</span><span class="sc">&gt;</span></span></code></pre></div>
-<p>Puedes usar estas fuentes de datos para consularlas, cruzarlas con otras tablas, o su uso principal, que es usarlas para alimentar a la función <code><a href="reference/agregar_poblacion.html">agregar_poblacion()</a></code>, como veremos a continuación.</p>
+</details><p>Puedes usar estas fuentes de datos para consularlas, cruzarlas con otras tablas, o su uso principal, que es usarlas para alimentar a la función <code><a href="reference/agregar_poblacion.html">agregar_poblacion()</a></code>, como veremos a continuación.</p>
 <p>Veamos una de las tablas de datos:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>

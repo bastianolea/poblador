@@ -55,6 +55,8 @@ library(poblador)
 datos()
 ```
 
+Ver *output* de `datos()`
+
 ``` R
 ── Datos disponibles en poblador ───────────────────────────────────────────────
 
