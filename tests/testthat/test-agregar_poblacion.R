@@ -228,10 +228,10 @@ describe("agregar_poblacion() argumento datos", {
   it("falla si los códigos no son numéricos", {
     datos <- data.frame(codigo_comuna = "1101")
 
-    expect_error(
+    suppressMessages(expect_error(
       agregar_poblacion(datos, años = 2023),
       "debe ser numérica"
-    )
+    ))
   })
 
   it("entrega NA y una advertencia para códigos inexistentes mezclados con válidos", {
@@ -396,20 +396,23 @@ describe("agregar_poblacion() argumento años", {
   it("falla si los años de los datos no existen en la base", {
     datos <- data.frame(codigo_comuna = 1101, año = 1900)
 
-    expect_error(agregar_poblacion(datos), "no está disponible")
+    suppressMessages(expect_error(
+      agregar_poblacion(datos),
+      "no está disponible"
+    ))
   })
 
   it("falla si el año pedido no existe en la base", {
     datos <- data.frame(codigo_comuna = 1101)
 
-    expect_error(
+    suppressMessages(expect_error(
       agregar_poblacion(datos, años = 1900),
       "años disponibles son: entre 2002 y 2035"
-    )
-    expect_error(
+    ))
+    suppressMessages(expect_error(
       agregar_poblacion(datos, años = 2023, base = "censo_poblacion_2017"),
       "años disponibles son: 2017"
-    )
+    ))
   })
 
   it("funciona con años enteros en datos y en el argumento", {
@@ -521,10 +524,10 @@ describe("agregar_poblacion() argumento base", {
   })
 
   it("falla si la base propia no tiene las columnas requeridas", {
-    expect_error(
+    suppressMessages(expect_error(
       agregar_poblacion(datos, años = 2023, base = data.frame(a = 1)),
       "no tiene las columnas requeridas"
-    )
+    ))
   })
 
   it("falla si la base propia tiene filas duplicadas por comuna y año", {
@@ -545,17 +548,17 @@ describe("agregar_poblacion() argumento base", {
   })
 
   it("falla si el nombre de la base no existe o el tipo es inválido", {
-    expect_error(
+    suppressMessages(expect_error(
       agregar_poblacion(datos, años = 2023, base = "noexiste"),
       "No se encontró la base"
-    )
-    expect_error(
+    ))
+    suppressMessages(expect_error(
       agregar_poblacion(datos, años = 2023, base = 5),
       "debe ser un dataframe"
-    )
-    expect_error(
+    ))
+    suppressMessages(expect_error(
       agregar_poblacion(datos, años = 2023, base = c("a", "b")),
       "debe ser un dataframe"
-    )
+    ))
   })
 })
