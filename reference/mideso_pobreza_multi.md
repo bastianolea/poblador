@@ -54,6 +54,13 @@ Un data frame con 345 filas y 8 columnas:
 
 ## Details
 
+La medición de pobreza multidimensional se calcula a partir de 5
+dimensiones, cada una con 4 indicadores: Educación, Salud, Trabajo y
+Seguridad Social, Vivienda y Entorno, y Redes y Cohesión Social. Cada
+dimensión tiene la misma ponderación (20%). Para más información, ver el
+documento [Metodología 2024 de medición de pobreza
+multidimensional](https://observatorio.ministeriodesarrollosocial.gob.cl/encuesta-casen-2024).
+
 Los datos fueron obtenidos [desde el sitio web de
 Mideso](https://bidat.gob.cl/directorio/Indicadores%20comunales%20en%20base%20a%20CASEN/estimaciones-de-pobreza-comunal-2024).
 Para más información, revisar el [reporte

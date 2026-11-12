@@ -1,4 +1,4 @@
-# Población a nivel comunal de Chile (2024)
+# Población censada a nivel comunal de Chile (2024)
 
 Cifras de población según el Censo 2024
 

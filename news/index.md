@@ -1,5 +1,17 @@
 # Changelog
 
+## poblador 0.3.0 (2026/11/12)
+
+- Catálogo de datos
+  [`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
+  entrega información sobre los datos disponibles, y retorna los nombres
+  de objetos de manera invisible.
+- Mejora en
+  [`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md)
+  para especificar el nombre de la columna de población, y así se puede
+  usar dos veces consecutivas (por ejemplo para agregar la población y
+  luego la población en situación de pobreza).
+
 ## poblador 0.2.0 (2026/11/11)
 
 - Función

@@ -32,9 +32,9 @@ pak::pak("bastianolea/poblador")
 ```
 
 Para que [poblador](https://bastianolea.github.io/poblador/) funcione,
-necesitas tener instalado
-[territorial](https://bastianolea.github.io/territorial). Si no lo
-tienes, instálalo con:
+necesitas [tener instalado
+`{territorial}`](https://bastianolea.github.io/territorial/#instalaci%C3%B3n).
+Si no lo tienes, instálalo con:
 
 ``` r
 
@@ -55,10 +55,131 @@ library(poblador)
 datos()
 ```
 
+``` R
+── Datos disponibles en poblador ───────────────────────────────────────────────
+
+── Población a nivel comunal de Chile (2017) ──
+
+• Objeto: `censo_poblacion_2017`
+
+• Tabla de 346 y 8 columnas
+
+• Años: 2017
+
+• Cantidad de comunas únicas: 346
+
+• Fuente: Instituto Nacional de Estadísticas de Chile (INE),
+<https://www.ine.gob.cl/estadisticas-por-tema/demografia-y-poblacion/censo-de-poblacion-y-vivienda>
+
+── Población censada a nivel comunal de Chile (2024) ──
+
+• Objeto: `censo_poblacion_2024`
+
+• Tabla de 346 y 8 columnas
+
+• Años: 2024
+
+• Cantidad de comunas únicas: 346
+
+• Fuente: Instituto Nacional de Estadísticas de Chile (INE),
+<https://censo2024.ine.gob.cl/resultados/>
+
+── Proyecciones de población a nivel comunal de Chile (2002-2035), base Censo 2017 ──
+
+• Objeto: `censo_poblacion_proyeccion`
+
+• Tabla de 11764 y 8 columnas
+
+• Las proyecciones de población proporcionan una referencia del futuro tamaño y
+estructura por edades de una población, basados en un conjunto de supuestos
+sobre el comportamiento de los componentes demográficos fecundidad, mortalidad
+y migración. Son un insumo fundamental para la planificación y la toma de
+decisiones tanto para el sector público como el privado, dado que permiten
+anticipar demandas futuras e identificar desafíos que surgen como consecuencia
+de los cambios demográficos.
+
+• Años: entre 2002 y 2035
+
+• Cantidad de comunas únicas: 346
+
+• Fuente: Instituto Nacional de Estadísticas de Chile (INE),
+<https://www.ine.gob.cl/estadisticas-por-tema/demografia-y-poblacion/estimaciones-y-proyecciones-de-poblacion>
+
+── Población en situación de pobreza por ingresos a nivel comunal (2024) ──
+
+• Objeto: `mideso_pobreza_ingresos`
+
+• Tabla de 345 y 8 columnas
+
+• Cifras de población en situación de pobreza, calculadas por el Ministerio de
+Desarrollo Social y Familia a partir de datos de la Encuesta de Caracterización
+Socioeconómica Nacional 2024 (Casen 2024), por medio de la aplicación de la
+metodología de áreas pequeñas o SAE.
+
+• Años: 2024
+
+• Cantidad de comunas únicas: 345
+
+• Fuente: Ministerio de Desarrollo Social y Familia (Mideso),
+<https://bidat.gob.cl/details/ficha/dataset/base-de-datos-pobreza-comunal-2024>
+
+── Población en situación de pobreza multidimensional a nivel comunal (2024) ──
+
+• Objeto: `mideso_pobreza_multi`
+
+• Tabla de 345 y 8 columnas
+
+• Cifras de población en situación de pobreza, calculadas por el Ministerio de
+Desarrollo Social y Familia a partir de datos de la Encuesta de Caracterización
+Socioeconómica Nacional 2024 (Casen 2024), por medio de la aplicación de la
+metodología de áreas pequeñas o SAE. La medición de pobreza multidimensional se
+calcula a partir de 5 dimensiones, cada una con 4 indicadores: Educación,
+Salud, Trabajo y Seguridad Social, Vivienda y Entorno, y Redes y Cohesión
+Social.
+
+• Años: 2024
+
+• Cantidad de comunas únicas: 345
+
+• Fuente: Ministerio de Desarrollo Social y Familia (Mideso),
+<https://bidat.gob.cl/details/ficha/dataset/base-de-datos-pobreza-comunal-2024>
+```
+
 Puedes usar estas fuentes de datos para consularlas, cruzarlas con otras
 tablas, o su uso principal, que es usarlas para alimentar a la función
 [`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md),
 como veremos a continuación.
+
+Veamos una de las tablas de datos:
+
+``` r
+
+library(dplyr)
+```
+
+``` r
+
+glimpse(censo_poblacion_2024)
+```
+
+``` R
+Rows: 346
+Columns: 8
+$ codigo_region    <dbl> 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3,…
+$ nombre_region    <chr> "Tarapacá", "Tarapacá", "Tarapacá", "Tarapacá", "Tara…
+$ codigo_provincia <dbl> 11, 11, 14, 14, 14, 14, 14, 22, 21, 22, 21, 23, 21, 2…
+$ nombre_provincia <chr> "Iquique", "Iquique", "Tamarugal", "Tamarugal", "Tama…
+$ codigo_comuna    <dbl> 1101, 1107, 1401, 1405, 1404, 1402, 1403, 2201, 2102,…
+$ nombre_comuna    <chr> "Iquique", "Alto Hospicio", "Pozo Almonte", "Pica", "…
+$ año              <dbl> 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024,…
+$ poblacion        <int> 199587, 142086, 16878, 6272, 2858, 1335, 790, 166334,…
+```
+
+Todas las tablas de datos del paquete siguen esta estructura de
+`codigo_region`, `nombre_region`, `codigo_comuna` y `nombre_comuna`
+(heredada del [paquete
+`{territorial}`](https://bastianolea.github.io/territorial/)), además de
+contener `año` y `poblacion`.
 
 ## Agregar población a tus datos
 
@@ -69,6 +190,8 @@ recibe una tabla de datos o *dataframe* y le agrega una columna
 
 Primero creemos una tabla de datos de ejemplo:
 
+Ver código de tabla
+
 ``` r
 
 library(dplyr)
@@ -76,18 +199,20 @@ library(dplyr)
 comunas <- tibble::tribble(
   ~nombre_comuna, ~codigo_comuna,
   "Iquique",       1101,
-  "Mejillones",    2102
+  "Mejillones",    2102,
+  "La Florida",    13110
 )
 
 comunas
 ```
 
 ``` R
-# A tibble: 2 × 2
+# A tibble: 3 × 2
   nombre_comuna codigo_comuna
   <chr>                 <dbl>
 1 Iquique                1101
 2 Mejillones             2102
+3 La Florida            13110
 ```
 
 Ahora agreguémosle la población:
@@ -107,11 +232,12 @@ comunas |>
 
 ℹ Agregando datos de población de nivel comunal del año 2026 desde la base `poblador::censo_poblacion_proyeccion()`.
 
-# A tibble: 2 × 3
+# A tibble: 3 × 3
   nombre_comuna codigo_comuna poblacion
   <chr>                 <dbl>     <dbl>
 1 Iquique                1101    234407
 2 Mejillones             2102     16291
+3 La Florida            13110    408195
 ```
 
 Así de simple! La tabla recibe una columna de población.
@@ -137,16 +263,19 @@ comunas |>
 ``` R
 ℹ Agregando datos de población de nivel comunal del año 2020 desde la base `poblador::censo_poblacion_proyeccion()`.
 
-# A tibble: 2 × 3
+# A tibble: 3 × 3
   nombre_comuna codigo_comuna poblacion
   <chr>                 <dbl>     <dbl>
 1 Iquique                1101    223463
 2 Mejillones             2102     14776
+3 La Florida            13110    402433
 ```
 
 ### Datos regionales
 
 Ahora probemos con datos regionales. Creamos una tabla de muestra:
+
+Ver código de tabla
 
 ``` r
 
@@ -227,7 +356,7 @@ población de Chile el año 2030?
 
 ``` r
 
-dplyr::tibble(país = "Chile") |> 
+tibble(país = "Chile") |> 
   agregar_poblacion(
     nivel = "nacional",
     años = 2030)
@@ -240,6 +369,135 @@ dplyr::tibble(país = "Chile") |>
   país  poblacion
   <chr>     <dbl>
 1 Chile  20735289
+```
+
+### Datos socioeconómicos
+
+EL paquete incluye bases de datos socioeconómicos, por ejemplo
+`mideso_pobreza_ingresos` y `mideso_pobreza_multi` (usa
+[`poblador::datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
+para ver todas las bases)
+
+``` r
+
+mideso_pobreza_ingresos
+```
+
+``` R
+# A tibble: 345 × 8
+   codigo_region nombre_region codigo_provincia nombre_provincia codigo_comuna
+           <dbl> <chr>                    <dbl> <chr>                    <dbl>
+ 1             1 Tarapacá                    11 Iquique                   1101
+ 2             1 Tarapacá                    11 Iquique                   1107
+ 3             1 Tarapacá                    14 Tamarugal                 1401
+ 4             1 Tarapacá                    14 Tamarugal                 1402
+ 5             1 Tarapacá                    14 Tamarugal                 1403
+ 6             1 Tarapacá                    14 Tamarugal                 1404
+ 7             1 Tarapacá                    14 Tamarugal                 1405
+ 8             2 Antofagasta                 21 Antofagasta               2101
+ 9             2 Antofagasta                 21 Antofagasta               2102
+10             2 Antofagasta                 21 Antofagasta               2103
+# ℹ 335 more rows
+# ℹ 3 more variables: nombre_comuna <chr>, año <dbl>, poblacion <dbl>
+```
+
+Veamos un ejemplo de comunas.
+
+Ver código de tabla
+
+``` r
+
+library(dplyr)
+
+comunas <- tibble::tribble(
+  ~nombre_comuna, ~codigo_comuna,
+  "La Florida",   13110,
+  "Puente Alto",  13201,
+  "La Pintana",   13112,
+  "Las Condes",   13114
+)
+
+comunas
+```
+
+``` R
+# A tibble: 4 × 2
+  nombre_comuna codigo_comuna
+  <chr>                 <dbl>
+1 La Florida            13110
+2 Puente Alto           13201
+3 La Pintana            13112
+4 Las Condes            13114
+```
+
+Para usar las bases de datos socioeconómicos, simplemente las agregamos
+al argumento `base` de
+[`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md)
+o de
+[`obtener_poblacion()`](https://bastianolea.github.io/poblador/reference/obtener_poblacion.md):
+
+``` r
+
+comunas |> 
+  agregar_poblacion(base = mideso_pobreza_ingresos)
+```
+
+``` R
+! Se detectó la columna `codigo_comuna`. Se asumirá el nivel "comunal".
+
+! Considerando el año más reciente (2024) para la base "mideso_pobreza_ingresos".
+
+ℹ Agregando datos de población de nivel comunal del año 2024 desde la base `poblador::mideso_pobreza_ingresos()`.
+
+# A tibble: 4 × 3
+  nombre_comuna codigo_comuna poblacion
+  <chr>                 <dbl>     <dbl>
+1 La Florida            13110    48429.
+2 Puente Alto           13201    92515.
+3 La Pintana            13112    44008.
+4 Las Condes            13114     9558.
+```
+
+En este ejemplo agregamos la población comunal estimada de habitantes en
+situación de pobreza por ingresos, según la encuesta Casen.
+
+Si usamos
+[`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md)
+consecutivamente, podemos agregar tanto la población comunal como la
+población en situación de pobreza, a partir de lo cual podemos calcular
+el porcentaje de pobreza en pocas líneas:
+
+``` r
+
+comunas |> 
+  agregar_poblacion(
+    base = censo_poblacion_2024) |> 
+  agregar_poblacion(
+    base = mideso_pobreza_ingresos,
+    nombre = "pobreza") |> 
+  mutate(porcentaje = (pobreza/poblacion)*100)
+```
+
+``` R
+! Se detectó la columna `codigo_comuna`. Se asumirá el nivel "comunal".
+
+! Considerando el año más reciente (2024) para la base "censo_poblacion_2024".
+
+ℹ Agregando datos de población de nivel comunal del año 2024 desde la base `poblador::censo_poblacion_2024()`.
+
+! Se detectó la columna `codigo_comuna`. Se asumirá el nivel "comunal".
+
+! Considerando el año más reciente (2024) para la base "mideso_pobreza_ingresos".
+
+ℹ Agregando datos de población de nivel comunal del año 2024 desde la base `poblador::mideso_pobreza_ingresos()`.
+
+# A tibble: 4 × 5
+  nombre_comuna codigo_comuna poblacion pobreza porcentaje
+  <chr>                 <dbl>     <int>   <dbl>      <dbl>
+1 La Florida            13110    374836  48429.      12.9 
+2 Puente Alto           13201    568086  92515.      16.3 
+3 La Pintana            13112    175421  44008.      25.1 
+4 Las Condes            13114    296134   9558.       3.23
 ```
 
 ## Obtener población de territorios
@@ -301,7 +559,7 @@ obtener_poblacion("La Florida", años = 2002)
 [1] 376943
 ```
 
-Obtener la población de una comuna en el Censo 2017 y en el Censo 2024
+Obtener la población de una comuna en el Censo 2017 y en el Censo 2024:
 
 ``` r
 
@@ -335,4 +593,58 @@ obtener_poblacion(
 ℹ Agregando datos de población de nivel comunal del año 2024 desde la base `poblador::censo_poblacion_2024()`.
 
 [1] 374836
+```
+
+Esta forma de obtener datos de población también sirve para usarla
+dentro de
+[`dplyr::mutate()`](https://dplyr.tidyverse.org/reference/mutate.html)
+al crear o modificar columnas de un *dataframe*:
+
+Ver código de tabla
+
+``` r
+
+library(dplyr)
+
+comunas <- territorial::territorios |>
+  filter(codigo_region == 15) |>
+  select(nombre_comuna, codigo_comuna)
+```
+
+``` r
+
+comunas |>
+  mutate(poblacion = obtener_poblacion(codigo_comuna, años = 2027))
+```
+
+``` R
+! Se detectó que los datos son códigos comunales. Se asumirá el nivel "comunal".
+
+ℹ Agregando datos de población de nivel comunal del año 2027 desde la base `poblador::censo_poblacion_proyeccion()`.
+
+# A tibble: 4 × 3
+  nombre_comuna codigo_comuna poblacion
+  <chr>                 <dbl>     <dbl>
+1 Arica                 15101    262679
+2 Camarones             15102      1251
+3 Putre                 15201      2594
+4 General Lagos         15202       791
+```
+
+Otro uso útil es para [reportes
+Quarto](https://bastianolea.rbind.io/blog/quarto_reportes/) o
+[aplicaciones Shiny](https://bastianolea.rbind.io/blog/shiny/); por
+ejemplo, en la [redacción de un
+párrafo](https://bastianolea.rbind.io/blog/redactar_texto/) basado en
+datos:
+
+``` r
+
+comuna <- "Ñuñoa"
+
+glue::glue("La comuna de {comuna} tiene una población de {obtener_poblacion(comuna)} habitantes.")
+```
+
+``` R
+La comuna de Ñuñoa tiene una población de 274180 habitantes.
 ```

@@ -1,10 +1,17 @@
 # Articles
 
-### Viñetas
+### Artículos
 
-Información general sobre el paquete
+Ejemplos de uso del paquete
 
-- [Introducción al
-  paquete](https://bastianolea.github.io/poblador/articles/poblador.md):
+- [Gráfico de población nacional de
+  Chile](https://bastianolea.github.io/poblador/articles/poblacion_nacional.md):
 
-  Instalación y primeros pasos con el paquete {poblador}.
+  Ejemplo de uso de tablas de datos poblacionales para generar un
+  gráfico de líneas
+
+- [Gráfico de población regional de
+  Chile](https://bastianolea.github.io/poblador/articles/poblacion_regional.md):
+
+  Ejemplo de uso de tablas de datos poblacionales para generar un
+  gráfico de barras

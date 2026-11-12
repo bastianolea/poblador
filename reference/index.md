@@ -3,7 +3,7 @@
 ## Catálogo de datos
 
 - [`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
-  : Lista de fuentes de datos disponibles en poblador
+  : Fuentes de datos disponibles
 
 ## Tablas de datos de población de Chile
 
@@ -12,7 +12,7 @@ Datos oficiales de población a nivel de comuna, obtenidos desde el INE
 - [`censo_poblacion_2017`](https://bastianolea.github.io/poblador/reference/censo_poblacion_2017.md)
   : Población a nivel comunal de Chile (2017)
 - [`censo_poblacion_2024`](https://bastianolea.github.io/poblador/reference/censo_poblacion_2024.md)
-  : Población a nivel comunal de Chile (2024)
+  : Población censada a nivel comunal de Chile (2024)
 - [`censo_poblacion_proyeccion`](https://bastianolea.github.io/poblador/reference/censo_poblacion_proyeccion.md)
   : Proyecciones de población a nivel comunal de Chile (2002-2035), base
   Censo 2017

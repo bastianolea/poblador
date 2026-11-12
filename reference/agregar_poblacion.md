@@ -18,7 +18,8 @@ agregar_poblacion(
   datos,
   nivel = NULL,
   años = NULL,
-  base = "censo_poblacion_proyeccion"
+  base = "censo_poblacion_proyeccion",
+  nombre = "poblacion"
 )
 ```
 
@@ -45,6 +46,11 @@ agregar_poblacion(
   Ver
   [`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
   para una lista de fuentes de datos posibles.
+
+- nombre:
+
+  Nombre de la columna de población a agregar. Por defecto es
+  `poblacion`.
 
 ## Details
 
