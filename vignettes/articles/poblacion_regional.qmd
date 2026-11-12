@@ -1,0 +1,80 @@
+---
+title: "Gráfico de población regional de Chile"
+description: "Ejemplo de uso de tablas de datos poblacionales para generar un gráfico de barras"
+---
+
+```{r}
+#| label: setup
+#| message: false
+library(poblador)
+library(dplyr)
+```
+
+El paquete incluye tablas de datos de los últimos censos de Chile:
+
+```{r}
+library(poblador)
+
+censo_poblacion_2024
+
+censo_poblacion_2017
+```
+
+También incluye las últimas proyecciones de población disponibles a nivel de comuna, que son en base al Censo 2017, y que pueden filtrarse por año:
+
+```{r}
+#| warning: false
+
+library(dplyr)
+
+censo_poblacion_proyeccion |> 
+  filter(año == 2030)
+```
+
+Finalmente, el paquete incluye datos sociales relacionados a población, como son las estimaciones de pobreza por ingreso y pobreza multidimensional en base a Casen 2024:
+
+```{r}
+mideso_pobreza_ingresos
+
+mideso_pobreza_multi
+```
+
+Para calcular la población regional de Chile, realizamos una suma agrupada:
+
+```{r}
+pob_regional <- poblador::censo_poblacion_2024 |> 
+  group_by(nombre_region, codigo_region) |> 
+  summarize(poblacion = sum(poblacion)) |> 
+  ungroup() |> 
+  territorial::ordenar_regiones(invertir = TRUE)
+```
+
+Luego generamos un gráfico de barras:
+
+```{r}
+#| fig-height: 6
+#| message: false
+#| warning: false
+
+library(ggplot2)
+library(scales)
+
+pob_regional |> 
+  ggplot() +
+  aes(x = poblacion, y = nombre_region) +
+  geom_col(width = .6) +
+  geom_text(
+    aes(label = label_comma(big.mark = ".")(poblacion)),
+    hjust = -0.1, size = 3
+  ) +
+  scale_x_continuous(
+    labels = label_comma(big.mark = "."),
+    expand = expansion(c(0, 0.2))
+  ) +
+  labs(title = "Población regional de Chile",
+       subtitle = "Censo de Población y Vivienda 2024",
+       caption = "Fuente: INE, datos del paquete de R {poblador}",
+       x = "Población total nacional", y = NULL) +
+  theme_classic(base_family = "Arial")
+
+```
