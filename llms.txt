@@ -1,7 +1,7 @@
 # Paquete `{poblador}`
 
 Datos de población para Chile y funciones para agregar datos
-poblacionales fácilmente.
+poblacionales fácilmente a otras tablas de datos.
 
 Este paquete ofrece tablas de datos de población desde fuentes oficiales
 de Chile, así como funciones para simplificar el uso de estos datos como

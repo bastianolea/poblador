@@ -1,5 +1,16 @@
 # Changelog
 
+## poblador 0.3.1 (2026/11/12)
+
+- Funciones
+  [`datos()`](https://bastianolea.github.io/poblador/reference/datos.md),
+  [`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md)
+  y
+  [`obtener_poblacion()`](https://bastianolea.github.io/poblador/reference/obtener_poblacion.md)
+  ahora funcionan sin cargar el paquete (por ejemplo
+  [`poblador::datos()`](https://bastianolea.github.io/poblador/reference/datos.md),
+  `poblador::obtener_poblacion(1101)`).
+
 ## poblador 0.3.0 (2026/11/12)
 
 - Catálogo de datos
