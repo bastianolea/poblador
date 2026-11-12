@@ -2,6 +2,8 @@
 #'
 #' Cifras de población en situación de pobreza, calculadas por el Ministerio de Desarrollo Social y Familia a partir de datos de la Encuesta de Caracterización Socioeconómica Nacional 2024 (Casen 2024), por medio de la aplicación de la metodología de áreas pequeñas o SAE.
 #'
+#' La medición de pobreza multidimensional se calcula a partir de 5 dimensiones, cada una con 4 indicadores: Educación, Salud, Trabajo y Seguridad Social, Vivienda y Entorno, y Redes y Cohesión Social. Cada dimensión tiene la misma ponderación (20%). Para más información, ver el documento [Metodología 2024 de medición de pobreza multidimensional](https://observatorio.ministeriodesarrollosocial.gob.cl/encuesta-casen-2024).
+#'
 #' Los datos fueron obtenidos [desde el sitio web de Mideso](https://bidat.gob.cl/directorio/Indicadores%20comunales%20en%20base%20a%20CASEN/estimaciones-de-pobreza-comunal-2024). Para más información, revisar el [reporte metodológico](https://bidat.gob.cl/details/ficha/dato/informe-metodologico-sae-2024).
 #'
 #' @format Un data frame con 345 filas y 8 columnas:
