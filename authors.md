@@ -1,14 +1,14 @@
-# Authors and Citation
+# Autores y Citas
 
-## Authors
+## Autores
 
-- **[Bastián Olea Herrera](https://bastianolea.rbind.io)**. Author,
-  maintainer. [](https://orcid.org/0000-0001-6541-0367)  
+- **[Bastián Olea Herrera](https://bastianolea.rbind.io)**. Autor-a,
+  mantenedor-a. [](https://orcid.org/0000-0001-6541-0367)  
   https://bastianolea.rbind.io
 
-## Citation
+## Cita
 
-Source:
+Código:
 [`DESCRIPTION`](https://github.com/bastianolea/poblador/blob/main/DESCRIPTION)
 
 Olea Herrera B (2026). *poblador: Datos de población para Chile y

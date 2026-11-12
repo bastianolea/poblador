@@ -1,5 +1,9 @@
 # NA
 
+viñeta sobre fuentes de datos
+
+viñeta sobre incluir otras tablas
+
 función para calcular tasas
 
 hacer función datos() a mano o de alguna otra forma?

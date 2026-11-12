@@ -5,13 +5,13 @@ Ministerio de Desarrollo Social y Familia a partir de datos de la
 Encuesta de Caracterización Socioeconómica Nacional 2024 (Casen 2024),
 por medio de la aplicación de la metodología de áreas pequeñas o SAE.
 
-## Usage
+## Uso
 
 ``` r
 mideso_pobreza_ingresos
 ```
 
-## Format
+## Formato
 
 Un data frame con 345 filas y 8 columnas:
 
@@ -48,11 +48,11 @@ Un data frame con 345 filas y 8 columnas:
 
   Cantidad de habitantes para la comuna y el año correspondientes
 
-## Source
+## Fuente
 
 <https://bidat.gob.cl/directorio/Indicadores%20comunales%20en%20base%20a%20CASEN/estimaciones-de-pobreza-comunal-2024>
 
-## Details
+## Detalles
 
 Los datos fueron obtenidos [desde el sitio web de
 Mideso](https://bidat.gob.cl/directorio/Indicadores%20comunales%20en%20base%20a%20CASEN/estimaciones-de-pobreza-comunal-2024).

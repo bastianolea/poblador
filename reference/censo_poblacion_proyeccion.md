@@ -8,13 +8,13 @@ planificación y la toma de decisiones tanto para el sector público como
 el privado, dado que permiten anticipar demandas futuras e identificar
 desafíos que surgen como consecuencia de los cambios demográficos.
 
-## Usage
+## Uso
 
 ``` r
 censo_poblacion_proyeccion
 ```
 
-## Format
+## Formato
 
 Un data frame con 11.764 filas y 8 columnas:
 
@@ -52,11 +52,11 @@ Un data frame con 11.764 filas y 8 columnas:
   Cantidad de habitantes proyectados para la comuna y el año
   correspondientes
 
-## Source
+## Fuente
 
 <https://www.ine.gob.cl/estadisticas-por-tema/demografia-y-poblacion/estimaciones-y-proyecciones-de-poblacion>
 
-## Details
+## Detalles
 
 Los datos fueron obtenidos [desde el sitio web del
 INE](https://www.ine.gob.cl/estadisticas-por-tema/demografia-y-poblacion/estimaciones-y-proyecciones-de-poblacion)

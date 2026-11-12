@@ -4,13 +4,13 @@ Imprime en la consola una lista de todas las fuentes de datos incluídas
 en el paquete, con su información. Útil para saber qué está disponible
 en el paquete.
 
-## Usage
+## Uso
 
 ``` r
 datos()
 ```
 
-## See also
+## Ver también
 
 [`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md)
 y
@@ -18,7 +18,7 @@ y
 para hacer uso de estas fuentes de datos sobre dataframes y vectores,
 respectivamente.
 
-## Examples
+## Ejemplos
 
 ``` r
 datos()

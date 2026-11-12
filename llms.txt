@@ -43,10 +43,19 @@ install.packages("territorial", repos = "https://bastianolea.r-universe.dev")
 
 ## Datos de población
 
+Uno de los aspectos principales de
+[poblador](https://bastianolea.github.io/poblador/) es que contiene
+bases de datos de población procesadas [a partir de las fuentes
+oficiales](https://github.com/bastianolea/poblador/tree/main/data-raw) a
+nivel comunal. Las principales son los últimos dos Censos de población
+(2017 y 2024), junto a las proyecciones de población oficiales (en base
+al Censo 2017).
+
 La función
 [`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
-entrega una lista con todas las fuentes de datos disponibles en el
-paquete:
+te muestra todas las fuentes de datos disponibles en el paquete,
+incluído el nombre que tienen para cargarlas en R, sus características y
+fuentes:
 
 ``` r
 
@@ -55,7 +64,7 @@ library(poblador)
 datos()
 ```
 
-Ver *output* de `datos()`
+**Ver el catálogo de datos generado por `datos()`**
 
 ``` R
 ── Datos disponibles en poblador ───────────────────────────────────────────────
@@ -147,12 +156,10 @@ Social.
 <https://bidat.gob.cl/details/ficha/dataset/base-de-datos-pobreza-comunal-2024>
 ```
 
-Puedes usar estas fuentes de datos para consularlas, cruzarlas con otras
-tablas, o su uso principal, que es usarlas para alimentar a la función
-[`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md),
-como veremos a continuación.
-
-Veamos una de las tablas de datos:
+Luego de consultar
+[`datos()`](https://bastianolea.github.io/poblador/reference/datos.md),
+vemos que la tabla del Censo 2024 se llama `censo_poblacion_2024`, así
+que podemos explorarla:
 
 ``` r
 
@@ -161,21 +168,28 @@ library(dplyr)
 
 ``` r
 
-glimpse(censo_poblacion_2024)
+censo_poblacion_2024 |> 
+  head() |> 
+  glimpse()
 ```
 
 ``` R
-Rows: 346
+Rows: 6
 Columns: 8
-$ codigo_region    <dbl> 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3,…
+$ codigo_region    <dbl> 1, 1, 1, 1, 1, 1
 $ nombre_region    <chr> "Tarapacá", "Tarapacá", "Tarapacá", "Tarapacá", "Tara…
-$ codigo_provincia <dbl> 11, 11, 14, 14, 14, 14, 14, 22, 21, 22, 21, 23, 21, 2…
+$ codigo_provincia <dbl> 11, 11, 14, 14, 14, 14
 $ nombre_provincia <chr> "Iquique", "Iquique", "Tamarugal", "Tamarugal", "Tama…
-$ codigo_comuna    <dbl> 1101, 1107, 1401, 1405, 1404, 1402, 1403, 2201, 2102,…
+$ codigo_comuna    <dbl> 1101, 1107, 1401, 1405, 1404, 1402
 $ nombre_comuna    <chr> "Iquique", "Alto Hospicio", "Pozo Almonte", "Pica", "…
-$ año              <dbl> 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024,…
-$ poblacion        <int> 199587, 142086, 16878, 6272, 2858, 1335, 790, 166334,…
+$ año              <dbl> 2024, 2024, 2024, 2024, 2024, 2024
+$ poblacion        <int> 199587, 142086, 16878, 6272, 2858, 1335
 ```
+
+Puedes usar estas fuentes de datos para consularlas, cruzarlas con otras
+tablas, o su uso principal, que es usarlas para alimentar a la función
+[`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md),
+como veremos a continuación.
 
 Todas las tablas de datos del paquete siguen esta estructura de
 `codigo_region`, `nombre_region`, `codigo_comuna` y `nombre_comuna`
@@ -185,12 +199,16 @@ contener `año` y `poblacion`.
 
 ## Agregar población a tus datos
 
-La función
+El fuerte de [poblador](https://bastianolea.github.io/poblador/) es
+agregar datos de población a otras fuentes de datos con las que
+trabajes. La función
 [`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md)
 recibe una tabla de datos o *dataframe* y le agrega una columna
 `poblacion` con los datos oficiales de población.
 
-Primero creemos una tabla de datos de ejemplo:
+Para probar
+[`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md),
+creemos una tabla de datos de nivel **comunal** como ejemplo.
 
 Ver código de tabla
 
@@ -200,24 +218,27 @@ library(dplyr)
 
 comunas <- tibble::tribble(
   ~nombre_comuna, ~codigo_comuna,
-  "Iquique",       1101,
-  "Mejillones",    2102,
-  "La Florida",    13110
+  "La Florida",    13110,
+  "Puente Alto",   13201,
+  "La Pintana",    13112, 
+  "San Joaquín",   13129
 )
 
 comunas
 ```
 
 ``` R
-# A tibble: 3 × 2
+# A tibble: 4 × 2
   nombre_comuna codigo_comuna
   <chr>                 <dbl>
-1 Iquique                1101
-2 Mejillones             2102
-3 La Florida            13110
+1 La Florida            13110
+2 Puente Alto           13201
+3 La Pintana            13112
+4 San Joaquín           13129
 ```
 
-Ahora agreguémosle la población:
+Ahora, a estos datos de ejemplo les agregamos la población que
+corresponde a cada fila:
 
 ``` r
 
@@ -234,25 +255,27 @@ comunas |>
 
 ℹ Agregando datos de población de nivel comunal del año 2026 desde la base `poblador::censo_poblacion_proyeccion()`.
 
-# A tibble: 3 × 3
+# A tibble: 4 × 3
   nombre_comuna codigo_comuna poblacion
   <chr>                 <dbl>     <dbl>
-1 Iquique                1101    234407
-2 Mejillones             2102     16291
-3 La Florida            13110    408195
+1 La Florida            13110    408195
+2 Puente Alto           13201    674064
+3 La Pintana            13112    188629
+4 San Joaquín           13129    102504
 ```
 
-Así de simple! La tabla recibe una columna de población.
+Así de simple! La tabla recibió una columna con la población oficial,
+descrita por el mensaje en la consola. La función detectó
+automáticamente que se trataba de datos comunales (por la presencia de
+las columnas `codigo_comuna` o `nombre_comuna`, y por defecto agregó la
+población del año actual.
 
 Por defecto, la población se obtiene de las [proyecciones oficiales del
 INE](https://www.ine.gob.cl/estadisticas-por-tema/demografia-y-poblacion/estimaciones-y-proyecciones-de-poblacion)
 (ver
 [`poblador::censo_poblacion_proyeccion`](https://bastianolea.github.io/poblador/reference/censo_poblacion_proyeccion.md)).
-
-La función detectó automáticamente que se trataba de datos comunales, y
-puso el año actual por defecto.
-
-Puedes agregar datos de otro año, por ejemplo, de 2020:
+Esto significa que puedes agregar datos de cualquier otro año, por
+ejemplo, del año 2020:
 
 ``` r
 
@@ -265,17 +288,21 @@ comunas |>
 ``` R
 ℹ Agregando datos de población de nivel comunal del año 2020 desde la base `poblador::censo_poblacion_proyeccion()`.
 
-# A tibble: 3 × 3
+# A tibble: 4 × 3
   nombre_comuna codigo_comuna poblacion
   <chr>                 <dbl>     <dbl>
-1 Iquique                1101    223463
-2 Mejillones             2102     14776
-3 La Florida            13110    402433
+1 La Florida            13110    402433
+2 Puente Alto           13201    645909
+3 La Pintana            13112    189335
+4 San Joaquín           13129    103485
 ```
 
 ### Datos regionales
 
-Ahora probemos con datos regionales. Creamos una tabla de muestra:
+Como vimos antes, las funciones de
+[poblador](https://bastianolea.github.io/poblador/) detectan
+automáticamente el nivel de los datos. Probemos ahora con datos
+regionales, creando una nueva tabla de ejemplo.
 
 Ver código de tabla
 
@@ -285,22 +312,24 @@ regiones <- tibble::tribble(
   ~nombre_region, ~codigo_region,
   "Maule",         7,
   "Ñuble",         16,
-  "Biobío",        8
+  "Biobío",        8,
+  "La Araucanía",  9
 )
 
 regiones
 ```
 
 ``` R
-# A tibble: 3 × 2
+# A tibble: 4 × 2
   nombre_region codigo_region
   <chr>                 <dbl>
 1 Maule                     7
 2 Ñuble                    16
 3 Biobío                    8
+4 La Araucanía              9
 ```
 
-Y agregamos la población con
+A esta nueva tabla de datos le agregamos la población con
 [`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md):
 
 ``` r
@@ -316,16 +345,30 @@ regiones |>
 
 ℹ Agregando datos de población de nivel regional del año 2026 desde la base `poblador::censo_poblacion_proyeccion()`.
 
-# A tibble: 3 × 3
+# A tibble: 4 × 3
   nombre_region codigo_region poblacion
   <chr>                 <dbl>     <dbl>
 1 Maule                     7   1189907
 2 Ñuble                    16    525925
 3 Biobío                    8   1694602
+4 La Araucanía              9   1039468
 ```
 
-Nuevamente el nivel territorial se asume automático. Probemos agregando
-a las ergiones datos de un Censo oficial específico:
+Nuevamente el nivel territorial se asume automático.
+
+## Población desde otras fuentes
+
+El argumento `base` de
+[`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md)
+permite usar otras fuentes de datos de población, ya sean las incluídas
+en el paquete (ver
+[`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)),
+o incluso tus propias tablas de población (que sigan las convenciones
+del paquete).
+
+Probemos agregando a la tabla de regiones los datos de un Censo oficial
+específico, en este caso del Censo 2017 (disponible en el objeto
+`censo_poblacion_2017`):
 
 ``` r
 
@@ -340,45 +383,30 @@ regiones |>
 
 ℹ Agregando datos de población de nivel regional del año 2017 desde la base `poblador::censo_poblacion_2017()`.
 
-# A tibble: 3 × 3
+# A tibble: 4 × 3
   nombre_region codigo_region poblacion
   <chr>                 <dbl>     <dbl>
 1 Maule                     7   1044950
 2 Ñuble                    16    480609
 3 Biobío                    8   1556805
+4 La Araucanía              9    957224
 ```
 
-Al agregar datos regionales, el paquete toma los datos comunales y los
-suma para obtener los regionales.
+Como las tablas de datos usadas por
+[poblador](https://bastianolea.github.io/poblador/) vienen en nivel
+comunal, al procesar datos regionales,
+[`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md)
+toma los datos comunales y los suma para obtener los regionales.
 
-### Datos nacionales
+## Datos socioeconómicos
 
-También se pueden obtener las poblaciones nacionales: ¿Cuál será la
-población de Chile el año 2030?
-
-``` r
-
-tibble(país = "Chile") |> 
-  agregar_poblacion(
-    nivel = "nacional",
-    años = 2030)
-```
-
-``` R
-ℹ Agregando datos de población de nivel nacional del año 2030 desde la base `poblador::censo_poblacion_proyeccion()`.
-
-# A tibble: 1 × 2
-  país  poblacion
-  <chr>     <dbl>
-1 Chile  20735289
-```
-
-### Datos socioeconómicos
-
-EL paquete incluye bases de datos socioeconómicos, por ejemplo
-`mideso_pobreza_ingresos` y `mideso_pobreza_multi` (usa
+Entre las distintas bases de datos incluídas, el paquete incluye datos
+socioeconómicos, como las estimaciones de pobreza a nivel comunal en las
+tablas `mideso_pobreza_ingresos` y `mideso_pobreza_multi` (usa
 [`poblador::datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
-para ver todas las bases)
+para ver todas las bases).
+
+Por ejemplo:
 
 ``` r
 
@@ -403,7 +431,8 @@ mideso_pobreza_ingresos
 # ℹ 3 more variables: nombre_comuna <chr>, año <dbl>, poblacion <dbl>
 ```
 
-Veamos un ejemplo de comunas.
+Creemos una tabla de comunas de ejemplo para probar los datos
+socioeconómicos.
 
 Ver código de tabla
 
@@ -467,16 +496,19 @@ Si usamos
 [`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md)
 consecutivamente, podemos agregar tanto la población comunal como la
 población en situación de pobreza, a partir de lo cual podemos calcular
-el porcentaje de pobreza en pocas líneas:
+el **porcentaje de pobreza** en pocas líneas:
 
 ``` r
 
 comunas |> 
+  # agregar habitantes en 2024
   agregar_poblacion(
     base = censo_poblacion_2024) |> 
+  # agregar población en situación de pobreza
   agregar_poblacion(
     base = mideso_pobreza_ingresos,
     nombre = "pobreza") |> 
+  # calcular porcentaje
   mutate(porcentaje = (pobreza/poblacion)*100)
 ```
 
@@ -508,10 +540,11 @@ También se puede obtener la población de territorios específicos con
 [`obtener_poblacion()`](https://bastianolea.github.io/poblador/reference/obtener_poblacion.md).
 Funciona casi idéntico a
 [`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md),
-sólo qeu sobre vectores de datos como nombres o códigos territoriales.
+sólo que sobre vectores de datos como nombres o códigos territoriales.
 
-De esta manera podemos obtener fácilmente la población de una comuna,
-notando que la función infiere que se trata de una comuna:
+De esta manera podemos obtener fácilmente la población de una o varias
+comunas (notando que la función infiere automáticamente que se trata de
+comunas):
 
 ``` r
 
@@ -528,7 +561,7 @@ obtener_poblacion("La Florida")
 [1] 408195
 ```
 
-También podemos entregar algunos [códigos únicos
+También podemos entregar [códigos únicos
 territoriales](https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html):
 
 ``` r
@@ -546,61 +579,48 @@ obtener_poblacion(c(13102, 13201))
 [1]  90328 674064
 ```
 
-Solicitar la proyección de población de un año específico:
+Esta forma de obtener datos de población sirve principalmente para
+[reportes Quarto](https://bastianolea.rbind.io/blog/quarto_reportes/) o
+[aplicaciones Shiny](https://bastianolea.rbind.io/blog/shiny/); por
+ejemplo, en la [redacción de un
+párrafo](https://bastianolea.rbind.io/blog/redactar_texto/) basado en
+datos:
 
 ``` r
 
-obtener_poblacion("La Florida", años = 2002)
+comuna <- "Ñuñoa"
+
+glue::glue("La comuna de {comuna} tiene una población de {obtener_poblacion(comuna)} habitantes.")
+```
+
+``` R
+La comuna de Ñuñoa tiene una población de 274180 habitantes.
+```
+
+Al igual que con
+[`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md),
+al basarse por defecto en las proyecciones de población del INE se puede
+solicitar la proyección de población de cualquier territorio en un año
+específico:
+
+``` r
+
+obtener_poblacion("La Florida", años = 2030)
 ```
 
 ``` R
 ! Se detectó que los datos son nombres de comunas. Se asumirá el nivel "comunal".
 
-ℹ Agregando datos de población de nivel comunal del año 2002 desde la base `poblador::censo_poblacion_proyeccion()`.
+ℹ Agregando datos de población de nivel comunal del año 2030 desde la base `poblador::censo_poblacion_proyeccion()`.
 
-[1] 376943
+[1] 409368
 ```
 
-Obtener la población de una comuna en el Censo 2017 y en el Censo 2024:
-
-``` r
-
-obtener_poblacion(
-  "La Florida", 
-  base = censo_poblacion_2017)
-```
-
-``` R
-! Se detectó que los datos son nombres de comunas. Se asumirá el nivel "comunal".
-
-! Considerando el año más reciente (2017) para la base "censo_poblacion_2017".
-
-ℹ Agregando datos de población de nivel comunal del año 2017 desde la base `poblador::censo_poblacion_2017()`.
-
-[1] 366916
-```
-
-``` r
-
-obtener_poblacion(
-  "La Florida", 
-  base = censo_poblacion_2024)
-```
-
-``` R
-! Se detectó que los datos son nombres de comunas. Se asumirá el nivel "comunal".
-
-! Considerando el año más reciente (2024) para la base "censo_poblacion_2024".
-
-ℹ Agregando datos de población de nivel comunal del año 2024 desde la base `poblador::censo_poblacion_2024()`.
-
-[1] 374836
-```
-
-Esta forma de obtener datos de población también sirve para usarla
+También puedes usar
+[`obtener_poblacion()`](https://bastianolea.github.io/poblador/reference/obtener_poblacion.md)
 dentro de
-[`dplyr::mutate()`](https://dplyr.tidyverse.org/reference/mutate.html)
-al crear o modificar columnas de un *dataframe*:
+[`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html) al crear
+o modificar columnas de un *dataframe*:
 
 Ver código de tabla
 
@@ -633,25 +653,7 @@ comunas |>
 4 General Lagos         15202       791
 ```
 
-Otro uso útil es para [reportes
-Quarto](https://bastianolea.rbind.io/blog/quarto_reportes/) o
-[aplicaciones Shiny](https://bastianolea.rbind.io/blog/shiny/); por
-ejemplo, en la [redacción de un
-párrafo](https://bastianolea.rbind.io/blog/redactar_texto/) basado en
-datos:
-
-``` r
-
-comuna <- "Ñuñoa"
-
-glue::glue("La comuna de {comuna} tiene una población de {obtener_poblacion(comuna)} habitantes.")
-```
-
-``` R
-La comuna de Ñuñoa tiene una población de 274180 habitantes.
-```
-
-# Package index
+# Índice del paquete
 
 ## Catálogo de datos
 
@@ -685,7 +687,7 @@ Funciones para agregar columnas con población o cifras de población
 - [`obtener_poblacion()`](https://bastianolea.github.io/poblador/reference/obtener_poblacion.md)
   : Obtener la población una unidad territorial
 
-# Articles
+# Artículos
 
 ### Artículos
 

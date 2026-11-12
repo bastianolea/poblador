@@ -11,7 +11,7 @@ territorial](https://bastianolea.github.io/territorial). Para obtener la
 población de vectores, usar
 [`obtener_poblacion()`](https://bastianolea.github.io/poblador/reference/obtener_poblacion.md).
 
-## Usage
+## Uso
 
 ``` r
 agregar_poblacion(
@@ -23,7 +23,7 @@ agregar_poblacion(
 )
 ```
 
-## Arguments
+## Argumentos
 
 - datos:
 
@@ -52,14 +52,14 @@ agregar_poblacion(
   Nombre de la columna de población a agregar. Por defecto es
   `poblacion`.
 
-## Details
+## Detalles
 
 Se puede especificar la base de datos de a utilizar entre las que ofrece
 este paquete (revísalas con
 [`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)),
 o una distinta que siga las mismas convenciones.
 
-## See also
+## Ver también
 
 [`obtener_poblacion()`](https://bastianolea.github.io/poblador/reference/obtener_poblacion.md)
 para obtener poblaciones de vectores con códigos o nombres de unidades
@@ -67,7 +67,7 @@ territoriales. Ver
 [`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
 para una lista de fuentes de datos posibles.
 
-## Examples
+## Ejemplos
 
 ``` r
 # tabla de datos con un par de comunas: el nivel comunal se detecta

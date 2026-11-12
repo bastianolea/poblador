@@ -9,7 +9,7 @@ de población correspondientes en el mismo orden que fueron entregadas.
 Para *dataframes*, usar
 [`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md).
 
-## Usage
+## Uso
 
 ``` r
 obtener_poblacion(
@@ -20,7 +20,7 @@ obtener_poblacion(
 )
 ```
 
-## Arguments
+## Argumentos
 
 - datos:
 
@@ -44,25 +44,25 @@ obtener_poblacion(
   [`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
   para una lista de fuentes de datos posibles.
 
-## Value
+## Valor
 
 Vector de las cifras de población correspondientes.
 
-## Details
+## Detalles
 
 Se puede especificar la base de datos de a utilizar entre las que ofrece
 este paquete (revísalas con
 [`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)),
 o una distinta que siga las mismas convenciones.
 
-## See also
+## Ver también
 
 [`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md)
 para agregar una columna de población sobre dataframes. Ver
 [`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
 para una lista de fuentes de datos posibles.
 
-## Examples
+## Ejemplos
 
 ``` r
 obtener_poblacion(c(1101, 2102))

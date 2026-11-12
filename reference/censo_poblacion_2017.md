@@ -2,13 +2,13 @@
 
 Cifras de población según el Censo 2017.
 
-## Usage
+## Uso
 
 ``` r
 censo_poblacion_2017
 ```
 
-## Format
+## Formato
 
 Un data frame con 346 filas y 8 columnas:
 
@@ -45,11 +45,11 @@ Un data frame con 346 filas y 8 columnas:
 
   Cantidad de habitantes para la comuna y el año correspondientes
 
-## Source
+## Fuente
 
 <https://www.ine.gob.cl/estadisticas-por-tema/demografia-y-poblacion/censo-de-poblacion-y-vivienda>
 
-## Details
+## Detalles
 
 Los datos fueron obtenidos [desde el sitio web del
 INE](https://www.ine.gob.cl/estadisticas-por-tema/demografia-y-poblacion/censo-de-poblacion-y-vivienda).
