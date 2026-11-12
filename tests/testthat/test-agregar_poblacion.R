@@ -562,3 +562,262 @@ describe("agregar_poblacion() argumento base", {
     ))
   })
 })
+
+describe("agregar_poblacion() con bases de Mideso", {
+  datos <- censo_poblacion_proyeccion |>
+    dplyr::distinct(codigo_comuna, nombre_comuna) |>
+    dplyr::filter(codigo_comuna %in% c(1101, 2102))
+
+  bases_mideso <- list(
+    mideso_pobreza_ingresos = mideso_pobreza_ingresos,
+    mideso_pobreza_multi = mideso_pobreza_multi
+  )
+
+  for (nombre_base in names(bases_mideso)) {
+    it(paste("agrega población desde", nombre_base), {
+      base_mideso <- bases_mideso[[nombre_base]]
+
+      resultado <- suppressMessages(
+        agregar_poblacion(datos, base = base_mideso)
+      )
+
+      esperado <- base_mideso |>
+        dplyr::filter(codigo_comuna %in% datos$codigo_comuna) |>
+        dplyr::arrange(match(codigo_comuna, datos$codigo_comuna))
+
+      expect_named(resultado, c("codigo_comuna", "nombre_comuna", "poblacion"))
+      expect_equal(resultado$codigo_comuna, datos$codigo_comuna)
+      expect_equal(resultado$poblacion, esperado$poblacion)
+      expect_false(anyNA(resultado$poblacion))
+    })
+  }
+})
+
+describe("agregar_poblacion() argumento nombre", {
+  datos <- data.frame(codigo_comuna = c(1101, 2102))
+
+  it("nombra la columna de población con el nombre indicado", {
+    resultado <- suppressMessages(
+      agregar_poblacion(datos, años = 2023, nombre = "habitantes")
+    )
+
+    expect_named(resultado, c("codigo_comuna", "habitantes"))
+    expect_false(anyNA(resultado$habitantes))
+  })
+
+  it("entrega las mismas cifras que con el nombre por defecto", {
+    con_nombre <- suppressMessages(
+      agregar_poblacion(datos, años = 2023, nombre = "habitantes")
+    )
+    sin_nombre <- suppressMessages(
+      agregar_poblacion(datos, años = 2023)
+    )
+
+    expect_equal(con_nombre$habitantes, sin_nombre$poblacion)
+  })
+
+  it("funciona en los niveles regional y nacional", {
+    regional <- suppressMessages(agregar_poblacion(
+      data.frame(codigo_region = 1),
+      años = 2023,
+      nombre = "habitantes"
+    ))
+    nacional <- suppressMessages(agregar_poblacion(
+      data.frame(pais = "Chile"),
+      nivel = "nacional",
+      años = 2023,
+      nombre = "habitantes"
+    ))
+
+    expect_named(regional, c("codigo_region", "habitantes"))
+    expect_named(nacional, c("pais", "habitantes"))
+  })
+
+  it("falla si los datos ya tienen una columna con el nombre indicado", {
+    datos_con_columna <- data.frame(codigo_comuna = 1101, habitantes = 1)
+
+    expect_error(
+      suppressMessages(agregar_poblacion(
+        datos_con_columna,
+        nivel = "comunal",
+        años = 2023,
+        nombre = "habitantes"
+      )),
+      "ya tienen una columna"
+    )
+  })
+
+  it("permite un nombre distinto si los datos ya tienen columna poblacion", {
+    datos_con_poblacion <- data.frame(codigo_comuna = 1101, poblacion = 1)
+
+    resultado <- suppressMessages(agregar_poblacion(
+      datos_con_poblacion,
+      nivel = "comunal",
+      años = 2023,
+      nombre = "poblacion_proyectada"
+    ))
+
+    expect_named(
+      resultado,
+      c("codigo_comuna", "poblacion", "poblacion_proyectada")
+    )
+    expect_equal(resultado$poblacion, 1)
+  })
+
+  it("el error de columna existente menciona el nombre indicado", {
+    datos_con_columna <- data.frame(codigo_comuna = 1101, habitantes = 1)
+
+    expect_error(
+      suppressMessages(agregar_poblacion(
+        datos_con_columna,
+        nivel = "comunal",
+        años = 2023,
+        nombre = "habitantes"
+      )),
+      "habitantes"
+    )
+  })
+})
+
+describe("agregar_poblacion() combinando nombre y base", {
+  datos <- censo_poblacion_proyeccion |>
+    dplyr::distinct(codigo_comuna, nombre_comuna) |>
+    dplyr::filter(codigo_comuna %in% c(1101, 2102))
+
+  it("agrega la cifra de una base distinta bajo el nombre indicado", {
+    resultado <- suppressMessages(agregar_poblacion(
+      datos,
+      base = mideso_pobreza_ingresos,
+      nombre = "pobreza"
+    ))
+
+    esperado <- mideso_pobreza_ingresos |>
+      dplyr::filter(codigo_comuna %in% datos$codigo_comuna) |>
+      dplyr::arrange(match(codigo_comuna, datos$codigo_comuna))
+
+    expect_named(resultado, c("codigo_comuna", "nombre_comuna", "pobreza"))
+    expect_equal(resultado$pobreza, esperado$poblacion)
+  })
+
+  it("acepta una base como texto con un nombre distinto", {
+    resultado <- suppressMessages(agregar_poblacion(
+      datos,
+      base = "mideso_pobreza_multi",
+      nombre = "pobreza_multidimensional"
+    ))
+
+    expect_named(
+      resultado,
+      c("codigo_comuna", "nombre_comuna", "pobreza_multidimensional")
+    )
+    expect_false(anyNA(resultado$pobreza_multidimensional))
+  })
+
+  it("permite encadenar varias bases en columnas distintas", {
+    resultado <- suppressMessages(
+      datos |>
+        agregar_poblacion(base = censo_poblacion_2024) |>
+        agregar_poblacion(base = mideso_pobreza_ingresos, nombre = "pobreza")
+    )
+
+    expect_named(
+      resultado,
+      c("codigo_comuna", "nombre_comuna", "poblacion", "pobreza")
+    )
+    expect_equal(
+      resultado$poblacion,
+      suppressMessages(
+        agregar_poblacion(datos, base = censo_poblacion_2024)$poblacion
+      )
+    )
+    expect_false(anyNA(resultado$pobreza))
+  })
+
+  it("suma una base distinta a nivel regional bajo el nombre indicado", {
+    datos_regiones <- data.frame(codigo_region = c(1, 2))
+
+    resultado <- suppressMessages(agregar_poblacion(
+      datos_regiones,
+      base = mideso_pobreza_ingresos,
+      nombre = "pobreza"
+    ))
+
+    esperado <- mideso_pobreza_ingresos |>
+      dplyr::filter(codigo_region %in% c(1, 2)) |>
+      dplyr::summarize(poblacion = sum(poblacion), .by = codigo_region) |>
+      dplyr::arrange(codigo_region)
+
+    expect_named(resultado, c("codigo_region", "pobreza"))
+    expect_equal(resultado$pobreza, esperado$poblacion)
+  })
+})
+
+describe("agregar_poblacion() en todas las combinaciones de base, nivel y nombre", {
+  bases <- list(
+    censo_poblacion_2017 = censo_poblacion_2017,
+    censo_poblacion_2024 = censo_poblacion_2024,
+    censo_poblacion_proyeccion = censo_poblacion_proyeccion,
+    mideso_pobreza_ingresos = mideso_pobreza_ingresos,
+    mideso_pobreza_multi = mideso_pobreza_multi
+  )
+
+  datos_por_nivel <- list(
+    comunal = data.frame(codigo_comuna = c(1101, 2102)),
+    regional = data.frame(codigo_region = c(1, 2)),
+    nacional = data.frame(pais = "Chile")
+  )
+
+  columna_codigo <- c(
+    comunal = "codigo_comuna",
+    regional = "codigo_region",
+    nacional = NA
+  )
+
+  for (nombre_base in names(bases)) {
+    for (nivel in names(datos_por_nivel)) {
+      for (nombre in c("poblacion", "otra_cifra")) {
+        it(paste("base", nombre_base, "| nivel", nivel, "| nombre", nombre), {
+          base <- bases[[nombre_base]]
+          datos <- datos_por_nivel[[nivel]]
+          año_base <- max(base$año)
+
+          # base entregada como dataframe y como texto deben coincidir
+          como_tabla <- suppressMessages(agregar_poblacion(
+            datos,
+            nivel = nivel,
+            años = año_base,
+            base = base,
+            nombre = nombre
+          ))
+          como_texto <- suppressMessages(agregar_poblacion(
+            datos,
+            nivel = nivel,
+            años = año_base,
+            base = nombre_base,
+            nombre = nombre
+          ))
+
+          codigo <- columna_codigo[[nivel]]
+          base_año <- dplyr::filter(base, año == año_base)
+
+          if (is.na(codigo)) {
+            esperado <- sum(base_año$poblacion)
+          } else {
+            esperado <- base_año |>
+              dplyr::filter(.data[[codigo]] %in% datos[[codigo]]) |>
+              dplyr::summarize(
+                poblacion = sum(poblacion),
+                .by = dplyr::all_of(codigo)
+              ) |>
+              dplyr::arrange(match(.data[[codigo]], datos[[codigo]])) |>
+              dplyr::pull(poblacion)
+          }
+
+          expect_named(como_tabla, c(names(datos), nombre))
+          expect_equal(como_tabla, como_texto)
+          expect_equal(como_tabla[[nombre]], esperado)
+        })
+      }
+    }
+  }
+})

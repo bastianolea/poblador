@@ -9,3 +9,4 @@
 _pendientes.md
 ^vignettes/\.quarto$
 ^vignettes/*_files$
+^vignettes/articles$

@@ -8,6 +8,7 @@
 #' @param nivel Nivel del dato a agregar. Puede ser "regional", "comunal" o "nacional", pero si no se indica, se infiere a partir de los datos.
 #' @param años Año de la población, para las bases de población que cubren múltiples años.
 #' @param base Base de datos de población a utilizar. Por defecto es [poblador::censo_poblacion_proyeccion]. Ver [poblador::datos()] para una lista de fuentes de datos posibles.
+#' @param nombre Nombre de la columna de población a agregar. Por defecto es `poblacion`.
 #'
 #' @seealso [poblador::obtener_poblacion()] para obtener poblaciones de vectores con códigos o nombres de unidades territoriales. Ver [poblador::datos()] para una lista de fuentes de datos posibles.
 #' @export
@@ -39,7 +40,8 @@ agregar_poblacion <- function(
   datos,
   nivel = NULL,
   años = NULL,
-  base = "censo_poblacion_proyeccion"
+  base = "censo_poblacion_proyeccion",
+  nombre = "poblacion"
 ) {
   # nivel <- "comuna"
   # codigo <- c(1101, 2102)
@@ -72,9 +74,9 @@ agregar_poblacion <- function(
   }
 
   # si ya tiene población
-  if ("poblacion" %in% colnames(datos)) {
+  if (nombre %in% colnames(datos)) {
     cli::cli_abort(
-      "Los datos ya tienen una columna {.col poblacion}. Renómbrala o elimínala antes de agregar población."
+      "Los datos ya tienen una columna {.col {nombre}}. Renómbrala o elimínala antes de agregar población."
     )
   }
 
@@ -300,7 +302,9 @@ agregar_poblacion <- function(
   # tabla con la población a cruzar con `datos`
   cruzar <- pob_filtrada |>
     dplyr::ungroup() |>
-    dplyr::select(dplyr::all_of(columnas_cruce), poblacion)
+    dplyr::select(dplyr::all_of(columnas_cruce), poblacion) |>
+    # aplicar nombre elegido
+    dplyr::rename(!!nombre := poblacion)
 
   # realizar cruce
   if (length(columnas_cruce) > 0) {
@@ -323,7 +327,7 @@ agregar_poblacion <- function(
       "Se obtuvieron más filas en la base cruzada ({nrow(cruce)}) que los datos originales ({nrow(datos)})."
     )
   }
-  if (nrow(cruce) > 0 && all(is.na(cruce$poblacion))) {
+  if (nrow(cruce) > 0 && all(is.na(cruce[[nombre]]))) {
     cli::cli_abort(
       "No se encontraron cifras de población para los códigos y años especificados. Revisa los argumentos {.arg nivel}, {.arg codigo} y {.arg años}."
     )

@@ -8,7 +8,8 @@ agregar_poblacion(
   datos,
   nivel = NULL,
   años = NULL,
-  base = "censo_poblacion_proyeccion"
+  base = "censo_poblacion_proyeccion",
+  nombre = "poblacion"
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ agregar_poblacion(
 \item{años}{Año de la población, para las bases de población que cubren múltiples años.}
 
 \item{base}{Base de datos de población a utilizar. Por defecto es \link{censo_poblacion_proyeccion}. Ver \code{\link[=datos]{datos()}} para una lista de fuentes de datos posibles.}
+
+\item{nombre}{Nombre de la columna de población a agregar. Por defecto es \code{poblacion}.}
 }
 \description{
 Agrega cifras de población oficiales a datos territoriales de Chile. Esta función opera sobre tablas de datos (\emph{dataframes}) agregando una nueva columna llamada \code{poblacion}, y se espeta que estos datos tengan columnas \code{nombre_comuna}, \code{codigo_comuna}, \code{nombre_region} o \code{codigo_region}, como en la tabla \link[territorial:territorios]{territorial::territorios} del \href{https://bastianolea.github.io/territorial}{paquete de R {territorial}}. Para obtener la población de vectores, usar \code{\link[=obtener_poblacion]{obtener_poblacion()}}.

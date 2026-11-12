@@ -2,12 +2,12 @@
 % Please edit documentation in R/datos.R
 \name{datos}
 \alias{datos}
-\title{Lista de fuentes de datos disponibles en {poblador}}
+\title{Fuentes de datos disponibles}
 \usage{
 datos()
 }
 \description{
-Imprime en la consola una lista de todas las fuentes de datos incluídas en el paquete.
+Imprime en la consola una lista de todas las fuentes de datos incluídas en el paquete, con su información. Útil para saber qué está disponible en el paquete.
 }
 \examples{
 datos()

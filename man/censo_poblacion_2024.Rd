@@ -3,7 +3,7 @@
 \docType{data}
 \name{censo_poblacion_2024}
 \alias{censo_poblacion_2024}
-\title{Población a nivel comunal de Chile (2024)}
+\title{Población censada a nivel comunal de Chile (2024)}
 \format{
 Un data frame con 346 filas y 8 columnas:
 \describe{

@@ -28,7 +28,7 @@ También puedes instalar desde GitHub:
 pak::pak("bastianolea/poblador")
 ```
 
-Para que `{poblador}` funcione, necesitas tener instalado `{territorial}`. Si no lo tienes, instálalo con:
+Para que `{poblador}` funcione, necesitas [tener instalado `{territorial}`](https://bastianolea.github.io/territorial/#instalación). Si no lo tienes, instálalo con:
 
 ```r
 install.packages("territorial", repos = "https://bastianolea.r-universe.dev")
@@ -46,11 +46,7 @@ datos()
 
 Puedes usar estas fuentes de datos para consularlas, cruzarlas con otras tablas, o su uso principal, que es usarlas para alimentar a la función `agregar_poblacion()`, como veremos a continuación.
 
-## Agregar población a tus datos
-
-La función `agregar_poblacion()` recibe una tabla de datos o _dataframe_ y le agrega una columna `poblacion` con los datos oficiales de población.
-
-Primero creemos una tabla de datos de ejemplo:
+Veamos una de las tablas de datos:
 
 ```{r}
 #| warning: false
@@ -58,13 +54,29 @@ library(dplyr)
 ```
 
 ```{r}
+glimpse(censo_poblacion_2024)
+```
+
+Todas las tablas de datos del paquete siguen esta estructura de 
+`codigo_region`, `nombre_region`, `codigo_comuna` y `nombre_comuna` (heredada del [paquete `{territorial}`](https://bastianolea.github.io/territorial/)), además de contener `año` y `poblacion`.
+
+## Agregar población a tus datos
+
+La función `agregar_poblacion()` recibe una tabla de datos o _dataframe_ y le agrega una columna `poblacion` con los datos oficiales de población.
+
+Primero creemos una tabla de datos de ejemplo:
+
+```{r}
 #| code-fold: true
 #| code-summary: "Ver código de tabla"
+#| warning: false
+library(dplyr)
 
 comunas <- tibble::tribble(
   ~nombre_comuna, ~codigo_comuna,
   "Iquique",       1101,
-  "Mejillones",    2102
+  "Mejillones",    2102,
+  "La Florida",    13110
 )
 
 comunas
@@ -139,6 +151,55 @@ tibble(país = "Chile") |>
   agregar_poblacion(
     nivel = "nacional",
     años = 2030)
+```
+
+
+### Datos socioeconómicos
+
+EL paquete incluye bases de datos socioeconómicos, por ejemplo `mideso_pobreza_ingresos` y `mideso_pobreza_multi` (usa `poblador::datos()` para ver todas las bases)
+
+```{r}
+mideso_pobreza_ingresos
+```
+
+Veamos un ejemplo de comunas.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Ver código de tabla"
+#| warning: false
+library(dplyr)
+
+comunas <- tibble::tribble(
+  ~nombre_comuna, ~codigo_comuna,
+  "La Florida",   13110,
+  "Puente Alto",  13201,
+  "La Pintana",   13112,
+  "Las Condes",   13114
+)
+
+comunas
+```
+
+Para usar las bases de datos socioeconómicos, simplemente las agregamos al argumento `base` de `agregar_poblacion()` o de `obtener_poblacion()`:
+
+```{r}
+comunas |> 
+  agregar_poblacion(base = mideso_pobreza_ingresos)
+```
+
+En este ejemplo agregamos la población comunal estimada de habitantes en situación de pobreza por ingresos, según la encuesta Casen. 
+
+Si usamos `agregar_poblacion()` consecutivamente, podemos agregar tanto la población comunal como la población en situación de pobreza, a partir de lo cual podemos calcular el porcentaje de pobreza en pocas líneas:
+
+```{r}
+comunas |> 
+  agregar_poblacion(
+    base = censo_poblacion_2024) |> 
+  agregar_poblacion(
+    base = mideso_pobreza_ingresos,
+    nombre = "pobreza") |> 
+  mutate(porcentaje = (pobreza/poblacion)*100)
 ```
 
 

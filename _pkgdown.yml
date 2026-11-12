@@ -37,8 +37,8 @@ reference:
   - starts_with("obtener")
 
 articles:
-- title: Viñetas
+- title: Artículos
   navbar: ~
-  desc: Información general sobre el paquete
+  desc: Ejemplos de uso del paquete
   contents:
-  - poblador
+  - starts_with("poblacion")
