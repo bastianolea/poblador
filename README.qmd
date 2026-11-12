@@ -36,7 +36,9 @@ install.packages("territorial", repos = "https://bastianolea.r-universe.dev")
 
 ## Datos de población
 
-La función `datos()` entrega una lista con todas las fuentes de datos disponibles en el paquete:
+Uno de los aspectos principales de `{poblador}` es que contiene bases de datos de población procesadas [a partir de las fuentes oficiales](https://github.com/bastianolea/poblador/tree/main/data-raw) a nivel comunal. Las principales son los últimos dos Censos de población (2017 y 2024), junto a las proyecciones de población oficiales (en base al Censo 2017). 
+
+La función `datos()` te muestra todas las fuentes de datos disponibles en el paquete, incluído el nombre que tienen para cargarlas en R, sus características y fuentes:
 
 ```{r}
 #| output: false
@@ -46,18 +48,16 @@ datos()
 ```
 
 <details>
-<summary>Ver _output_ de `datos()`</summary>
+<summary>**Ver el catálogo de datos generado por `datos()`**</summary>
 
-```{r}
+```{r catalogo de datos}
 #| echo: false
 datos()
 ```
 
 </details>
 
-Puedes usar estas fuentes de datos para consularlas, cruzarlas con otras tablas, o su uso principal, que es usarlas para alimentar a la función `agregar_poblacion()`, como veremos a continuación.
-
-Veamos una de las tablas de datos:
+Luego de consultar `datos()`, vemos que la tabla del Censo 2024 se llama `censo_poblacion_2024`, así que podemos explorarla:
 
 ```{r}
 #| warning: false
@@ -65,17 +65,21 @@ library(dplyr)
 ```
 
 ```{r}
-glimpse(censo_poblacion_2024)
+censo_poblacion_2024 |> 
+  head() |> 
+  glimpse()
 ```
+
+Puedes usar estas fuentes de datos para consularlas, cruzarlas con otras tablas, o su uso principal, que es usarlas para alimentar a la función `agregar_poblacion()`, como veremos a continuación.
 
 Todas las tablas de datos del paquete siguen esta estructura de 
 `codigo_region`, `nombre_region`, `codigo_comuna` y `nombre_comuna` (heredada del [paquete `{territorial}`](https://bastianolea.github.io/territorial/)), además de contener `año` y `poblacion`.
 
 ## Agregar población a tus datos
 
-La función `agregar_poblacion()` recibe una tabla de datos o _dataframe_ y le agrega una columna `poblacion` con los datos oficiales de población.
+El fuerte de `{poblador}` es agregar datos de población a otras fuentes de datos con las que trabajes. La función `agregar_poblacion()` recibe una tabla de datos o _dataframe_ y le agrega una columna `poblacion` con los datos oficiales de población.
 
-Primero creemos una tabla de datos de ejemplo:
+Para probar `agregar_poblacion()`, creemos una tabla de datos de nivel **comunal** como ejemplo.
 
 ```{r}
 #| code-fold: true
@@ -85,15 +89,16 @@ library(dplyr)
 
 comunas <- tibble::tribble(
   ~nombre_comuna, ~codigo_comuna,
-  "Iquique",       1101,
-  "Mejillones",    2102,
-  "La Florida",    13110
+  "La Florida",    13110,
+  "Puente Alto",   13201,
+  "La Pintana",    13112, 
+  "San Joaquín",   13129
 )
 
 comunas
 ```
 
-Ahora agreguémosle la población:
+Ahora, a estos datos de ejemplo les agregamos la población que corresponde a cada fila:
 
 ```{r}
 library(poblador)
@@ -102,13 +107,9 @@ comunas |>
   agregar_poblacion()
 ```
 
-Así de simple! La tabla recibe una columna de población. 
+Así de simple! La tabla recibió una columna con la población oficial, descrita por el mensaje en la consola. La función detectó automáticamente que se trataba de datos comunales (por la presencia de las columnas `codigo_comuna` o `nombre_comuna`, y por defecto agregó la población del año actual.
 
-Por defecto, la población se obtiene de las [proyecciones oficiales del INE](https://www.ine.gob.cl/estadisticas-por-tema/demografia-y-poblacion/estimaciones-y-proyecciones-de-poblacion) (ver `poblador::censo_poblacion_proyeccion`).
-
-La función detectó automáticamente que se trataba de datos comunales, y puso el año actual por defecto.
-
-Puedes agregar datos de otro año, por ejemplo, de 2020:
+Por defecto, la población se obtiene de las [proyecciones oficiales del INE](https://www.ine.gob.cl/estadisticas-por-tema/demografia-y-poblacion/estimaciones-y-proyecciones-de-poblacion) (ver `poblador::censo_poblacion_proyeccion`). Esto significa que puedes agregar datos de cualquier otro año, por ejemplo, del año 2020:
 
 ```{r}
 comunas |> 
@@ -119,7 +120,7 @@ comunas |>
 
 ### Datos regionales
 
-Ahora probemos con datos regionales. Creamos una tabla de muestra:
+Como vimos antes, las funciones de `{poblador}` detectan automáticamente el nivel de los datos. Probemos ahora con datos regionales, creando una nueva tabla de ejemplo.
 
 ```{r}
 #| code-fold: true
@@ -129,20 +130,27 @@ regiones <- tibble::tribble(
   ~nombre_region, ~codigo_region,
   "Maule",         7,
   "Ñuble",         16,
-  "Biobío",        8
+  "Biobío",        8,
+  "La Araucanía",  9
 )
 
 regiones
 ```
 
-Y agregamos la población con `agregar_poblacion()`:
+A esta nueva tabla de datos le agregamos la población con `agregar_poblacion()`:
 
 ```{r}
 regiones |> 
   agregar_poblacion()
 ```
 
-Nuevamente el nivel territorial se asume automático. Probemos agregando a las ergiones datos de un Censo oficial específico:
+Nuevamente el nivel territorial se asume automático. 
+
+## Población desde otras fuentes
+
+El argumento `base` de `agregar_poblacion()` permite usar otras fuentes de datos de población, ya sean las incluídas en el paquete (ver `datos()`), o incluso tus propias tablas de población (que sigan las convenciones del paquete).
+
+Probemos agregando a la tabla de regiones los datos de un Censo oficial específico, en este caso del Censo 2017 (disponible en el objeto `censo_poblacion_2017`):
 
 ```{r}
 regiones |> 
@@ -151,29 +159,19 @@ regiones |>
     base = censo_poblacion_2017)
 ```
 
-Al agregar datos regionales, el paquete toma los datos comunales y los suma para obtener los regionales.
+Como las tablas de datos usadas por `{poblador}` vienen en nivel comunal, al procesar datos regionales, `agregar_poblacion()` toma los datos comunales y los suma para obtener los regionales.
 
-### Datos nacionales
+## Datos socioeconómicos
 
-También se pueden obtener las poblaciones nacionales: ¿Cuál será la población de Chile el año 2030?
+Entre las distintas bases de datos incluídas, el paquete incluye datos socioeconómicos, como las estimaciones de pobreza a nivel comunal en las tablas `mideso_pobreza_ingresos` y `mideso_pobreza_multi` (usa `poblador::datos()` para ver todas las bases).
 
-```{r}
-tibble(país = "Chile") |> 
-  agregar_poblacion(
-    nivel = "nacional",
-    años = 2030)
-```
-
-
-### Datos socioeconómicos
-
-EL paquete incluye bases de datos socioeconómicos, por ejemplo `mideso_pobreza_ingresos` y `mideso_pobreza_multi` (usa `poblador::datos()` para ver todas las bases)
+Por ejemplo:
 
 ```{r}
 mideso_pobreza_ingresos
 ```
 
-Veamos un ejemplo de comunas.
+Creemos una tabla de comunas de ejemplo para probar los datos socioeconómicos.
 
 ```{r}
 #| code-fold: true
@@ -201,54 +199,54 @@ comunas |>
 
 En este ejemplo agregamos la población comunal estimada de habitantes en situación de pobreza por ingresos, según la encuesta Casen. 
 
-Si usamos `agregar_poblacion()` consecutivamente, podemos agregar tanto la población comunal como la población en situación de pobreza, a partir de lo cual podemos calcular el porcentaje de pobreza en pocas líneas:
+Si usamos `agregar_poblacion()` consecutivamente, podemos agregar tanto la población comunal como la población en situación de pobreza, a partir de lo cual podemos calcular el **porcentaje de pobreza** en pocas líneas:
 
 ```{r}
 comunas |> 
+  # agregar habitantes en 2024
   agregar_poblacion(
     base = censo_poblacion_2024) |> 
+  # agregar población en situación de pobreza
   agregar_poblacion(
     base = mideso_pobreza_ingresos,
     nombre = "pobreza") |> 
+  # calcular porcentaje
   mutate(porcentaje = (pobreza/poblacion)*100)
 ```
 
 
 ## Obtener población de territorios
 
-También se puede obtener la población de territorios específicos con `obtener_poblacion()`. Funciona casi idéntico a `agregar_poblacion()`, sólo qeu sobre vectores de datos como nombres o códigos territoriales.
+También se puede obtener la población de territorios específicos con `obtener_poblacion()`. Funciona casi idéntico a `agregar_poblacion()`, sólo que sobre vectores de datos como nombres o códigos territoriales.
 
-De esta manera podemos obtener fácilmente la población de una comuna, notando que la función infiere que se trata de una comuna:
+De esta manera podemos obtener fácilmente la población de una o varias comunas (notando que la función infiere automáticamente que se trata de comunas):
 
 ```{r}
 obtener_poblacion("La Florida")
 ```
 
-También podemos entregar algunos [códigos únicos territoriales](https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html):
+También podemos entregar [códigos únicos territoriales](https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html):
 
 ```{r}
 obtener_poblacion(c(13102, 13201))
 ```
 
-Solicitar la proyección de población de un año específico: 
+Esta forma de obtener datos de población sirve principalmente para [reportes Quarto](https://bastianolea.rbind.io/blog/quarto_reportes/) o [aplicaciones Shiny](https://bastianolea.rbind.io/blog/shiny/); por ejemplo, en la [redacción de un párrafo](https://bastianolea.rbind.io/blog/redactar_texto/) basado en datos:
 
 ```{r}
-obtener_poblacion("La Florida", años = 2002)
+#| warning: false
+comuna <- "Ñuñoa"
+
+glue::glue("La comuna de {comuna} tiene una población de {obtener_poblacion(comuna)} habitantes.")
 ```
 
-Obtener la población de una comuna en el Censo 2017 y en el Censo 2024:
+Al igual que con `agregar_poblacion()`, al basarse por defecto en las proyecciones de población del INE se puede solicitar la proyección de población de cualquier territorio en un año específico: 
 
 ```{r}
-obtener_poblacion(
-  "La Florida", 
-  base = censo_poblacion_2017)
-
-obtener_poblacion(
-  "La Florida", 
-  base = censo_poblacion_2024)
+obtener_poblacion("La Florida", años = 2030)
 ```
 
-Esta forma de obtener datos de población también sirve para usarla dentro de `dplyr::mutate()` al crear o modificar columnas de un _dataframe_:
+También puedes usar `obtener_poblacion()` dentro de `mutate()` al crear o modificar columnas de un _dataframe_:
 
 ```{r}
 #| warning: false
@@ -265,15 +263,5 @@ comunas <- territorial::territorios |>
 ```{r}
 comunas |>
   mutate(poblacion = obtener_poblacion(codigo_comuna, años = 2027))
-```
-
-
-Otro uso útil es para [reportes Quarto](https://bastianolea.rbind.io/blog/quarto_reportes/) o [aplicaciones Shiny](https://bastianolea.rbind.io/blog/shiny/); por ejemplo, en la [redacción de un párrafo](https://bastianolea.rbind.io/blog/redactar_texto/) basado en datos:
-
-```{r}
-#| warning: false
-comuna <- "Ñuñoa"
-
-glue::glue("La comuna de {comuna} tiene una población de {obtener_poblacion(comuna)} habitantes.")
 ```
 

@@ -1,3 +1,6 @@
+- viñeta sobre fuentes de datos
+- viñeta sobre incluir otras tablas
+
 - [ ] función para calcular tasas
 - [x] hacer función datos() a mano o de alguna otra forma?
 - [x] Quizás agregar_poblacion (para tablas) y obtener_población (para vectores)
