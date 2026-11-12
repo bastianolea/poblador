@@ -41,4 +41,5 @@ articles:
   navbar: ~
   desc: Ejemplos de uso del paquete
   contents:
-  - starts_with("poblacion")
+  - articles/poblacion_nacional
+  - articles/poblacion_regional
