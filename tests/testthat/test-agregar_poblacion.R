@@ -821,3 +821,38 @@ describe("agregar_poblacion() en todas las combinaciones de base, nivel y nombre
     }
   }
 })
+
+test_that("agregar_poblacion() con base como texto funciona sin tener el paquete cargado", {
+  if ("package:poblador" %in% search()) {
+    detach("package:poblador", character.only = TRUE)
+    withr::defer(attachNamespace("poblador"))
+  }
+
+  datos_prueba <- data.frame(codigo_comuna = c(1101, 2102))
+
+  resultado <- suppressMessages(
+    poblador::agregar_poblacion(
+      datos_prueba,
+      nivel = "comunal",
+      años = 2023,
+      base = "censo_poblacion_proyeccion"
+    )
+  )
+
+  expect_true("poblacion" %in% colnames(resultado))
+  expect_equal(nrow(resultado), 2)
+})
+
+test_that("agregar_poblacion() con argumentos por defecto funciona sin tener el paquete cargado", {
+  if ("package:poblador" %in% search()) {
+    detach("package:poblador", character.only = TRUE)
+    withr::defer(attachNamespace("poblador"))
+  }
+
+  datos_prueba <- data.frame(codigo_comuna = c(1101, 2102))
+
+  resultado <- suppressMessages(poblador::agregar_poblacion(datos_prueba))
+
+  expect_true("poblacion" %in% colnames(resultado))
+  expect_equal(nrow(resultado), 2)
+})

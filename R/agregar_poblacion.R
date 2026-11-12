@@ -191,7 +191,14 @@ agregar_poblacion <- function(
     pob <- base
     nombre_base <- deparse(substitute(base))
   } else if (is.character(base)) {
-    pob <- tryCatch(get(base), error = function(e) NULL) # obtener desde el paquete
+    # obtener desde el paquete, o si no, desde el entorno del usuario
+    entorno_usuario <- parent.frame()
+    pob <- tryCatch(
+      getExportedValue("poblador", base),
+      error = function(e) {
+        tryCatch(get(base, envir = entorno_usuario), error = function(e) NULL)
+      }
+    )
     nombre_base <- as.character(base)
     # si con get no se obtiene, error
     if (!is.data.frame(pob) | length(pob) == 0) {

@@ -10,9 +10,11 @@
 datos <- function() {
   cli::cli_h1("Datos disponibles en {.pkg poblador}")
 
-  purrr::walk(catalogo, \(info) {
+  catalogo_datos <- getExportedValue("poblador", "catalogo")
+
+  purrr::walk(catalogo_datos, \(info) {
     # info <- catalogo[[1]]
-    base <- get(info$objeto)
+    base <- getExportedValue("poblador", info$objeto)
 
     texto_años <- ifelse(
       dplyr::n_distinct(base$año) > 1,
@@ -36,5 +38,5 @@ datos <- function() {
     cli::cat_line()
   })
 
-  return(invisible(names(catalogo)))
+  return(invisible(names(catalogo_datos)))
 }

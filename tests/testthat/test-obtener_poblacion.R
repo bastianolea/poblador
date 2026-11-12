@@ -390,3 +390,34 @@ describe("obtener_poblacion() nombres con nivel explícito", {
     expect_equal(resultado, esperado)
   })
 })
+
+test_that("obtener_poblacion() con base como texto funciona sin tener el paquete cargado", {
+  if ("package:poblador" %in% search()) {
+    detach("package:poblador", character.only = TRUE)
+    withr::defer(attachNamespace("poblador"))
+  }
+
+  resultado <- suppressMessages(
+    poblador::obtener_poblacion(
+      1101,
+      nivel = "comunal",
+      años = 2023,
+      base = "censo_poblacion_proyeccion"
+    )
+  )
+
+  expect_type(resultado, "double")
+  expect_length(resultado, 1)
+})
+
+test_that("obtener_poblacion() con argumentos por defecto funciona sin tener el paquete cargado", {
+  if ("package:poblador" %in% search()) {
+    detach("package:poblador", character.only = TRUE)
+    withr::defer(attachNamespace("poblador"))
+  }
+
+  resultado <- suppressMessages(poblador::obtener_poblacion(1101))
+
+  expect_type(resultado, "double")
+  expect_length(resultado, 1)
+})
