@@ -48,21 +48,21 @@ nivel comunal. Las principales son los últimos dos Censos de población
 (2017 y 2024), junto a las proyecciones de población oficiales (en base
 al Censo 2017).
 
-La función `datos()` te muestra todas las fuentes de datos disponibles
+La función `catalogo()` te muestra todas las fuentes de datos disponibles
 en el paquete, incluído el nombre que tienen para cargarlas en R, sus
 características y fuentes:
 
 ``` r
 library(poblador)
 
-datos()
+catalogo()
 ```
 
 <details>
 
 <summary>
 
-**Ver el catálogo de datos generado por `datos()`**
+**Ver el catálogo de datos generado por `catalogo()`**
 </summary>
 
     ── Datos disponibles en poblador ───────────────────────────────────────────────
@@ -155,7 +155,7 @@ datos()
 
 </details>
 
-Luego de consultar `datos()`, vemos que la tabla del Censo 2024 se llama
+Luego de consultar `catalogo()`, vemos que la tabla del Censo 2024 se llama
 `censo_poblacion_2024`, así que podemos explorarla:
 
 ``` r
@@ -337,7 +337,7 @@ Nuevamente el nivel territorial se asume automático.
 
 El argumento `base` de `agregar_poblacion()` permite usar otras fuentes
 de datos de población, ya sean las incluídas en el paquete (ver
-`datos()`), o incluso tus propias tablas de población (que sigan las
+`catalogo()`), o incluso tus propias tablas de población (que sigan las
 convenciones del paquete).
 
 Probemos agregando a la tabla de regiones los datos de un Censo oficial
@@ -372,7 +372,7 @@ datos comunales y los suma para obtener los regionales.
 Entre las distintas bases de datos incluídas, el paquete incluye datos
 socioeconómicos, como las estimaciones de pobreza a nivel comunal en las
 tablas `mideso_pobreza_ingresos` y `mideso_pobreza_multi` (usa
-`poblador::datos()` para ver todas las bases).
+`poblador::catalogo()` para ver todas las bases).
 
 Por ejemplo:
 

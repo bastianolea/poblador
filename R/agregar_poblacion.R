@@ -1,16 +1,16 @@
-#' Agregar población de Chile a datos existentes
+#' Agregar población comunal, regional o nacional oficial de Chile a tablas de datos
 #'
 #' Agrega cifras de población oficiales a datos territoriales de Chile. Esta función opera sobre tablas de datos (_dataframes_) agregando una nueva columna llamada `poblacion`, y se espeta que estos datos tengan columnas `nombre_comuna`, `codigo_comuna`, `nombre_region` o `codigo_region`, como en la tabla [territorial::territorios] del [paquete de R {territorial}](https://bastianolea.github.io/territorial). Para obtener la población de vectores, usar [obtener_poblacion()].
 #'
-#' Se puede especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con [poblador::datos()]), o una distinta que siga las mismas convenciones.
+#' Se puede especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con [poblador::catalogo()]), o una distinta que siga las mismas convenciones.
 #'
-#' @param datos Dataframe al que deseas agregar población
+#' @param datos Dataframe al que deseas agregar población. Debe tener columnas de nombres y/o códigos de comunas o regiones, como aparecen en la tabla [territorial::territorios].
 #' @param nivel Nivel del dato a agregar. Puede ser "regional", "comunal" o "nacional", pero si no se indica, se infiere a partir de los datos.
 #' @param años Año de la población, para las bases de población que cubren múltiples años.
-#' @param base Base de datos de población a utilizar. Por defecto es [poblador::censo_poblacion_proyeccion]. Ver [poblador::datos()] para una lista de fuentes de datos posibles.
+#' @param base Base de datos de población a utilizar. Por defecto es [poblador::censo_poblacion_proyeccion]. Ver [poblador::catalogo()] para una lista de fuentes de datos posibles.
 #' @param nombre Nombre de la columna de población a agregar. Por defecto es `poblacion`.
 #'
-#' @seealso [poblador::obtener_poblacion()] para obtener poblaciones de vectores con códigos o nombres de unidades territoriales. Ver [poblador::datos()] para una lista de fuentes de datos posibles.
+#' @seealso [poblador::obtener_poblacion()] para obtener poblaciones de vectores con códigos o nombres de unidades territoriales. Ver [poblador::catalogo()] para una lista de fuentes de datos posibles.
 #' @export
 #'
 #' @examples

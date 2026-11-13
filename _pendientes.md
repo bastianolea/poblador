@@ -2,7 +2,7 @@
 - viñeta sobre incluir otras tablas
 
 - [ ] función para calcular tasas
-- [x] hacer función datos() a mano o de alguna otra forma?
+- [x] hacer función catalogo() a mano o de alguna otra forma?
 - [x] Quizás agregar_poblacion (para tablas) y obtener_población (para vectores)
 
 - [x] mensaje de qué se está agregando

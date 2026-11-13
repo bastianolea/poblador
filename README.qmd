@@ -38,26 +38,26 @@ install.packages("territorial", repos = "https://bastianolea.r-universe.dev")
 
 Uno de los aspectos principales de `{poblador}` es que contiene bases de datos de población procesadas [a partir de las fuentes oficiales](https://github.com/bastianolea/poblador/tree/main/data-raw) a nivel comunal. Las principales son los últimos dos Censos de población (2017 y 2024), junto a las proyecciones de población oficiales (en base al Censo 2017). 
 
-La función `datos()` te muestra todas las fuentes de datos disponibles en el paquete, incluído el nombre que tienen para cargarlas en R, sus características y fuentes:
+La función `catalogo()` te muestra todas las fuentes de datos disponibles en el paquete, incluído el nombre que tienen para cargarlas en R, sus características y fuentes:
 
 ```{r}
 #| output: false
 library(poblador)
 
-datos()
+catalogo()
 ```
 
 <details>
-<summary>**Ver el catálogo de datos generado por `datos()`**</summary>
+<summary>**Ver el catálogo de datos generado por `catalogo()`**</summary>
 
 ```{r catalogo de datos}
 #| echo: false
-datos()
+catalogo()
 ```
 
 </details>
 
-Luego de consultar `datos()`, vemos que la tabla del Censo 2024 se llama `censo_poblacion_2024`, así que podemos explorarla:
+Luego de consultar `catalogo()`, vemos que la tabla del Censo 2024 se llama `censo_poblacion_2024`, así que podemos explorarla:
 
 ```{r}
 #| warning: false
@@ -148,7 +148,7 @@ Nuevamente el nivel territorial se asume automático.
 
 ## Población desde otras fuentes
 
-El argumento `base` de `agregar_poblacion()` permite usar otras fuentes de datos de población, ya sean las incluídas en el paquete (ver `datos()`), o incluso tus propias tablas de población (que sigan las convenciones del paquete).
+El argumento `base` de `agregar_poblacion()` permite usar otras fuentes de datos de población, ya sean las incluídas en el paquete (ver `catalogo()`), o incluso tus propias tablas de población (que sigan las convenciones del paquete).
 
 Probemos agregando a la tabla de regiones los datos de un Censo oficial específico, en este caso del Censo 2017 (disponible en el objeto `censo_poblacion_2017`):
 
@@ -163,7 +163,7 @@ Como las tablas de datos usadas por `{poblador}` vienen en nivel comunal, al pro
 
 ## Datos socioeconómicos
 
-Entre las distintas bases de datos incluídas, el paquete incluye datos socioeconómicos, como las estimaciones de pobreza a nivel comunal en las tablas `mideso_pobreza_ingresos` y `mideso_pobreza_multi` (usa `poblador::datos()` para ver todas las bases).
+Entre las distintas bases de datos incluídas, el paquete incluye datos socioeconómicos, como las estimaciones de pobreza a nivel comunal en las tablas `mideso_pobreza_ingresos` y `mideso_pobreza_multi` (usa `poblador::catalogo()` para ver todas las bases).
 
 Por ejemplo:
 

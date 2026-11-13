@@ -24,7 +24,7 @@ home:
 reference:
 - title: Catálogo de datos
   contents:
-  - datos
+  - catalogo
 - title: Tablas de datos de población de Chile
   desc: Datos oficiales de población a nivel de comuna, obtenidos desde el INE
   contents:
@@ -41,5 +41,6 @@ articles:
   navbar: ~
   desc: Ejemplos de uso del paquete
   contents:
+  - articles/ejemplo_rsh
   - articles/poblacion_nacional
   - articles/poblacion_regional

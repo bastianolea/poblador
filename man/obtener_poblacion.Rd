@@ -2,7 +2,7 @@
 % Please edit documentation in R/obtener_poblacion.R
 \name{obtener_poblacion}
 \alias{obtener_poblacion}
-\title{Obtener la población una unidad territorial}
+\title{Obtener la población oficial de una o varias unidades territoriales (comuna, región o país)}
 \usage{
 obtener_poblacion(
   datos,
@@ -18,7 +18,7 @@ obtener_poblacion(
 
 \item{años}{Año de la población, para las bases de población que cubren múltiples años.}
 
-\item{base}{Base de datos de población a utilizar. Por defecto es \link{censo_poblacion_proyeccion}. Ver \code{\link[=datos]{datos()}} para una lista de fuentes de datos posibles.}
+\item{base}{Base de datos de población a utilizar. Por defecto es \link{censo_poblacion_proyeccion}. Ver \code{\link[=catalogo]{catalogo()}} para una lista de fuentes de datos posibles.}
 }
 \value{
 Vector de las cifras de población correspondientes.
@@ -27,7 +27,7 @@ Vector de las cifras de población correspondientes.
 A partir del código único territorial de una unidad territorial (comuna, región o país) de Chile (ver \href{https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html}{viñeta sobre códigos únicos territoriales}), esta función obtiene la población correspondiente en un año específico. Esta función opera sobre vectores, retornando un vector con las cifras de población correspondientes en el mismo orden que fueron entregadas. Para \emph{dataframes}, usar \code{\link[=agregar_poblacion]{agregar_poblacion()}}.
 }
 \details{
-Se puede especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con \code{\link[=datos]{datos()}}), o una distinta que siga las mismas convenciones.
+Se puede especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con \code{\link[=catalogo]{catalogo()}}), o una distinta que siga las mismas convenciones.
 }
 \examples{
 obtener_poblacion(c(1101, 2102))
@@ -35,6 +35,8 @@ obtener_poblacion(c(1101, 2102))
 obtener_poblacion("La Florida", años = 2023)
 
 obtener_poblacion("La Florida", base = censo_poblacion_2017)
+
+obtener_poblacion("Chile", nivel = "nacional", base = censo_poblacion_2024)
 
 # crear una variable de población dentro de una tabla
 comunas <- territorial::territorios |>
@@ -45,5 +47,5 @@ comunas |>
   dplyr::mutate(poblacion = obtener_poblacion(codigo_comuna, años = 2023))
 }
 \seealso{
-\code{\link[=agregar_poblacion]{agregar_poblacion()}} para agregar una columna de población sobre dataframes. Ver \code{\link[=datos]{datos()}} para una lista de fuentes de datos posibles.
+\code{\link[=agregar_poblacion]{agregar_poblacion()}} para agregar una columna de población sobre dataframes. Ver \code{\link[=catalogo]{catalogo()}} para una lista de fuentes de datos posibles.
 }

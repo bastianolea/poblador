@@ -2,7 +2,7 @@
 % Please edit documentation in R/agregar_poblacion.R
 \name{agregar_poblacion}
 \alias{agregar_poblacion}
-\title{Agregar población de Chile a datos existentes}
+\title{Agregar población comunal, regional o nacional oficial de Chile a tablas de datos}
 \usage{
 agregar_poblacion(
   datos,
@@ -13,13 +13,13 @@ agregar_poblacion(
 )
 }
 \arguments{
-\item{datos}{Dataframe al que deseas agregar población}
+\item{datos}{Dataframe al que deseas agregar población. Debe tener columnas de nombres y/o códigos de comunas o regiones, como aparecen en la tabla \link[territorial:territorios]{territorial::territorios}.}
 
 \item{nivel}{Nivel del dato a agregar. Puede ser "regional", "comunal" o "nacional", pero si no se indica, se infiere a partir de los datos.}
 
 \item{años}{Año de la población, para las bases de población que cubren múltiples años.}
 
-\item{base}{Base de datos de población a utilizar. Por defecto es \link{censo_poblacion_proyeccion}. Ver \code{\link[=datos]{datos()}} para una lista de fuentes de datos posibles.}
+\item{base}{Base de datos de población a utilizar. Por defecto es \link{censo_poblacion_proyeccion}. Ver \code{\link[=catalogo]{catalogo()}} para una lista de fuentes de datos posibles.}
 
 \item{nombre}{Nombre de la columna de población a agregar. Por defecto es \code{poblacion}.}
 }
@@ -27,7 +27,7 @@ agregar_poblacion(
 Agrega cifras de población oficiales a datos territoriales de Chile. Esta función opera sobre tablas de datos (\emph{dataframes}) agregando una nueva columna llamada \code{poblacion}, y se espeta que estos datos tengan columnas \code{nombre_comuna}, \code{codigo_comuna}, \code{nombre_region} o \code{codigo_region}, como en la tabla \link[territorial:territorios]{territorial::territorios} del \href{https://bastianolea.github.io/territorial}{paquete de R {territorial}}. Para obtener la población de vectores, usar \code{\link[=obtener_poblacion]{obtener_poblacion()}}.
 }
 \details{
-Se puede especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con \code{\link[=datos]{datos()}}), o una distinta que siga las mismas convenciones.
+Se puede especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con \code{\link[=catalogo]{catalogo()}}), o una distinta que siga las mismas convenciones.
 }
 \examples{
 # tabla de datos con un par de comunas: el nivel comunal se detecta
@@ -54,5 +54,5 @@ regiones |>
 
 }
 \seealso{
-\code{\link[=obtener_poblacion]{obtener_poblacion()}} para obtener poblaciones de vectores con códigos o nombres de unidades territoriales. Ver \code{\link[=datos]{datos()}} para una lista de fuentes de datos posibles.
+\code{\link[=obtener_poblacion]{obtener_poblacion()}} para obtener poblaciones de vectores con códigos o nombres de unidades territoriales. Ver \code{\link[=catalogo]{catalogo()}} para una lista de fuentes de datos posibles.
 }

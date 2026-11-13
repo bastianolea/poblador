@@ -1,16 +1,17 @@
-#' Fuentes de datos disponibles
+#' Tablas de datos de población disponibles
 #'
 #' Imprime en la consola una lista de todas las fuentes de datos incluídas en el paquete, con su información. Útil para saber qué está disponible en el paquete.
 #'
+#' @return Emite mensajes, y si se asigna a un objeto, retorna los nombres de las tablas de manera invisible.
 #' @export
 #' @seealso [agregar_poblacion()] y [obtener_poblacion()] para hacer uso de estas fuentes de datos sobre dataframes y vectores, respectivamente.
 #' @examples
-#' datos()
+#' catalogo()
 #'
-datos <- function() {
+catalogo <- function() {
   cli::cli_h1("Datos disponibles en {.pkg poblador}")
 
-  catalogo_datos <- getExportedValue("poblador", "catalogo")
+  catalogo_datos <- getExportedValue("poblador", "catalogo_lista")
 
   purrr::walk(catalogo_datos, \(info) {
     # info <- catalogo[[1]]

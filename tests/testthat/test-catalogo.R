@@ -1,8 +1,8 @@
-test_that("datos() menciona todas las tablas de datos del paquete", {
+test_that("catalogo() menciona todas las tablas de datos del paquete", {
   # las líneas vacías de cat_line() salen por stdout, no como mensajes
   mensajes <- NULL
   utils::capture.output(
-    mensajes <- testthat::capture_messages(datos())
+    mensajes <- testthat::capture_messages(catalogo())
   )
   mensajes <- paste(mensajes, collapse = "")
 
@@ -17,16 +17,16 @@ test_that("datos() menciona todas las tablas de datos del paquete", {
   }
 })
 
-test_that("datos() retorna invisible los nombres del catálogo", {
+test_that("catalogo() retorna invisible los nombres del catálogo", {
   resultado <- NULL
   utils::capture.output(
-    resultado <- suppressMessages(withVisible(datos()))
+    resultado <- suppressMessages(withVisible(catalogo()))
   )
 
   expect_false(resultado$visible)
 })
 
-test_that("poblador::datos() funciona sin tener el paquete cargado", {
+test_that("poblador::catalogo() funciona sin tener el paquete cargado", {
   # desadjunta el paquete durante el test y lo vuelve a adjuntar al terminar
   if ("package:poblador" %in% search()) {
     detach("package:poblador", character.only = TRUE)
@@ -37,7 +37,7 @@ test_that("poblador::datos() funciona sin tener el paquete cargado", {
 
   resultado <- NULL
   utils::capture.output(
-    resultado <- suppressMessages(poblador::datos())
+    resultado <- suppressMessages(poblador::catalogo())
   )
 
   expect_gt(length(resultado), 0)

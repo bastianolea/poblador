@@ -1,15 +1,15 @@
-#' Obtener la población una unidad territorial
+#' Obtener la población oficial de una o varias unidades territoriales (comuna, región o país)
 #'
 #' A partir del código único territorial de una unidad territorial (comuna, región o país) de Chile (ver [viñeta sobre códigos únicos territoriales](https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html)), esta función obtiene la población correspondiente en un año específico. Esta función opera sobre vectores, retornando un vector con las cifras de población correspondientes en el mismo orden que fueron entregadas. Para _dataframes_, usar [agregar_poblacion()].
 #'
-#' Se puede especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con [poblador::datos()]), o una distinta que siga las mismas convenciones.
+#' Se puede especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con [poblador::catalogo()]), o una distinta que siga las mismas convenciones.
 #'
 #'@param datos Vector de datos para obtener su población
 #' @param nivel Nivel del dato a obtener. Puede ser "regional", "comunal" o "nacional", pero si no se indica, se infiere a partir de los datos.
 #' @param años Año de la población, para las bases de población que cubren múltiples años.
-#' @param base Base de datos de población a utilizar. Por defecto es [poblador::censo_poblacion_proyeccion]. Ver [poblador::datos()] para una lista de fuentes de datos posibles.
+#' @param base Base de datos de población a utilizar. Por defecto es [poblador::censo_poblacion_proyeccion]. Ver [poblador::catalogo()] para una lista de fuentes de datos posibles.
 #'
-#' @seealso [agregar_poblacion()] para agregar una columna de población sobre dataframes. Ver [poblador::datos()] para una lista de fuentes de datos posibles.
+#' @seealso [agregar_poblacion()] para agregar una columna de población sobre dataframes. Ver [poblador::catalogo()] para una lista de fuentes de datos posibles.
 #' @returns Vector de las cifras de población correspondientes.
 #' @export
 #'
@@ -19,6 +19,8 @@
 #' obtener_poblacion("La Florida", años = 2023)
 #'
 #' obtener_poblacion("La Florida", base = censo_poblacion_2017)
+#'
+#' obtener_poblacion("Chile", nivel = "nacional", base = censo_poblacion_2024)
 #'
 #' # crear una variable de población dentro de una tabla
 #' comunas <- territorial::territorios |>
@@ -44,12 +46,14 @@ obtener_poblacion <- function(
   }
 
   # niveles ----
+  nivel <- tolower(nivel)
+
   # si no es válido, corregir
   if (!is.null(nivel) && !nivel %in% c("regional", "comunal", "nacional")) {
     nivel <- dplyr::case_when(
-      tolower(nivel) %in% c("región", "region", "codigo_region") ~ "regional",
-      tolower(nivel) %in% c("comuna", "codigo_comuna") ~ "comunal",
-      tolower(nivel) %in% c("pais", "país", "chile") ~ "nacional"
+      nivel %in% c("región", "region", "codigo_region") ~ "regional",
+      nivel %in% c("comuna", "codigo_comuna") ~ "comunal",
+      nivel %in% c("pais", "país", "chile") ~ "nacional"
     )
 
     # error si no coincide
