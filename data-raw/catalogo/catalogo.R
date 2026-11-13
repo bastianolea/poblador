@@ -1,4 +1,4 @@
-catalogo <- list(
+catalogo_lista <- list(
   "censo_poblacion_2017" = list(
     objeto = "censo_poblacion_2017",
     titulo = "Población a nivel comunal de Chile (2017)",
@@ -34,4 +34,4 @@ catalogo <- list(
   )
 )
 
-usethis::use_data(catalogo, overwrite = TRUE, internal = TRUE)
+usethis::use_data(catalogo_lista, overwrite = TRUE, internal = TRUE)

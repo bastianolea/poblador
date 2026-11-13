@@ -1,0 +1,87 @@
+---
+title: "Ejemplo con datos del Registro Social de Hogares"
+description: "Uso del paquete para agregar población a una tabla de datos sociales" 
+---
+
+Usando la plataforma [Analista Digital de Información Social (ADIS)](https://adis.gob.cl/#/) del Ministerio de Desarrollo Social y Familia, podemos acceder a datos del Registro Social de Hogares (RSH) a nivel regional y comunal. 
+
+Para descargar una tabla de N° total de **personas con dependencia moderada o severa** por comuna, accedemos a la sección [Estadísticas socioeconómicas > Consultas frecuentes de ADIS](https://adis.gob.cl/#/estadisticas-socioeconomicas/frecuentes), elegimos el indicador, seleccionamos en _Territorio y desagregación_ "Nacional por Comunas", y presionamos _Descargar_. También puedes [descargar aquí los datos](https://github.com/bastianolea/poblador/raw/main/data-raw/ejemplo_rsh.xlsx) para seguir el ejemplo.
+
+```{r setup}
+#| message: false
+library(dplyr)
+library(readxl)
+library(here)
+```
+
+```{r}
+registro <- read_xlsx(
+  here("data-raw/ejemplo_rsh.xlsx"),
+  skip = 2) |> 
+  select(
+    nombre_comuna = 1,
+    discapacidad = 2
+  )
+
+registro
+```
+
+Lo primero que vemos en los datos es que existe una fila de totales que hay que filtrar, y opcionalmente podríamos omitir las filas sin valor en el conteo de personas.
+
+```{r}
+registro_1 <- registro |> 
+  filter_out(nombre_comuna == "Total") #|> 
+  #filter_out(is.na(discapacidad))
+```
+
+Como los datos son comunales, conviene [validarlos primero usando `validar_comunas()`](https://bastianolea.github.io/territorial/reference/validar_comunas.html) del paquete `{territorial}`, que realiza una revisión de los nombres de comunas.
+
+```{r}
+library(territorial)
+
+registro_1 |> 
+  validar_comunas()
+```
+
+Vemos que existen algunos problemas, así que aplicamos una limpieza automatizada de los nombres con la [función `limpiar_comunas()` de `{territorial}`](https://bastianolea.github.io/territorial/reference/limpiar_comunas.html).
+
+```{r}
+registro_2 <- registro_1 |> 
+  limpiar_comunas()
+```
+
+Ahora que los nombres de comunas fueron validados y limpiados, podemos [agregar variables territoriales faltantes con `contextualizar()`](https://bastianolea.github.io/territorial/reference/contextualizar.html), principalmente las columnas de región y los [códigos únicos territoriales](https://bastianolea.github.io/territorial/articles/codigos_unicos_territoriales.html) para un manejo más preciso de los datos.
+
+```{r}
+registro_3 <- registro_2 |> 
+  contextualizar() |> 
+  select(-starts_with("provincia"))
+
+registro_3 |> 
+  head() |> 
+  glimpse()
+```
+
+Ahora los datos están en buen estado para seguir trabajando con ellos, y podemos usar `agregar_poblacion()` de `{poblador}` para agregar automáticamente una columna con la población del año 2026 que se corresponde con los datos que estamos trabajando.
+
+```{r}
+library(poblador)
+
+registro_4 <- registro_3 |> 
+  agregar_poblacion(años = 2026)
+
+registro_4 |> 
+  select(ends_with("comuna"), discapacidad, poblacion)
+```
+
+Teniendo la población de interés (personas con dependencia moderada o severa en el RSH) y la población de cada comuna, podemos calcular un simple porcentaje:
+
+```{r}
+registro_5 <- registro_4 |> 
+  mutate(porcentaje = discapacidad/poblacion) |> 
+  mutate(porcentaje = scales::label_percent(accuracy = 0.1)(porcentaje))
+
+registro_5 |> 
+  select(ends_with("comuna"), discapacidad, poblacion, porcentaje)
+```
+

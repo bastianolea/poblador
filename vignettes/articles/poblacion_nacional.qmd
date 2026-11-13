@@ -10,28 +10,28 @@ library(poblador)
 library(dplyr)
 ```
 
-El paquete incluye tablas de datos de los últimos censos de Chile:
+El paquete incluye tablas de datos de los últimos censos de Chile, que puedes revisar ejecutando `poblador::catalogo()`. Por ejemplo:
 
 ```{r}
-library(poblador)
+censo_poblacion_2024 |> 
+  select(nombre_comuna, año, poblacion) |> 
+  head()
 
-censo_poblacion_2024
-
-censo_poblacion_2017
+censo_poblacion_2017 |> 
+  select(nombre_comuna, año, poblacion) |> 
+  head()
 ```
 
 También incluye las últimas proyecciones de población disponibles a nivel de comuna, que son en base al Censo 2017, y que pueden filtrarse por año:
 
 ```{r}
-#| warning: false
-
-library(dplyr)
-
 censo_poblacion_proyeccion |> 
-  filter(año == 2030)
+  filter(año == 2030) |> 
+  select(nombre_comuna, año, poblacion) |> 
+  head()
 ```
 
-Procesamos los datos para obtener tres tablas con poblaciones de distintos años y mediciones:
+A partir de las tablas de datos de población, procesamos para obtener tres tablas con poblaciones de distintos años y mediciones:
 
 ```{r}
 pob_2017 <- poblador::censo_poblacion_2017 |> 
@@ -62,9 +62,13 @@ datos <- bind_rows(
 Ahora obtenemos una suma de las poblaciones para llegar a la población nacional:
 
 ```{r}
+#| message: false
+
 datos_anual <- datos |> 
   group_by(año, tipo) |> 
   summarize(poblacion = sum(poblacion))
+
+datos_anual
 ```
 
 Finalmente generamos un gráfico de los cambios de población en Chile según las últimas mediciones censales y la proyección del año en curso:
