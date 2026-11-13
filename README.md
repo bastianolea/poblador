@@ -6,13 +6,14 @@ Datos de población para Chile y funciones para agregar datos
 poblacionales fácilmente a otras tablas de datos.
 
 Este paquete ofrece tablas de datos de población desde fuentes oficiales
-de Chile, así como funciones para simplificar el uso de estos datos como
-complemento a otros conjuntos de datos, por ejemplo, para agregar
-población oficial a una tabla de comunas o regiones, entre otros.
+de Chile, como `censo_poblacion_2024`, así como funciones para
+simplificar el uso de estos datos como complemento a otros conjuntos de
+datos, como para agregar población oficial a una tabla de comunas o
+regiones con `agregar_poblacion()`, entre otras.
 
-El funcionamiento interno de este paquete depende bastante de [mi
-paquete `territorial`](https://bastianolea.github.io/territorial/), que
-entrega herramientas para trabajar con datos qeu representan comunas y
+El funcionamiento interno de este paquete depende bastante del [paquete
+`{territorial}`](https://bastianolea.github.io/territorial/), que
+entrega herramientas para trabajar con datos que representan comunas y
 regiones de Chile.
 
 ## Instalación
@@ -179,8 +180,9 @@ censo_poblacion_2024 |>
     $ año              <dbl> 2024, 2024, 2024, 2024, 2024, 2024
     $ poblacion        <int> 199587, 142086, 16878, 6272, 2858, 1335
 
-Puedes usar estas fuentes de datos para consularlas, cruzarlas con otras
-tablas, o su uso principal, que es usarlas para alimentar a la función
+Puedes usar estas fuentes de datos para consularlas, [cruzarlas con
+otras tablas](https://bastianolea.rbind.io/blog/left_join/), o su uso
+principal, que es usarlas para alimentar a la función
 `agregar_poblacion()`, como veremos a continuación.
 
 Todas las tablas de datos del paquete siguen esta estructura de
