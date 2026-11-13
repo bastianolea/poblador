@@ -11,8 +11,6 @@
 catalogo <- function() {
   cli::cli_h1("Datos disponibles en {.pkg poblador}")
 
-  catalogo_datos <- getExportedValue("poblador", "catalogo_lista")
-
   purrr::walk(catalogo_datos, \(info) {
     # info <- catalogo[[1]]
     base <- getExportedValue("poblador", info$objeto)

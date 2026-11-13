@@ -46,7 +46,9 @@ obtener_poblacion <- function(
   }
 
   # niveles ----
-  nivel <- tolower(nivel)
+  if (!is.null(nivel)) {
+    nivel <- tolower(nivel)
+  }
 
   # si no es válido, corregir
   if (!is.null(nivel) && !nivel %in% c("regional", "comunal", "nacional")) {
