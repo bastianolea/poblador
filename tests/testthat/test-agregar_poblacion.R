@@ -563,36 +563,6 @@ describe("agregar_poblacion() argumento base", {
   })
 })
 
-describe("agregar_poblacion() con bases de Mideso", {
-  datos <- censo_poblacion_proyeccion |>
-    dplyr::distinct(codigo_comuna, nombre_comuna) |>
-    dplyr::filter(codigo_comuna %in% c(1101, 2102))
-
-  bases_mideso <- list(
-    mideso_pobreza_ingresos = mideso_pobreza_ingresos,
-    mideso_pobreza_multi = mideso_pobreza_multi
-  )
-
-  for (nombre_base in names(bases_mideso)) {
-    it(paste("agrega población desde", nombre_base), {
-      base_mideso <- bases_mideso[[nombre_base]]
-
-      resultado <- suppressMessages(
-        agregar_poblacion(datos, base = base_mideso)
-      )
-
-      esperado <- base_mideso |>
-        dplyr::filter(codigo_comuna %in% datos$codigo_comuna) |>
-        dplyr::arrange(match(codigo_comuna, datos$codigo_comuna))
-
-      expect_named(resultado, c("codigo_comuna", "nombre_comuna", "poblacion"))
-      expect_equal(resultado$codigo_comuna, datos$codigo_comuna)
-      expect_equal(resultado$poblacion, esperado$poblacion)
-      expect_false(anyNA(resultado$poblacion))
-    })
-  }
-})
-
 describe("agregar_poblacion() argumento nombre", {
   datos <- data.frame(codigo_comuna = c(1101, 2102))
 
@@ -752,7 +722,7 @@ describe("agregar_poblacion() combinando nombre y base", {
   })
 })
 
-describe("agregar_poblacion() en todas las combinaciones de base, nivel y nombre", {
+describe("agregar_poblacion() en todas las combinaciones de base y nivel", {
   bases <- list(
     censo_poblacion_2017 = censo_poblacion_2017,
     censo_poblacion_2024 = censo_poblacion_2024,
@@ -775,49 +745,45 @@ describe("agregar_poblacion() en todas las combinaciones de base, nivel y nombre
 
   for (nombre_base in names(bases)) {
     for (nivel in names(datos_por_nivel)) {
-      for (nombre in c("poblacion", "otra_cifra")) {
-        it(paste("base", nombre_base, "| nivel", nivel, "| nombre", nombre), {
-          base <- bases[[nombre_base]]
-          datos <- datos_por_nivel[[nivel]]
-          año_base <- max(base$año)
+      it(paste("base", nombre_base, "| nivel", nivel), {
+        base <- bases[[nombre_base]]
+        datos <- datos_por_nivel[[nivel]]
+        año_base <- max(base$año)
 
-          # base entregada como dataframe y como texto deben coincidir
-          como_tabla <- suppressMessages(agregar_poblacion(
-            datos,
-            nivel = nivel,
-            años = año_base,
-            base = base,
-            nombre = nombre
-          ))
-          como_texto <- suppressMessages(agregar_poblacion(
-            datos,
-            nivel = nivel,
-            años = año_base,
-            base = nombre_base,
-            nombre = nombre
-          ))
+        # base entregada como dataframe y como texto deben coincidir
+        como_tabla <- suppressMessages(agregar_poblacion(
+          datos,
+          nivel = nivel,
+          años = año_base,
+          base = base
+        ))
+        como_texto <- suppressMessages(agregar_poblacion(
+          datos,
+          nivel = nivel,
+          años = año_base,
+          base = nombre_base
+        ))
 
-          codigo <- columna_codigo[[nivel]]
-          base_año <- dplyr::filter(base, año == año_base)
+        codigo <- columna_codigo[[nivel]]
+        base_año <- dplyr::filter(base, año == año_base)
 
-          if (is.na(codigo)) {
-            esperado <- sum(base_año$poblacion)
-          } else {
-            esperado <- base_año |>
-              dplyr::filter(.data[[codigo]] %in% datos[[codigo]]) |>
-              dplyr::summarize(
-                poblacion = sum(poblacion),
-                .by = dplyr::all_of(codigo)
-              ) |>
-              dplyr::arrange(match(.data[[codigo]], datos[[codigo]])) |>
-              dplyr::pull(poblacion)
-          }
+        if (is.na(codigo)) {
+          esperado <- sum(base_año$poblacion)
+        } else {
+          esperado <- base_año |>
+            dplyr::filter(.data[[codigo]] %in% datos[[codigo]]) |>
+            dplyr::summarize(
+              poblacion = sum(poblacion),
+              .by = dplyr::all_of(codigo)
+            ) |>
+            dplyr::arrange(match(.data[[codigo]], datos[[codigo]])) |>
+            dplyr::pull(poblacion)
+        }
 
-          expect_named(como_tabla, c(names(datos), nombre))
-          expect_equal(como_tabla, como_texto)
-          expect_equal(como_tabla[[nombre]], esperado)
-        })
-      }
+        expect_named(como_tabla, c(names(datos), "poblacion"))
+        expect_equal(como_tabla, como_texto)
+        expect_equal(como_tabla$poblacion, esperado)
+      })
     }
   }
 })

@@ -1,3 +1,7 @@
+# poblador 0.3.2 (2026/11/13)
+- Mejora en artículos y viñetas
+- Función `datos()` ahora se llama `catalogo()`.
+
 # poblador 0.3.1 (2026/11/12)
 - Funciones `catalogo()`, `agregar_poblacion()` y `obtener_poblacion()` ahora funcionan sin cargar el paquete (por ejemplo `poblador::catalogo()`, `poblador::obtener_poblacion(1101)`).
 

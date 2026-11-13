@@ -10,36 +10,15 @@ library(poblador)
 library(dplyr)
 ```
 
-El paquete incluye tablas de datos de los últimos censos de Chile:
+El paquete incluye tablas de datos de los últimos censos de Chile, que puedes revisar ejecutando `poblador::catalogo()`. Por ejemplo:
 
 ```{r}
-library(poblador)
-
-censo_poblacion_2024
-
-censo_poblacion_2017
+censo_poblacion_2024 |> 
+  select(nombre_comuna, año, poblacion) |> 
+  head()
 ```
 
-También incluye las últimas proyecciones de población disponibles a nivel de comuna, que son en base al Censo 2017, y que pueden filtrarse por año:
-
-```{r}
-#| warning: false
-
-library(dplyr)
-
-censo_poblacion_proyeccion |> 
-  filter(año == 2030)
-```
-
-Finalmente, el paquete incluye datos sociales relacionados a población, como son las estimaciones de pobreza por ingreso y pobreza multidimensional en base a Casen 2024:
-
-```{r}
-mideso_pobreza_ingresos
-
-mideso_pobreza_multi
-```
-
-Para calcular la población regional de Chile, realizamos una suma agrupada:
+Para calcular la población regional de Chile, realizamos una [suma agrupada con `summarize()`](https://bastianolea.rbind.io/blog/r_introduccion/dplyr_summarize/):
 
 ```{r}
 pob_regional <- poblador::censo_poblacion_2024 |> 

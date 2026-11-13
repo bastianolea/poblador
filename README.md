@@ -48,9 +48,9 @@ nivel comunal. Las principales son los últimos dos Censos de población
 (2017 y 2024), junto a las proyecciones de población oficiales (en base
 al Censo 2017).
 
-La función `catalogo()` te muestra todas las fuentes de datos disponibles
-en el paquete, incluído el nombre que tienen para cargarlas en R, sus
-características y fuentes:
+La función `catalogo()` te muestra todas las fuentes de datos
+disponibles en el paquete, incluído el nombre que tienen para cargarlas
+en R, sus características y fuentes:
 
 ``` r
 library(poblador)
@@ -155,8 +155,8 @@ catalogo()
 
 </details>
 
-Luego de consultar `catalogo()`, vemos que la tabla del Censo 2024 se llama
-`censo_poblacion_2024`, así que podemos explorarla:
+Luego de consultar `catalogo()`, vemos que la tabla del Censo 2024 se
+llama `censo_poblacion_2024`, así que podemos explorarla:
 
 ``` r
 library(dplyr)
