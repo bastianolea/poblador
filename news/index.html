@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">poblador</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Cambiar la navegación">
@@ -18,7 +18,8 @@
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../reference/index.html">Índice</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-art-culos" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Artículos</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-art-culos"><li><a class="dropdown-item" href="../articles/poblacion_nacional.html">Gráfico de población nacional de Chile</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-art-culos"><li><a class="dropdown-item" href="../articles/ejemplo_rsh.html">Ejemplo con datos del Registro Social de Hogares</a></li>
+    <li><a class="dropdown-item" href="../articles/poblacion_nacional.html">Gráfico de población nacional de Chile</a></li>
     <li><a class="dropdown-item" href="../articles/poblacion_regional.html">Gráfico de población regional de Chile</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Registro de cambios</a></li>
@@ -37,12 +38,17 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.2" id="poblador-032-20261113">poblador 0.3.2 (2026/11/13)<a class="anchor" aria-label="anchor" href="#poblador-032-20261113"></a></h2>
+<ul><li>Mejora en artículos y viñetas</li>
+<li>Función <code>datos()</code> ahora se llama <code><a href="../reference/catalogo.html">catalogo()</a></code>.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.1" id="poblador-031-20261112">poblador 0.3.1 (2026/11/12)<a class="anchor" aria-label="anchor" href="#poblador-031-20261112"></a></h2>
-<ul><li>Funciones <code><a href="../reference/datos.html">datos()</a></code>, <code><a href="../reference/agregar_poblacion.html">agregar_poblacion()</a></code> y <code><a href="../reference/obtener_poblacion.html">obtener_poblacion()</a></code> ahora funcionan sin cargar el paquete (por ejemplo <code><a href="../reference/datos.html">poblador::datos()</a></code>, <code>poblador::obtener_poblacion(1101)</code>).</li>
+<ul><li>Funciones <code><a href="../reference/catalogo.html">catalogo()</a></code>, <code><a href="../reference/agregar_poblacion.html">agregar_poblacion()</a></code> y <code><a href="../reference/obtener_poblacion.html">obtener_poblacion()</a></code> ahora funcionan sin cargar el paquete (por ejemplo <code><a href="../reference/catalogo.html">poblador::catalogo()</a></code>, <code>poblador::obtener_poblacion(1101)</code>).</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="poblador-030-20261112">poblador 0.3.0 (2026/11/12)<a class="anchor" aria-label="anchor" href="#poblador-030-20261112"></a></h2>
-<ul><li>Catálogo de datos <code><a href="../reference/datos.html">datos()</a></code> entrega información sobre los datos disponibles, y retorna los nombres de objetos de manera invisible.</li>
+<ul><li>Catálogo de datos <code><a href="../reference/catalogo.html">catalogo()</a></code> entrega información sobre los datos disponibles, y retorna los nombres de objetos de manera invisible.</li>
 <li>Mejora en <code><a href="../reference/agregar_poblacion.html">agregar_poblacion()</a></code> para especificar el nombre de la columna de población, y así se puede usar dos veces consecutivas (por ejemplo para agregar la población y luego la población en situación de pobreza).</li>
 </ul></div>
     <div class="section level2">

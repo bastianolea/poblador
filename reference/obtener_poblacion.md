@@ -1,4 +1,4 @@
-# Obtener la población una unidad territorial
+# Obtener la población oficial de una o varias unidades territoriales (comuna, región o país)
 
 A partir del código único territorial de una unidad territorial (comuna,
 región o país) de Chile (ver [viñeta sobre códigos únicos
@@ -41,7 +41,7 @@ obtener_poblacion(
   Base de datos de población a utilizar. Por defecto es
   [censo_poblacion_proyeccion](https://bastianolea.github.io/poblador/reference/censo_poblacion_proyeccion.md).
   Ver
-  [`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
+  [`catalogo()`](https://bastianolea.github.io/poblador/reference/catalogo.md)
   para una lista de fuentes de datos posibles.
 
 ## Valor
@@ -52,14 +52,14 @@ Vector de las cifras de población correspondientes.
 
 Se puede especificar la base de datos de a utilizar entre las que ofrece
 este paquete (revísalas con
-[`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)),
+[`catalogo()`](https://bastianolea.github.io/poblador/reference/catalogo.md)),
 o una distinta que siga las mismas convenciones.
 
 ## Ver también
 
 [`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md)
 para agregar una columna de población sobre dataframes. Ver
-[`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
+[`catalogo()`](https://bastianolea.github.io/poblador/reference/catalogo.md)
 para una lista de fuentes de datos posibles.
 
 ## Ejemplos
@@ -81,6 +81,11 @@ obtener_poblacion("La Florida", base = censo_poblacion_2017)
 #> ! Considerando el año más reciente (2017) para la base "censo_poblacion_2017".
 #> ℹ Agregando datos de población de nivel comunal del año 2017 desde la base `poblador::censo_poblacion_2017()`.
 #> [1] 366916
+
+obtener_poblacion("Chile", nivel = "nacional", base = censo_poblacion_2024)
+#> ! Considerando el año más reciente (2024) para la base "censo_poblacion_2024".
+#> ℹ Agregando datos de población de nivel nacional del año 2024 desde la base `poblador::censo_poblacion_2024()`.
+#> [1] 18480432
 
 # crear una variable de población dentro de una tabla
 comunas <- territorial::territorios |>

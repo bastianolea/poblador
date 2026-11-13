@@ -1,20 +1,26 @@
 # Registro de cambios
 
+## poblador 0.3.2 (2026/11/13)
+
+- Mejora en artículos y viñetas
+- Función `datos()` ahora se llama
+  [`catalogo()`](https://bastianolea.github.io/poblador/reference/catalogo.md).
+
 ## poblador 0.3.1 (2026/11/12)
 
 - Funciones
-  [`datos()`](https://bastianolea.github.io/poblador/reference/datos.md),
+  [`catalogo()`](https://bastianolea.github.io/poblador/reference/catalogo.md),
   [`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md)
   y
   [`obtener_poblacion()`](https://bastianolea.github.io/poblador/reference/obtener_poblacion.md)
   ahora funcionan sin cargar el paquete (por ejemplo
-  [`poblador::datos()`](https://bastianolea.github.io/poblador/reference/datos.md),
+  [`poblador::catalogo()`](https://bastianolea.github.io/poblador/reference/catalogo.md),
   `poblador::obtener_poblacion(1101)`).
 
 ## poblador 0.3.0 (2026/11/12)
 
 - Catálogo de datos
-  [`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
+  [`catalogo()`](https://bastianolea.github.io/poblador/reference/catalogo.md)
   entrega información sobre los datos disponibles, y retorna los nombres
   de objetos de manera invisible.
 - Mejora en

@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">poblador</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Cambiar la navegación">
@@ -42,7 +42,8 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-art-culos" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Artículos</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-art-culos">
-<li><a class="dropdown-item" href="../articles/poblacion_nacional.html">Gráfico de población nacional de Chile</a></li>
+<li><a class="dropdown-item" href="../articles/ejemplo_rsh.html">Ejemplo con datos del Registro Social de Hogares</a></li>
+    <li><a class="dropdown-item" href="../articles/poblacion_nacional.html">Gráfico de población nacional de Chile</a></li>
     <li><a class="dropdown-item" href="../articles/poblacion_regional.html">Gráfico de población regional de Chile</a></li>
   </ul>
 </li>
@@ -80,118 +81,27 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bastianolea.github.io/poblador/">poblador</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
 </div>
-<p>El paquete incluye tablas de datos de los últimos censos de Chile:</p>
+<p>El paquete incluye tablas de datos de los últimos censos de Chile, que puedes revisar ejecutando <code><a href="../reference/catalogo.html">poblador::catalogo()</a></code>. Por ejemplo:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bastianolea.github.io/poblador/">poblador</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">censo_poblacion_2024</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">censo_poblacion_2024</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">nombre_comuna</span>, <span class="va">año</span>, <span class="va">poblacion</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 346 × 8
-   codigo_region nombre_region codigo_provincia nombre_provincia codigo_comuna
-           &lt;dbl&gt; &lt;chr&gt;                    &lt;dbl&gt; &lt;chr&gt;                    &lt;dbl&gt;
- 1             1 Tarapacá                    11 Iquique                   1101
- 2             1 Tarapacá                    11 Iquique                   1107
- 3             1 Tarapacá                    14 Tamarugal                 1401
- 4             1 Tarapacá                    14 Tamarugal                 1405
- 5             1 Tarapacá                    14 Tamarugal                 1404
- 6             1 Tarapacá                    14 Tamarugal                 1402
- 7             1 Tarapacá                    14 Tamarugal                 1403
- 8             2 Antofagasta                 22 El Loa                    2201
- 9             2 Antofagasta                 21 Antofagasta               2102
-10             2 Antofagasta                 22 El Loa                    2203
-# ℹ 336 more rows
-# ℹ 3 more variables: nombre_comuna &lt;chr&gt;, año &lt;dbl&gt;, poblacion &lt;int&gt;</code></pre>
+<pre><code># A tibble: 6 × 3
+  nombre_comuna   año poblacion
+  &lt;chr&gt;         &lt;dbl&gt;     &lt;int&gt;
+1 Iquique        2024    199587
+2 Alto Hospicio  2024    142086
+3 Pozo Almonte   2024     16878
+4 Pica           2024      6272
+5 Huara          2024      2858
+6 Camiña         2024      1335</code></pre>
 </div>
+</div>
+<p>Para calcular la población regional de Chile, realizamos una <a href="https://bastianolea.rbind.io/blog/r_introduccion/dplyr_summarize/" class="external-link">suma agrupada con <code>summarize()</code></a>:</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">censo_poblacion_2017</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 346 × 8
-   codigo_region nombre_region codigo_provincia nombre_provincia codigo_comuna
-           &lt;dbl&gt; &lt;chr&gt;                    &lt;dbl&gt; &lt;chr&gt;                    &lt;dbl&gt;
- 1             1 Tarapacá                    11 Iquique                   1101
- 2             1 Tarapacá                    11 Iquique                   1107
- 3             1 Tarapacá                    14 Tamarugal                 1401
- 4             1 Tarapacá                    14 Tamarugal                 1402
- 5             1 Tarapacá                    14 Tamarugal                 1403
- 6             1 Tarapacá                    14 Tamarugal                 1404
- 7             1 Tarapacá                    14 Tamarugal                 1405
- 8             2 Antofagasta                 21 Antofagasta               2101
- 9             2 Antofagasta                 21 Antofagasta               2102
-10             2 Antofagasta                 21 Antofagasta               2103
-# ℹ 336 more rows
-# ℹ 3 more variables: nombre_comuna &lt;chr&gt;, año &lt;dbl&gt;, poblacion &lt;dbl&gt;</code></pre>
-</div>
-</div>
-<p>También incluye las últimas proyecciones de población disponibles a nivel de comuna, que son en base al Censo 2017, y que pueden filtrarse por año:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">censo_poblacion_proyeccion</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">año</span> <span class="op">==</span> <span class="fl">2030</span><span class="op">)</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 346 × 8
-   codigo_region nombre_region codigo_provincia nombre_provincia codigo_comuna
-           &lt;dbl&gt; &lt;chr&gt;                    &lt;dbl&gt; &lt;chr&gt;                    &lt;dbl&gt;
- 1             1 Tarapacá                    11 Iquique                   1101
- 2             1 Tarapacá                    11 Iquique                   1107
- 3             1 Tarapacá                    14 Tamarugal                 1401
- 4             1 Tarapacá                    14 Tamarugal                 1402
- 5             1 Tarapacá                    14 Tamarugal                 1403
- 6             1 Tarapacá                    14 Tamarugal                 1404
- 7             1 Tarapacá                    14 Tamarugal                 1405
- 8             2 Antofagasta                 21 Antofagasta               2101
- 9             2 Antofagasta                 21 Antofagasta               2102
-10             2 Antofagasta                 21 Antofagasta               2103
-# ℹ 336 more rows
-# ℹ 3 more variables: nombre_comuna &lt;chr&gt;, año &lt;dbl&gt;, poblacion &lt;dbl&gt;</code></pre>
-</div>
-</div>
-<p>Finalmente, el paquete incluye datos sociales relacionados a población, como son las estimaciones de pobreza por ingreso y pobreza multidimensional en base a Casen 2024:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mideso_pobreza_ingresos</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 345 × 8
-   codigo_region nombre_region codigo_provincia nombre_provincia codigo_comuna
-           &lt;dbl&gt; &lt;chr&gt;                    &lt;dbl&gt; &lt;chr&gt;                    &lt;dbl&gt;
- 1             1 Tarapacá                    11 Iquique                   1101
- 2             1 Tarapacá                    11 Iquique                   1107
- 3             1 Tarapacá                    14 Tamarugal                 1401
- 4             1 Tarapacá                    14 Tamarugal                 1402
- 5             1 Tarapacá                    14 Tamarugal                 1403
- 6             1 Tarapacá                    14 Tamarugal                 1404
- 7             1 Tarapacá                    14 Tamarugal                 1405
- 8             2 Antofagasta                 21 Antofagasta               2101
- 9             2 Antofagasta                 21 Antofagasta               2102
-10             2 Antofagasta                 21 Antofagasta               2103
-# ℹ 335 more rows
-# ℹ 3 more variables: nombre_comuna &lt;chr&gt;, año &lt;dbl&gt;, poblacion &lt;dbl&gt;</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mideso_pobreza_multi</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 345 × 8
-   codigo_region nombre_region codigo_provincia nombre_provincia codigo_comuna
-           &lt;dbl&gt; &lt;chr&gt;                    &lt;dbl&gt; &lt;chr&gt;                    &lt;dbl&gt;
- 1             1 Tarapacá                    11 Iquique                   1101
- 2             1 Tarapacá                    11 Iquique                   1107
- 3             1 Tarapacá                    14 Tamarugal                 1401
- 4             1 Tarapacá                    14 Tamarugal                 1402
- 5             1 Tarapacá                    14 Tamarugal                 1403
- 6             1 Tarapacá                    14 Tamarugal                 1404
- 7             1 Tarapacá                    14 Tamarugal                 1405
- 8             2 Antofagasta                 21 Antofagasta               2101
- 9             2 Antofagasta                 21 Antofagasta               2102
-10             2 Antofagasta                 21 Antofagasta               2103
-# ℹ 335 more rows
-# ℹ 3 more variables: nombre_comuna &lt;chr&gt;, año &lt;dbl&gt;, poblacion &lt;dbl&gt;</code></pre>
-</div>
-</div>
-<p>Para calcular la población regional de Chile, realizamos una suma agrupada:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pob_regional</span> <span class="op">&lt;-</span> <span class="fu">poblador</span><span class="fu">::</span><span class="va"><a href="../reference/censo_poblacion_2024.html">censo_poblacion_2024</a></span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">nombre_region</span>, <span class="va">codigo_region</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>poblacion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">poblacion</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -208,7 +118,7 @@
 </div>
 <p>Luego generamos un gráfico de barras:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://scales.r-lib.org" class="external-link">scales</a></span><span class="op">)</span></span>
 <span></span>
@@ -231,7 +141,7 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span>base_family <span class="op">=</span> <span class="st">"Arial"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<figure><p><img src="poblacion_regional_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
+<figure><p><img src="poblacion_regional_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
 </figure>
 </div>
 </div>

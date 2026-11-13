@@ -1,4 +1,4 @@
-# Agregar población de Chile a datos existentes
+# Agregar población comunal, regional o nacional oficial de Chile a tablas de datos
 
 Agrega cifras de población oficiales a datos territoriales de Chile.
 Esta función opera sobre tablas de datos (*dataframes*) agregando una
@@ -27,7 +27,9 @@ agregar_poblacion(
 
 - datos:
 
-  Dataframe al que deseas agregar población
+  Dataframe al que deseas agregar población. Debe tener columnas de
+  nombres y/o códigos de comunas o regiones, como aparecen en la tabla
+  [territorial::territorios](https://bastianolea.github.io/territorial/reference/territorios.html).
 
 - nivel:
 
@@ -44,7 +46,7 @@ agregar_poblacion(
   Base de datos de población a utilizar. Por defecto es
   [censo_poblacion_proyeccion](https://bastianolea.github.io/poblador/reference/censo_poblacion_proyeccion.md).
   Ver
-  [`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
+  [`catalogo()`](https://bastianolea.github.io/poblador/reference/catalogo.md)
   para una lista de fuentes de datos posibles.
 
 - nombre:
@@ -56,7 +58,7 @@ agregar_poblacion(
 
 Se puede especificar la base de datos de a utilizar entre las que ofrece
 este paquete (revísalas con
-[`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)),
+[`catalogo()`](https://bastianolea.github.io/poblador/reference/catalogo.md)),
 o una distinta que siga las mismas convenciones.
 
 ## Ver también
@@ -64,7 +66,7 @@ o una distinta que siga las mismas convenciones.
 [`obtener_poblacion()`](https://bastianolea.github.io/poblador/reference/obtener_poblacion.md)
 para obtener poblaciones de vectores con códigos o nombres de unidades
 territoriales. Ver
-[`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
+[`catalogo()`](https://bastianolea.github.io/poblador/reference/catalogo.md)
 para una lista de fuentes de datos posibles.
 
 ## Ejemplos

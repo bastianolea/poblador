@@ -2,9 +2,10 @@ pandoc: 3.8.3
 pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
+  articles/ejemplo_rsh: ejemplo_rsh.html
   articles/poblacion_nacional: poblacion_nacional.html
   articles/poblacion_regional: poblacion_regional.html
-last_built: 2026-11-12T19:20Z
+last_built: 2026-11-13T15:45Z
 urls:
   reference: https://bastianolea.github.io/poblador/reference
   article: https://bastianolea.github.io/poblador/articles

@@ -2,8 +2,8 @@
 
 ## Catálogo de datos
 
-- [`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
-  : Fuentes de datos disponibles
+- [`catalogo()`](https://bastianolea.github.io/poblador/reference/catalogo.md)
+  : Tablas de datos de población disponibles
 
 ## Tablas de datos de población de Chile
 
@@ -28,6 +28,8 @@ Datos oficiales de población a nivel de comuna, obtenidos desde el INE
 Funciones para agregar columnas con población o cifras de población
 
 - [`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md)
-  : Agregar población de Chile a datos existentes
+  : Agregar población comunal, regional o nacional oficial de Chile a
+  tablas de datos
 - [`obtener_poblacion()`](https://bastianolea.github.io/poblador/reference/obtener_poblacion.md)
-  : Obtener la población una unidad territorial
+  : Obtener la población oficial de una o varias unidades territoriales
+  (comuna, región o país)

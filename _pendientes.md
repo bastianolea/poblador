@@ -6,7 +6,7 @@ viñeta sobre incluir otras tablas
 
 función para calcular tasas
 
-hacer función datos() a mano o de alguna otra forma?
+hacer función catalogo() a mano o de alguna otra forma?
 
 Quizás agregar_poblacion (para tablas) y obtener_población (para
 vectores)

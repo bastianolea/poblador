@@ -4,13 +4,16 @@ Datos de población para Chile y funciones para agregar datos
 poblacionales fácilmente a otras tablas de datos.
 
 Este paquete ofrece tablas de datos de población desde fuentes oficiales
-de Chile, así como funciones para simplificar el uso de estos datos como
-complemento a otros conjuntos de datos, por ejemplo, para agregar
-población oficial a una tabla de comunas o regiones, entre otros.
+de Chile, como `censo_poblacion_2024`, así como funciones para
+simplificar el uso de estos datos como complemento a otros conjuntos de
+datos, como para agregar población oficial a una tabla de comunas o
+regiones con
+[`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md),
+entre otras.
 
-El funcionamiento interno de este paquete depende bastante de [mi
-paquete `territorial`](https://bastianolea.github.io/territorial/), que
-entrega herramientas para trabajar con datos qeu representan comunas y
+El funcionamiento interno de este paquete depende bastante del [paquete
+`{territorial}`](https://bastianolea.github.io/territorial/), que
+entrega herramientas para trabajar con datos que representan comunas y
 regiones de Chile.
 
 ## Instalación
@@ -52,7 +55,7 @@ nivel comunal. Las principales son los últimos dos Censos de población
 al Censo 2017).
 
 La función
-[`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
+[`catalogo()`](https://bastianolea.github.io/poblador/reference/catalogo.md)
 te muestra todas las fuentes de datos disponibles en el paquete,
 incluído el nombre que tienen para cargarlas en R, sus características y
 fuentes:
@@ -61,10 +64,10 @@ fuentes:
 
 library(poblador)
 
-datos()
+catalogo()
 ```
 
-**Ver el catálogo de datos generado por `datos()`**
+**Ver el catálogo de datos generado por `catalogo()`**
 
 ``` R
 ── Datos disponibles en poblador ───────────────────────────────────────────────
@@ -157,7 +160,7 @@ Social.
 ```
 
 Luego de consultar
-[`datos()`](https://bastianolea.github.io/poblador/reference/datos.md),
+[`catalogo()`](https://bastianolea.github.io/poblador/reference/catalogo.md),
 vemos que la tabla del Censo 2024 se llama `censo_poblacion_2024`, así
 que podemos explorarla:
 
@@ -186,8 +189,9 @@ $ año              <dbl> 2024, 2024, 2024, 2024, 2024, 2024
 $ poblacion        <int> 199587, 142086, 16878, 6272, 2858, 1335
 ```
 
-Puedes usar estas fuentes de datos para consularlas, cruzarlas con otras
-tablas, o su uso principal, que es usarlas para alimentar a la función
+Puedes usar estas fuentes de datos para consularlas, [cruzarlas con
+otras tablas](https://bastianolea.rbind.io/blog/left_join/), o su uso
+principal, que es usarlas para alimentar a la función
 [`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md),
 como veremos a continuación.
 
@@ -362,7 +366,7 @@ El argumento `base` de
 [`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md)
 permite usar otras fuentes de datos de población, ya sean las incluídas
 en el paquete (ver
-[`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)),
+[`catalogo()`](https://bastianolea.github.io/poblador/reference/catalogo.md)),
 o incluso tus propias tablas de población (que sigan las convenciones
 del paquete).
 
@@ -403,7 +407,7 @@ toma los datos comunales y los suma para obtener los regionales.
 Entre las distintas bases de datos incluídas, el paquete incluye datos
 socioeconómicos, como las estimaciones de pobreza a nivel comunal en las
 tablas `mideso_pobreza_ingresos` y `mideso_pobreza_multi` (usa
-[`poblador::datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
+[`poblador::catalogo()`](https://bastianolea.github.io/poblador/reference/catalogo.md)
 para ver todas las bases).
 
 Por ejemplo:
@@ -657,8 +661,8 @@ comunas |>
 
 ## Catálogo de datos
 
-- [`datos()`](https://bastianolea.github.io/poblador/reference/datos.md)
-  : Fuentes de datos disponibles
+- [`catalogo()`](https://bastianolea.github.io/poblador/reference/catalogo.md)
+  : Tablas de datos de población disponibles
 
 ## Tablas de datos de población de Chile
 
@@ -683,15 +687,22 @@ Datos oficiales de población a nivel de comuna, obtenidos desde el INE
 Funciones para agregar columnas con población o cifras de población
 
 - [`agregar_poblacion()`](https://bastianolea.github.io/poblador/reference/agregar_poblacion.md)
-  : Agregar población de Chile a datos existentes
+  : Agregar población comunal, regional o nacional oficial de Chile a
+  tablas de datos
 - [`obtener_poblacion()`](https://bastianolea.github.io/poblador/reference/obtener_poblacion.md)
-  : Obtener la población una unidad territorial
+  : Obtener la población oficial de una o varias unidades territoriales
+  (comuna, región o país)
 
 # Artículos
 
 ### Artículos
 
 Ejemplos de uso del paquete
+
+- [Ejemplo con datos del Registro Social de
+  Hogares](https://bastianolea.github.io/poblador/articles/ejemplo_rsh.md):
+
+  Uso del paquete para agregar población a una tabla de datos sociales
 
 - [Gráfico de población nacional de
   Chile](https://bastianolea.github.io/poblador/articles/poblacion_nacional.md):

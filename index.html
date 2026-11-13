@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">poblador</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Cambiar la navegación">
@@ -42,7 +42,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-art-culos" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Artículos</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-art-culos">
-<li><a class="dropdown-item" href="articles/poblacion_nacional.html">Gráfico de población nacional de Chile</a></li>
+<li><a class="dropdown-item" href="articles/ejemplo_rsh.html">Ejemplo con datos del Registro Social de Hogares</a></li>
+    <li><a class="dropdown-item" href="articles/poblacion_nacional.html">Gráfico de población nacional de Chile</a></li>
     <li><a class="dropdown-item" href="articles/poblacion_regional.html">Gráfico de población regional de Chile</a></li>
   </ul>
 </li>
@@ -67,8 +68,8 @@
 </h1>
 </div>
 <p>Datos de población para Chile y funciones para agregar datos poblacionales fácilmente a otras tablas de datos.</p>
-<p>Este paquete ofrece tablas de datos de población desde fuentes oficiales de Chile, así como funciones para simplificar el uso de estos datos como complemento a otros conjuntos de datos, por ejemplo, para agregar población oficial a una tabla de comunas o regiones, entre otros.</p>
-<p>El funcionamiento interno de este paquete depende bastante de <a href="https://bastianolea.github.io/territorial/" class="external-link">mi paquete <code>territorial</code></a>, que entrega herramientas para trabajar con datos qeu representan comunas y regiones de Chile.</p>
+<p>Este paquete ofrece tablas de datos de población desde fuentes oficiales de Chile, como <code>censo_poblacion_2024</code>, así como funciones para simplificar el uso de estos datos como complemento a otros conjuntos de datos, como para agregar población oficial a una tabla de comunas o regiones con <code><a href="reference/agregar_poblacion.html">agregar_poblacion()</a></code>, entre otras.</p>
+<p>El funcionamiento interno de este paquete depende bastante del <a href="https://bastianolea.github.io/territorial/" class="external-link">paquete <code>{territorial}</code></a>, que entrega herramientas para trabajar con datos que representan comunas y regiones de Chile.</p>
 <div class="section level2">
 <h2 id="instalación">Instalación<a class="anchor" aria-label="anchor" href="#instalaci%C3%B3n"></a>
 </h2>
@@ -87,12 +88,12 @@
 <h2 id="datos-de-población">Datos de población<a class="anchor" aria-label="anchor" href="#datos-de-poblaci%C3%B3n"></a>
 </h2>
 <p>Uno de los aspectos principales de <a href="https://bastianolea.github.io/poblador/">poblador</a> es que contiene bases de datos de población procesadas <a href="https://github.com/bastianolea/poblador/tree/main/data-raw" class="external-link">a partir de las fuentes oficiales</a> a nivel comunal. Las principales son los últimos dos Censos de población (2017 y 2024), junto a las proyecciones de población oficiales (en base al Censo 2017).</p>
-<p>La función <code><a href="reference/datos.html">datos()</a></code> te muestra todas las fuentes de datos disponibles en el paquete, incluído el nombre que tienen para cargarlas en R, sus características y fuentes:</p>
+<p>La función <code><a href="reference/catalogo.html">catalogo()</a></code> te muestra todas las fuentes de datos disponibles en el paquete, incluído el nombre que tienen para cargarlas en R, sus características y fuentes:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bastianolea.github.io/poblador/">poblador</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="reference/datos.html">datos</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<details><summary><strong>Ver el catálogo de datos generado por <code>datos()</code></strong>
+<span><span class="fu"><a href="reference/catalogo.html">catalogo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<details><summary><strong>Ver el catálogo de datos generado por <code>catalogo()</code></strong>
 </summary><div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>── Datos disponibles en poblador ───────────────────────────────────────────────</span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>── Población a nivel comunal de <span class="fu">Chile</span> (<span class="dv">2017</span>) ──</span>
@@ -180,7 +181,7 @@
 <span id="cb5-85"><a href="#cb5-85" tabindex="-1"></a></span>
 <span id="cb5-86"><a href="#cb5-86" tabindex="-1"></a>• Fuente<span class="sc">:</span> Ministerio de Desarrollo Social y <span class="fu">Familia</span> (Mideso),</span>
 <span id="cb5-87"><a href="#cb5-87" tabindex="-1"></a><span class="sc">&lt;</span>https<span class="sc">:</span><span class="er">//</span>bidat.gob.cl<span class="sc">/</span>details<span class="sc">/</span>ficha<span class="sc">/</span>dataset<span class="sc">/</span>base<span class="sc">-</span>de<span class="sc">-</span>datos<span class="sc">-</span>pobreza<span class="sc">-</span>comunal<span class="dv">-2024</span><span class="sc">&gt;</span></span></code></pre></div>
-</details><p>Luego de consultar <code><a href="reference/datos.html">datos()</a></code>, vemos que la tabla del Censo 2024 se llama <code>censo_poblacion_2024</code>, así que podemos explorarla:</p>
+</details><p>Luego de consultar <code><a href="reference/catalogo.html">catalogo()</a></code>, vemos que la tabla del Censo 2024 se llama <code>censo_poblacion_2024</code>, así que podemos explorarla:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -197,7 +198,7 @@
 <span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="sc">$</span> nombre_comuna    <span class="sc">&lt;</span>chr<span class="sc">&gt;</span> <span class="st">"Iquique"</span>, <span class="st">"Alto Hospicio"</span>, <span class="st">"Pozo Almonte"</span>, <span class="st">"Pica"</span>, <span class="st">"…</span></span>
 <span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="st">$ año              &lt;dbl&gt; 2024, 2024, 2024, 2024, 2024, 2024</span></span>
 <span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="st">$ poblacion        &lt;int&gt; 199587, 142086, 16878, 6272, 2858, 1335</span></span></code></pre></div>
-<p>Puedes usar estas fuentes de datos para consularlas, cruzarlas con otras tablas, o su uso principal, que es usarlas para alimentar a la función <code><a href="reference/agregar_poblacion.html">agregar_poblacion()</a></code>, como veremos a continuación.</p>
+<p>Puedes usar estas fuentes de datos para consularlas, <a href="https://bastianolea.rbind.io/blog/left_join/" class="external-link">cruzarlas con otras tablas</a>, o su uso principal, que es usarlas para alimentar a la función <code><a href="reference/agregar_poblacion.html">agregar_poblacion()</a></code>, como veremos a continuación.</p>
 <p>Todas las tablas de datos del paquete siguen esta estructura de <code>codigo_region</code>, <code>nombre_region</code>, <code>codigo_comuna</code> y <code>nombre_comuna</code> (heredada del <a href="https://bastianolea.github.io/territorial/" class="external-link">paquete <code>{territorial}</code></a>), además de contener <code>año</code> y <code>poblacion</code>.</p>
 </div>
 <div class="section level2">
@@ -307,7 +308,7 @@ Ver código de tabla
 <div class="section level2">
 <h2 id="población-desde-otras-fuentes">Población desde otras fuentes<a class="anchor" aria-label="anchor" href="#poblaci%C3%B3n-desde-otras-fuentes"></a>
 </h2>
-<p>El argumento <code>base</code> de <code><a href="reference/agregar_poblacion.html">agregar_poblacion()</a></code> permite usar otras fuentes de datos de población, ya sean las incluídas en el paquete (ver <code><a href="reference/datos.html">datos()</a></code>), o incluso tus propias tablas de población (que sigan las convenciones del paquete).</p>
+<p>El argumento <code>base</code> de <code><a href="reference/agregar_poblacion.html">agregar_poblacion()</a></code> permite usar otras fuentes de datos de población, ya sean las incluídas en el paquete (ver <code><a href="reference/catalogo.html">catalogo()</a></code>), o incluso tus propias tablas de población (que sigan las convenciones del paquete).</p>
 <p>Probemos agregando a la tabla de regiones los datos de un Censo oficial específico, en este caso del Censo 2017 (disponible en el objeto <code>censo_poblacion_2017</code>):</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">regiones</span> <span class="op">|&gt;</span> </span>
@@ -330,7 +331,7 @@ Ver código de tabla
 <div class="section level2">
 <h2 id="datos-socioeconómicos">Datos socioeconómicos<a class="anchor" aria-label="anchor" href="#datos-socioecon%C3%B3micos"></a>
 </h2>
-<p>Entre las distintas bases de datos incluídas, el paquete incluye datos socioeconómicos, como las estimaciones de pobreza a nivel comunal en las tablas <code>mideso_pobreza_ingresos</code> y <code>mideso_pobreza_multi</code> (usa <code><a href="reference/datos.html">poblador::datos()</a></code> para ver todas las bases).</p>
+<p>Entre las distintas bases de datos incluídas, el paquete incluye datos socioeconómicos, como las estimaciones de pobreza a nivel comunal en las tablas <code>mideso_pobreza_ingresos</code> y <code>mideso_pobreza_multi</code> (usa <code><a href="reference/catalogo.html">poblador::catalogo()</a></code> para ver todas las bases).</p>
 <p>Por ejemplo:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mideso_pobreza_ingresos</span></span></code></pre></div>

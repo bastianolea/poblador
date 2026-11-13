@@ -6,128 +6,31 @@ library(poblador)
 library(dplyr)
 ```
 
-El paquete incluye tablas de datos de los últimos censos de Chile:
+El paquete incluye tablas de datos de los últimos censos de Chile, que
+puedes revisar ejecutando
+[`poblador::catalogo()`](https://bastianolea.github.io/poblador/reference/catalogo.md).
+Por ejemplo:
 
 ``` r
 
-library(poblador)
-
-censo_poblacion_2024
+censo_poblacion_2024 |> 
+  select(nombre_comuna, año, poblacion) |> 
+  head()
 ```
 
-    # A tibble: 346 × 8
-       codigo_region nombre_region codigo_provincia nombre_provincia codigo_comuna
-               <dbl> <chr>                    <dbl> <chr>                    <dbl>
-     1             1 Tarapacá                    11 Iquique                   1101
-     2             1 Tarapacá                    11 Iquique                   1107
-     3             1 Tarapacá                    14 Tamarugal                 1401
-     4             1 Tarapacá                    14 Tamarugal                 1405
-     5             1 Tarapacá                    14 Tamarugal                 1404
-     6             1 Tarapacá                    14 Tamarugal                 1402
-     7             1 Tarapacá                    14 Tamarugal                 1403
-     8             2 Antofagasta                 22 El Loa                    2201
-     9             2 Antofagasta                 21 Antofagasta               2102
-    10             2 Antofagasta                 22 El Loa                    2203
-    # ℹ 336 more rows
-    # ℹ 3 more variables: nombre_comuna <chr>, año <dbl>, poblacion <int>
+    # A tibble: 6 × 3
+      nombre_comuna   año poblacion
+      <chr>         <dbl>     <int>
+    1 Iquique        2024    199587
+    2 Alto Hospicio  2024    142086
+    3 Pozo Almonte   2024     16878
+    4 Pica           2024      6272
+    5 Huara          2024      2858
+    6 Camiña         2024      1335
 
-``` r
-
-censo_poblacion_2017
-```
-
-    # A tibble: 346 × 8
-       codigo_region nombre_region codigo_provincia nombre_provincia codigo_comuna
-               <dbl> <chr>                    <dbl> <chr>                    <dbl>
-     1             1 Tarapacá                    11 Iquique                   1101
-     2             1 Tarapacá                    11 Iquique                   1107
-     3             1 Tarapacá                    14 Tamarugal                 1401
-     4             1 Tarapacá                    14 Tamarugal                 1402
-     5             1 Tarapacá                    14 Tamarugal                 1403
-     6             1 Tarapacá                    14 Tamarugal                 1404
-     7             1 Tarapacá                    14 Tamarugal                 1405
-     8             2 Antofagasta                 21 Antofagasta               2101
-     9             2 Antofagasta                 21 Antofagasta               2102
-    10             2 Antofagasta                 21 Antofagasta               2103
-    # ℹ 336 more rows
-    # ℹ 3 more variables: nombre_comuna <chr>, año <dbl>, poblacion <dbl>
-
-También incluye las últimas proyecciones de población disponibles a
-nivel de comuna, que son en base al Censo 2017, y que pueden filtrarse
-por año:
-
-``` r
-
-library(dplyr)
-
-censo_poblacion_proyeccion |> 
-  filter(año == 2030)
-```
-
-    # A tibble: 346 × 8
-       codigo_region nombre_region codigo_provincia nombre_provincia codigo_comuna
-               <dbl> <chr>                    <dbl> <chr>                    <dbl>
-     1             1 Tarapacá                    11 Iquique                   1101
-     2             1 Tarapacá                    11 Iquique                   1107
-     3             1 Tarapacá                    14 Tamarugal                 1401
-     4             1 Tarapacá                    14 Tamarugal                 1402
-     5             1 Tarapacá                    14 Tamarugal                 1403
-     6             1 Tarapacá                    14 Tamarugal                 1404
-     7             1 Tarapacá                    14 Tamarugal                 1405
-     8             2 Antofagasta                 21 Antofagasta               2101
-     9             2 Antofagasta                 21 Antofagasta               2102
-    10             2 Antofagasta                 21 Antofagasta               2103
-    # ℹ 336 more rows
-    # ℹ 3 more variables: nombre_comuna <chr>, año <dbl>, poblacion <dbl>
-
-Finalmente, el paquete incluye datos sociales relacionados a población,
-como son las estimaciones de pobreza por ingreso y pobreza
-multidimensional en base a Casen 2024:
-
-``` r
-
-mideso_pobreza_ingresos
-```
-
-    # A tibble: 345 × 8
-       codigo_region nombre_region codigo_provincia nombre_provincia codigo_comuna
-               <dbl> <chr>                    <dbl> <chr>                    <dbl>
-     1             1 Tarapacá                    11 Iquique                   1101
-     2             1 Tarapacá                    11 Iquique                   1107
-     3             1 Tarapacá                    14 Tamarugal                 1401
-     4             1 Tarapacá                    14 Tamarugal                 1402
-     5             1 Tarapacá                    14 Tamarugal                 1403
-     6             1 Tarapacá                    14 Tamarugal                 1404
-     7             1 Tarapacá                    14 Tamarugal                 1405
-     8             2 Antofagasta                 21 Antofagasta               2101
-     9             2 Antofagasta                 21 Antofagasta               2102
-    10             2 Antofagasta                 21 Antofagasta               2103
-    # ℹ 335 more rows
-    # ℹ 3 more variables: nombre_comuna <chr>, año <dbl>, poblacion <dbl>
-
-``` r
-
-mideso_pobreza_multi
-```
-
-    # A tibble: 345 × 8
-       codigo_region nombre_region codigo_provincia nombre_provincia codigo_comuna
-               <dbl> <chr>                    <dbl> <chr>                    <dbl>
-     1             1 Tarapacá                    11 Iquique                   1101
-     2             1 Tarapacá                    11 Iquique                   1107
-     3             1 Tarapacá                    14 Tamarugal                 1401
-     4             1 Tarapacá                    14 Tamarugal                 1402
-     5             1 Tarapacá                    14 Tamarugal                 1403
-     6             1 Tarapacá                    14 Tamarugal                 1404
-     7             1 Tarapacá                    14 Tamarugal                 1405
-     8             2 Antofagasta                 21 Antofagasta               2101
-     9             2 Antofagasta                 21 Antofagasta               2102
-    10             2 Antofagasta                 21 Antofagasta               2103
-    # ℹ 335 more rows
-    # ℹ 3 more variables: nombre_comuna <chr>, año <dbl>, poblacion <dbl>
-
-Para calcular la población regional de Chile, realizamos una suma
-agrupada:
+Para calcular la población regional de Chile, realizamos una [suma
+agrupada con
+`summarize()`](https://bastianolea.rbind.io/blog/r_introduccion/dplyr_summarize/):
 
 ``` r
 
@@ -171,4 +74,4 @@ pob_regional |>
   theme_classic(base_family = "Arial")
 ```
 
-![](poblacion_regional_files/figure-html/unnamed-chunk-5-1.png)
+![](poblacion_regional_files/figure-html/unnamed-chunk-3-1.png)
