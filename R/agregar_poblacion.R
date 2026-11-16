@@ -1,6 +1,6 @@
 #' Agregar población comunal, regional o nacional oficial de Chile a tablas de datos
 #'
-#' Agrega cifras de población oficiales a datos territoriales de Chile. Esta función opera sobre tablas de datos (_dataframes_) agregando una nueva columna llamada `poblacion`, y se espeta que estos datos tengan columnas `nombre_comuna`, `codigo_comuna`, `nombre_region` o `codigo_region`, como en la tabla [territorial::territorios] del [paquete de R {territorial}](https://bastianolea.github.io/territorial). Para obtener la población de vectores, usar [obtener_poblacion()].
+#' Agrega cifras de población oficiales a datos territoriales de Chile. Esta función opera sobre tablas de datos (_dataframes_) agregando una nueva columna llamada `poblacion`, y se espeta que estos datos tengan columnas `nombre_comuna`, `codigo_comuna`, `nombre_region` o `codigo_region`, como en la tabla [territorial::territorios] del [paquete de R `territorial`](https://bastianolea.github.io/territorial). Para obtener la población de vectores, usar [obtener_poblacion()].
 #'
 #' Se puede especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con [poblador::catalogo()]), o una distinta que siga las mismas convenciones.
 #'
@@ -9,6 +9,8 @@
 #' @param años Año de la población, para las bases de población que cubren múltiples años.
 #' @param base Base de datos de población a utilizar. Por defecto es [poblador::censo_poblacion_proyeccion]. Ver [poblador::catalogo()] para una lista de fuentes de datos posibles.
 #' @param nombre Nombre de la columna de población a agregar. Por defecto es `poblacion`.
+#'
+#' @returns Dataframe con la nueva columna `poblacion` (o el nombre que hayas definido en `nombre`)
 #'
 #' @seealso [poblador::obtener_poblacion()] para obtener poblaciones de vectores con códigos o nombres de unidades territoriales. Ver [poblador::catalogo()] para una lista de fuentes de datos posibles.
 #' @export
