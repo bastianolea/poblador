@@ -54,6 +54,11 @@ agregar_poblacion(
   Nombre de la columna de población a agregar. Por defecto es
   `poblacion`.
 
+## Valor
+
+Dataframe con la nueva columna `poblacion` (o el nombre que hayas
+definido en `nombre`)
+
 ## Detalles
 
 Se puede especificar la base de datos de a utilizar entre las que ofrece
