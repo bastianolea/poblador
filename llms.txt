@@ -23,7 +23,9 @@ Instala el paquete a R desde
 
 ``` r
 
-install.packages('poblador', repos = c('https://bastianolea.r-universe.dev'))
+install.packages("poblador", 
+                 repos = c("https://bastianolea.r-universe.dev",
+                           "https://cloud.r-project.org"))
 ```
 
 También puedes instalar desde GitHub:
@@ -41,7 +43,9 @@ Si no lo tienes, instálalo con:
 
 ``` r
 
-install.packages("territorial", repos = "https://bastianolea.r-universe.dev")
+install.packages("territorial", 
+                 repos = c("https://bastianolea.r-universe.dev",
+                           "https://cloud.r-project.org"))
 ```
 
 ## Datos de población
