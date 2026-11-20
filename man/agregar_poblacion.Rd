@@ -27,7 +27,7 @@ agregar_poblacion(
 Dataframe con la nueva columna \code{poblacion} (o el nombre que hayas definido en \code{nombre})
 }
 \description{
-Agrega cifras de población oficiales a datos territoriales de Chile. Esta función opera sobre tablas de datos (\emph{dataframes}) agregando una nueva columna llamada \code{poblacion}, y se espeta que estos datos tengan columnas \code{nombre_comuna}, \code{codigo_comuna}, \code{nombre_region} o \code{codigo_region}, como en la tabla \link[territorial:territorios]{territorial::territorios} del \href{https://bastianolea.github.io/territorial}{paquete de R {territorial}}. Para obtener la población de vectores, usar \code{\link[=obtener_poblacion]{obtener_poblacion()}}.
+Agrega cifras de población oficiales a datos territoriales de Chile. Esta función opera sobre tablas de datos (\emph{dataframes}) agregando una nueva columna llamada \code{poblacion}, y se espeta que estos datos tengan columnas \code{nombre_comuna}, \code{codigo_comuna}, \code{nombre_region} o \code{codigo_region}, como en la tabla \link[territorial:territorios]{territorial::territorios} del \href{https://bastianolea.github.io/territorial}{paquete de R \code{territorial}}. Para obtener la población de vectores, usar \code{\link[=obtener_poblacion]{obtener_poblacion()}}.
 }
 \details{
 Se puede especificar la base de datos de a utilizar entre las que ofrece este paquete (revísalas con \code{\link[=catalogo]{catalogo()}}), o una distinta que siga las mismas convenciones.
