@@ -7,8 +7,8 @@ columnas `nombre_comuna`, `codigo_comuna`, `nombre_region` o
 `codigo_region`, como en la tabla
 [territorial::territorios](https://bastianolea.github.io/territorial/reference/territorios.html)
 del [paquete de R
-territorial](https://bastianolea.github.io/territorial). Para obtener la
-población de vectores, usar
+`territorial`](https://bastianolea.github.io/territorial). Para obtener
+la población de vectores, usar
 [`obtener_poblacion()`](https://bastianolea.github.io/poblador/reference/obtener_poblacion.md).
 
 ## Uso
